@@ -1,6 +1,6 @@
 #!/bin/bash
 # ==============================================================================
-# GPU Video Upscaler (Neural Network-powered Video Enhancer)
+# bananascaler — GPU-Accelerated Neural Video Upscaler
 # Utiliza Real-ESRGAN (Vulkan) y FFmpeg (con aceleración de hardware NVIDIA)
 # ==============================================================================
 
@@ -31,7 +31,7 @@ if [ -z "$OUTPUT_VIDEO" ]; then
 fi
 
 # Generar identificador único de sesión para evitar conflictos temporales
-SESSION_ID="upscale_$(date +%s)_$$"
+SESSION_ID="bananascaler_$(date +%s)_$$"
 TEMP_IN="/tmp/${SESSION_ID}_in"
 TEMP_OUT="/tmp/${SESSION_ID}_out"
 
