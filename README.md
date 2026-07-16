@@ -10,7 +10,7 @@
       <p>
         <a href="LICENSE"><img src="https://img.shields.io/badge/license-MIT-blue?style=plastic" alt="License MIT"></a>
         <img src="https://img.shields.io/badge/Built%20With-Go-00ADD8?style=plastic" alt="Built with Go">
-        <img src="https://img.shields.io/badge/version-0.3.0-informational?style=plastic" alt="Version 0.3.0">
+        <img src="https://img.shields.io/badge/version-0.4.0-informational?style=plastic" alt="Version 0.4.0">
         <img src="https://img.shields.io/badge/GPU-NVIDIA%20NVENC%2FNVDEC-76B900?style=plastic" alt="NVIDIA GPU">
         <img src="https://img.shields.io/badge/AI-Real--ESRGAN-orange?style=plastic" alt="Real-ESRGAN">
         <img src="https://img.shields.io/badge/TUI-Bubbletea-FF69B4?style=plastic" alt="Bubbletea TUI">
@@ -31,6 +31,11 @@
   - [System-wide Install](#system-wide-install)
   - [Dependencies (Arch Linux / CachyOS)](#dependencies-arch-linux-cachyos)
 - [Key Features](#key-features)
+- [Profiles](#profiles)
+  - [Hardware Tiers](#hardware-tiers)
+  - [Presets](#presets)
+  - [Profile Table](#profile-table)
+  - [VRAM Safety](#vram-safety)
 - [Technical Architecture](#technical-architecture)
   - [Core Components](#core-components)
 - [Processing Pipeline](#processing-pipeline)
@@ -121,17 +126,65 @@ ln -sf ~/.local/share/realesrgan/realesrgan-ncnn-vulkan ~/.local/bin/realesrgan-
 
 ## Key Features
 
+*   **Hardware-aware profiles**: Auto-detects GPU VRAM and selects optimal tile size, model, and encoding parameters. Choose `fast`, `balanced`, or `quality` — settings are adapted to your hardware tier.
 *   **Interactive TUI with file browser**: `bananascaler tui` opens a keyboard-navigable file picker in the current directory. Select a video and press Enter — the pipeline launches immediately inside the same TUI.
 *   **Full GPU pipeline**: NVDEC hardware-accelerated decoding in frame extraction + Vulkan-accelerated Real-ESRGAN upscaling + NVENC hardware-accelerated encoding. All three stages run on the GPU.
-*   **VRAM-safe tiling**: Real-ESRGAN uses tile-based processing (`-t 400`) to prevent out-of-memory crashes on high-resolution or 4× scale runs.
-*   **Neural Super-Resolution**: Frame-level upscaling via `realesr-animevideov3-x2`, supporting 2×, 3×, and 4× scale factors.
-*   **Automatic GPU Detection**: Detects NVIDIA via `nvidia-smi` at runtime; activates NVDEC + NVENC or falls back to `libx265`.
+*   **VRAM-safe tiling**: Tile sizes are scaled to detected VRAM and model weight class. `CheckTileSafety()` warns before exceeding safe limits, preventing OOM/SEGV crashes.
+*   **Neural Super-Resolution**: Frame-level upscaling via `realesr-animevideov3-x2` (lightweight), `realesrgan-x4plus-anime` (medium), or `realesrgan-x4plus` (heavy), supporting 2×, 3×, and 4× scale factors.
+*   **`bananascaler detect`**: Hardware scan subcommand showing your GPU info and all available profiles adapted to your system.
 *   **Atomic Output**: Encodes to a `.tmp` file; renames to final destination only on success. Interrupted runs leave no corrupt files.
 *   **Audio Preservation**: Original audio is remuxed without re-encoding (`-c:a copy`), maintaining lossless fidelity.
 *   **Session Isolation**: Each run creates a unique temp directory (`/tmp/bananascaler_{timestamp}_{PID}`) preventing conflicts.
 *   **Framerate Sync**: Uses `ffprobe` to extract the exact source framerate for perfect audio-video sync.
 *   **Smart Output Naming**: Auto-generates `{input}_upscaled.mp4` when no output path is given.
 *   **Graceful Cancellation**: Ctrl+C triggers cleanup of temp files before exit.
+
+---
+
+## Profiles
+
+bananascaler auto-detects your GPU's VRAM via `nvidia-smi` and selects optimized pipeline parameters. Three presets let you trade speed for quality.
+
+### Hardware Tiers
+
+| Tier | VRAM | Example GPUs |
+|------|------|-------------|
+| **low-end** | ≤4 GB | GTX 1050 Ti, GTX 1650, RX 570 |
+| **mid-range** | 4–8 GB | GTX 1060 6GB, RTX 2060, RX 5700 XT |
+| **high-end** | ≥8 GB | RTX 3080, RTX 4090, RX 6800 XT |
+| **unknown** | no NVIDIA | CPU-only mode / integrated GPU |
+
+### Presets
+
+| Preset | Focus | When to use |
+|--------|-------|-------------|
+| **fast** | Speed | Quick preview, short videos, time-constrained |
+| **balanced** | Default | Recommended for most users |
+| **quality** | Best output | Final render, archival, when time doesn't matter |
+
+### Profile Table
+
+Each tier × preset combination sets tile size, model, NVENC preset, x265 preset/CRF, and max scale:
+
+| Tier | Preset | Tile | Model | NVENC | x265 | CRF | Max Scale |
+|------|--------|------|-------|-------|------|-----|-----------|
+| low-end | fast | 64 | animevideov3-x2 | p1 | ultrafast | 28 | 2× |
+| low-end | balanced | 100 | animevideov3-x2 | p3 | fast | 26 | 2× |
+| low-end | quality | 150 | animevideov3-x2 | p5 | medium | 24 | 3× |
+| mid-range | fast | 150 | animevideov3-x2 | p3 | fast | 26 | 3× |
+| **mid-range** | **balanced** | **300** | **animevideov3-x2** | **p5** | **medium** | **22** | **4×** |
+| mid-range | quality | 200 | x4plus-anime | p7 | slow | 20 | 4× |
+| high-end | fast | 300 | x4plus-anime | p4 | medium | 22 | 4× |
+| high-end | balanced | 400 | x4plus | p6 | slow | 20 | 4× |
+| high-end | quality | 512 | x4plus | p7 | veryslow | 18 | 4× |
+
+The **bold** row is the default for mid-range GPUs (e.g., GTX 1060 6GB).
+
+### VRAM Safety
+
+Heavier models require smaller tiles on the same GPU. Using `realesrgan-x4plus` with tile=400 on a 6GB GPU will crash. The profile system enforces safe pairings, and `CheckTileSafety()` warns at startup if manual overrides exceed safe limits.
+
+Run `bananascaler detect` to see your hardware and all available profiles.
 
 ---
 
@@ -170,12 +223,13 @@ graph TD
 
 ### Core Components
 
-- **`cmd/root.go`**: Cobra CLI definition. Detects TTY, launches Bubbletea or plain logger.
+- **`cmd/root.go`**: Cobra CLI definition. Detects TTY, launches Bubbletea or plain logger. Handles `--profile`, `--auto`, and `detect` subcommand.
 - **`cmd/tui.go`**: `tui` subcommand — launches the file-selection TUI in the working directory.
-- **`internal/pipeline/pipeline.go`**: Core engine. Orchestrates the 3-stage processing chain via a `Logger` interface.
-- **`internal/tui/`**: Bubbletea TUI layer — model (explorer + pipeline states), design system (styles), messages, and pipeline adapter.
+- **`internal/pipeline/pipeline.go`**: Core engine. Orchestrates the 3-stage processing chain via a `Logger` interface. Reads parameters from the active profile.
+- **`internal/tui/`**: Bubbletea TUI layer — model (explorer + pipeline states, profile cycling), design system (styles), messages, and pipeline adapter.
 - **`internal/hardware/detect.go`**: GPU detection and media probing via external tools.
-- **`internal/config/config.go`**: Configuration struct with validation.
+- **`internal/hardware/profile.go`**: Hardware profile system — GPU VRAM detection, tier classification, 12 profile variants (4 tiers × 3 presets), VRAM safety validation.
+- **`internal/config/config.go`**: Configuration struct with validation and profile resolution.
 
 ---
 
@@ -210,7 +264,8 @@ stateDiagram-v2
 ### Key Engineering Decisions
 
 - **NVDEC hardware decoding in extraction**: `-hwaccel cuda` passed to FFmpeg in stage 1 so the GPU handles video demux and decode, reducing CPU load and extraction time.
-- **Tile-based VRAM protection**: `realesrgan-ncnn-vulkan -t 400` subdivides frames into 400×400 blocks before Vulkan dispatch. Prevents driver-level OOM kills on 1080p+ inputs with 4× scale.
+- **Tile-based VRAM protection**: Tile sizes are dynamically set from the hardware profile, pairing heavier models with smaller tiles to prevent OOM/SEGV crashes.
+- **Profile-driven parameters**: Tile size, model, JPEG quality, NVENC preset, and x265 preset/CRF are all read from the active profile instead of hardcoded, enabling automatic hardware adaptation.
 - **JPEG for intermediate frames, not PNG**: Reduces temp disk usage by ~60–70% and lowers I/O pressure on NVMe.
 - **Vulkan backend (ncnn) over CUDA-only**: `realesrgan-ncnn-vulkan` works on any GPU vendor via Vulkan, making the tool portable.
 - **Atomic write (`output.tmp` → rename)**: A `SIGKILL` mid-encode will leave a `.tmp` artifact, never a silently corrupt `.mp4`.
@@ -247,12 +302,31 @@ Cycle settings before launching: `s` (scale), `g` (GPU), `m` (model). Press `Ent
 | `--scale` | `-s` | `2` | Upscale factor: 2, 3, or 4 |
 | `--gpu` | `-g` | `0` | GPU device index (-1 = CPU) |
 | `--model` | `-m` | `realesr-animevideov3-x2` | Real-ESRGAN model name |
+| `--profile` | | `balanced` | Performance preset: `fast`, `balanced`, or `quality` |
+| `--auto` | | `false` | Auto-detect GPU and apply optimal profile |
 | `--verbose` | `-v` | `false` | Forward ffmpeg/realesrgan output |
 | `--no-tui` | | `false` | Disable interactive TUI |
 
 All flags are available on both the root command and the `tui` subcommand.
 
 ### Examples
+
+**Hardware detection (new in v0.4.0):**
+```bash
+bananascaler detect               # scan GPU + show all profiles
+```
+
+**Auto-detect profile, default balanced (recommended):**
+```bash
+bananascaler input.mp4            # auto-detects GPU tier, applies balanced
+bananascaler input.mp4 --auto     # same, explicit
+```
+
+**Choose a preset:**
+```bash
+bananascaler input.mp4 --profile fast       # speed over quality
+bananascaler input.mp4 --profile quality    # best possible output
+```
 
 **Interactive file picker (v0.3.0+):**
 ```bash
@@ -297,16 +371,16 @@ nohup bananascaler input.mp4 --output out.mp4 --scale 4 --no-tui > run.log 2>&1 
     poster.jpg
 
 ──────────────────────────────────────────────────
-  Scale: 2×  [s]   │   GPU: GPU 0  [g]   │   Model: animevideov3-x2  [m]
+  Scale: 2×  [s]   │   GPU: GPU 0  [g]   │   Model: animevideov3-x2  [m]   │   Profile: mid-range/balanced  [p]
 
-  ↑↓ / jk navigate  ·  Enter open / select  ·  ⌫ / h go up  ·  q quit
+  ↑↓ / jk navigate  ·  Enter open / select  ·  ⌫ / h go up  ·  p cycle profile  ·  q quit
 ```
 
 ### Pipeline Progress
 
 ```
   🍌 bananascaler
-  GPU: GPU 0 · NVDEC+NVENC   Model: animevideov3-x2   Scale: 2×
+  Profile: mid-range · balanced   GPU: GPU 0 · NVDEC+NVENC   Model: animevideov3-x2   Scale: 2×
   in  movie.mp4
   out movie_upscaled.mp4
 ──────────────────────────────────────────────────
@@ -339,7 +413,8 @@ nohup bananascaler input.mp4 --output out.mp4 --scale 4 --no-tui > run.log 2>&1 
 | **v0.1.0** | ✅ | Core pipeline: extract → upscale → re-encode → atomic output (Bash) |
 | **v0.2.0** | ✅ | Go rewrite + Bubbletea TUI + Logger interface + quality fixes |
 | **v0.3.0** | ✅ | `bananascaler tui` file picker · Full GPU pipeline (NVDEC+NVENC) · VRAM-safe tiling · Premium TUI redesign · System-wide `make install` |
-| **v0.4.0** | ⏳ | Parallel frame extraction/upscaling for multi-GPU setups |
+| **v0.4.0** | ✅ | Hardware profile system (4 tiers × 3 presets) · `bananascaler detect` · VRAM safety validation · Profile-aware encoding · TUI profile cycling |
+| **v0.5.0** | ⏳ | Parallel frame extraction/upscaling for multi-GPU setups |
 
 ---
 

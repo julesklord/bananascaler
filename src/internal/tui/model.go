@@ -9,6 +9,7 @@ import (
 	tea "github.com/charmbracelet/bubbletea"
 	"github.com/charmbracelet/lipgloss"
 	"github.com/julesklord/bananascaler/internal/config"
+	"github.com/julesklord/bananascaler/internal/hardware"
 	"github.com/julesklord/bananascaler/internal/pipeline"
 )
 
@@ -80,6 +81,20 @@ func NewModel(cfg *config.Config) Model {
 	if cfg.Input == "" {
 		state = stateSelectFile
 	}
+
+	// Auto-detect profile if none was set via CLI
+	if cfg.Profile == nil {
+		preset := hardware.PresetBalanced
+		if cfg.PresetStr != "" {
+			if p, err := hardware.ParsePreset(cfg.PresetStr); err == nil {
+				preset = p
+			}
+		}
+		profile, _ := hardware.AutoProfileWithPreset(preset)
+		cfg.Profile = profile
+		cfg.Model = profile.Model
+	}
+
 	wd, _ := os.Getwd()
 	return Model{
 		cfg:        cfg,
@@ -257,6 +272,22 @@ func (m Model) updateExplorer(msg tea.KeyMsg) (tea.Model, tea.Cmd) {
 			}
 		}
 		m.cfg.Model = modelNames[(idx+1)%len(modelNames)]
+	case "p":
+		// Cycle through presets: fast → balanced → quality → fast
+		presets := hardware.AllPresets()
+		idx := 0
+		if m.cfg.Profile != nil {
+			for i, p := range presets {
+				if p == m.cfg.Profile.Preset {
+					idx = i
+					break
+				}
+			}
+		}
+		nextPreset := presets[(idx+1)%len(presets)]
+		profile, _ := hardware.AutoProfileWithPreset(nextPreset)
+		m.cfg.Profile = profile
+		m.cfg.Model = profile.Model
 	case "enter", "right":
 		if len(m.files) == 0 {
 			break
@@ -426,10 +457,15 @@ func (m Model) viewExplorer() string {
 	if m.cfg.GPU >= 0 {
 		gpuVal = fmt.Sprintf("GPU %d", m.cfg.GPU)
 	}
+	profileVal := "none"
+	if m.cfg.Profile != nil {
+		profileVal = fmt.Sprintf("%s/%s", m.cfg.Profile.Tier, m.cfg.Profile.Preset)
+	}
 	settings := []struct{ k, v, kb string }{
 		{"Scale", fmt.Sprintf("%d×", m.cfg.Scale), "s"},
 		{"GPU", gpuVal, "g"},
 		{"Model", shortModel(m.cfg.Model), "m"},
+		{"Profile", profileVal, "p"},
 	}
 	settingParts := make([]string, len(settings))
 	for i, s := range settings {
@@ -444,6 +480,7 @@ func (m Model) viewExplorer() string {
 		{"↑↓ / jk", "navigate"},
 		{"Enter", "open / select"},
 		{"⌫ / h", "go up"},
+		{"p", "cycle profile"},
 		{"q", "quit"},
 	}
 	b.WriteString("  " + renderFooterBinds(binds))
@@ -465,12 +502,17 @@ func (m Model) viewPipeline() string {
 	// ── Header ─────────────────────────────────────────────────────────────
 	b.WriteString(titleStyle.Render("  🍌 bananascaler") + "\n")
 
-	// Meta row: gpu | model | scale
+	// Meta row: profile | gpu | model | scale
 	gpuLabel := "CPU · libx265"
 	if m.cfg.GPU >= 0 {
 		gpuLabel = fmt.Sprintf("GPU %d · NVDEC+NVENC", m.cfg.GPU)
 	}
-	meta := renderBadge("GPU", gpuLabel) + "   " +
+	profileLabel := "legacy"
+	if m.cfg.Profile != nil {
+		profileLabel = fmt.Sprintf("%s · %s", m.cfg.Profile.Tier, m.cfg.Profile.Preset)
+	}
+	meta := renderBadge("Profile", profileLabel) + "   " +
+		renderBadge("GPU", gpuLabel) + "   " +
 		renderBadge("Model", shortModel(m.cfg.Model)) + "   " +
 		renderBadge("Scale", fmt.Sprintf("%d×", m.cfg.Scale))
 	b.WriteString("  " + meta + "\n")

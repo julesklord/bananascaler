@@ -130,3 +130,63 @@ Rewrite in Go with idiomatic project layout (`cmd/`, `internal/`). Preserve the 
 
 - **Positive**: Structured error handling, interfaces for extensibility, Bubbletea TUI, proper signal handling, and a path to parallel processing.
 - **Negative**: Requires Go compiler for building. Binary is larger than a script. Bash version retained for reference.
+
+---
+
+### ADR 0007: Hardware profile system with tier-based parameterization
+
+**Status**: Accepted  
+**Date**: 2026-07-16
+
+#### Context
+
+The pipeline used hardcoded parameters (tile size 400, JPEG quality 2, no NVENC preset, x265 medium/CRF22) regardless of GPU capability. This caused SEGV crashes when the profile system (added in v0.4.0) paired heavier Real-ESRGAN models with large tiles on GPUs with insufficient VRAM (e.g., `x4plus-anime` + tile=400 on GTX 1060 6GB).
+
+#### Decision
+
+Introduce a 4-tier × 3-preset profile matrix stored in `hardware/profile.go`:
+
+| Tier | VRAM | Example GPUs |
+|------|------|-------------|
+| low-end | ≤4 GB | GTX 1050 Ti, GTX 1650, RX 570 |
+| mid-range | 4–8 GB | GTX 1060 6GB, RTX 2060, RX 5700 XT |
+| high-end | ≥8 GB | RTX 3080, RTX 4090, RX 6800 XT |
+| unknown | no NVIDIA | CPU-only / iGPU |
+
+Each tier defines 3 presets (fast / balanced / quality) controlling:
+- **Tile size** — VRAM-proportional, model-weight-aware
+- **Model** — lightweight (`animevideov3-x2`) for small VRAM, heavy (`x4plus`) for large
+- **JPEG quality** — intermediate frame compression
+- **NVENC preset** — p1 (fastest) to p7 (best quality)
+- **x265 preset/CRF** — CPU fallback encoding
+- **Max scale** — cap on upscale factor
+
+Tile/model pairing rules (empirical):
+- `animevideov3-x2` (lightweight): safe up to tile 400 on 4GB
+- `x4plus-anime` (medium): safe up to tile 200 on 6GB, tile 400 on 10GB
+- `x4plus` (heavy): safe up to tile 200 on 8GB, tile 512 on 12GB
+
+#### Consequences
+
+- **Positive**: No more OOM crashes from tile/model mismatch. Predictable performance per hardware class. Users can choose fast/balanced/quality without knowing tile sizes.
+- **Negative**: Adds complexity to config resolution. Profile database must be maintained as new models/GPUs emerge.
+
+---
+
+### ADR 0008: Runtime tile safety validation
+
+**Status**: Accepted  
+**Date**: 2026-07-16
+
+#### Context
+
+Even with conservative profiles, users may manually override `--model` or use legacy defaults that pair a heavy model with a large tile on insufficient VRAM.
+
+#### Decision
+
+Add `CheckTileSafety()` in `hardware/profile.go` that compares the active tile size against a VRAM/model lookup table. If the tile exceeds the safe limit, a warning is logged at pipeline startup. This does not block execution (user may know their hardware better than the heuristic).
+
+#### Consequences
+
+- **Positive**: Early warning before a multi-hour pipeline crashes. Users see the warning and can reduce tile size.
+- **Negative**: Heuristic-based — may false-positive on well-cooled overclocked cards or false-negative on cards with shared VRAM.

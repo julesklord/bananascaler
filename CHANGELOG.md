@@ -5,6 +5,29 @@ Format: [keepachangelog.com](https://keepachangelog.com) · Versioning: [semver.
 
 ## [Unreleased]
 
+## [0.4.0] - 2026-07-16
+
+### Added
+
+- **Hardware profile system** (`internal/hardware/profile.go`): Auto-detects GPU tier (low-end / mid-range / high-end) via VRAM query through `nvidia-smi` and applies optimized pipeline parameters (tile size, model, encoding preset, CRF).
+- **3 performance presets**: `--profile fast|balanced|quality` adapts speed/quality tradeoff to detected hardware. Each preset is customized per tier with VRAM-safe tile/model pairings.
+- **`--auto` flag**: Explicitly enable auto-detection and apply the balanced preset. Profiles are also auto-detected when using the TUI without any `--profile` flag.
+- **`bananascaler detect` subcommand**: Scans hardware and displays all available profiles (fast/balanced/quality) adapted to the detected GPU, plus a full reference table of all tier×preset combinations.
+- **Tile-model VRAM safety check** (`CheckTileSafety`): Warns at pipeline start if the tile size may exceed safe limits for the detected VRAM and model, preventing OOM/SEGV crashes.
+- **TUI profile cycling** (`p` key): Cycle between fast → balanced → quality presets in the file explorer, with profile displayed in the settings bar and pipeline header.
+- **Profile-aware NVENC encoding**: NVENC preset (`-preset p1`–`p7`) is now set from the profile instead of relying on driver defaults, giving predictable encode speed/quality across runs.
+
+### Changed
+
+- **Tier boundaries adjusted**: low-end ≤4GB, mid-range 4–8GB, high-end ≥8GB (previously binary NVIDIA/no-NVIDIA detection only).
+- **Tile sizes made VRAM-conservative**: Mid-range balanced uses `tile=300` with lightweight model (matching v0.3.0 behavior); heavier models (`x4plus-anime`, `x4plus`) only used at larger VRAM budgets with reduced tile sizes to prevent crashes.
+- **Config extended** (`config.go`): Added `Profile`, `AutoDetect`, `PresetStr` fields and `ResolveProfile()` method for profile resolution before pipeline execution.
+- **Pipeline parameterized** (`pipeline.go`): Hardcoded tile size (`-t 400`), JPEG quality (`-q:v 2`), NVENC flags, and x265 preset/CRF are now driven by the active profile instead of constants.
+
+### Fixed
+
+- GPU crash (SEGV_MAPERR) when using `realesrgan-x4plus-anime` model with tile size 400 on 6GB GPUs — tile sizes are now scaled to VRAM budget per model weight class.
+
 ## [0.3.0] - 2026-07-16
 
 ### Added

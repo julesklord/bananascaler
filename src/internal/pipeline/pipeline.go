@@ -49,6 +49,27 @@ func (l *StdoutLogger) Step(msg string)  { fmt.Printf("\n%s%s🍌 %s%s\n", cBold
 func (l *StdoutLogger) Err(msg string)   { fmt.Fprintf(os.Stderr, "%s%s[ERR ]%s %s\n", cBold, cRed, cReset, msg) }
 func (l *StdoutLogger) Progress(stage, current, total int) {}
 
+// pipelineParams extracts the effective parameters for this run,
+// preferring profile values when available, falling back to legacy defaults.
+func pipelineParams(cfg *config.Config) (tileSize int, jpegQuality int, nvencPreset string, x265Preset string, x265CRF int) {
+	// Defaults (legacy mode — no profile)
+	tileSize = 400
+	jpegQuality = 2
+	nvencPreset = ""
+	x265Preset = "medium"
+	x265CRF = 22
+
+	if cfg.Profile != nil {
+		p := cfg.Profile
+		tileSize = p.TileSize
+		jpegQuality = p.JPEGQuality
+		nvencPreset = p.NVEncPreset
+		x265Preset = p.X265Preset
+		x265CRF = p.X265CRF
+	}
+	return
+}
+
 // Run executes the full bananascaler pipeline.
 func Run(cfg *config.Config, log Logger) error {
 	if err := cfg.Validate(); err != nil {
@@ -59,16 +80,40 @@ func Run(cfg *config.Config, log Logger) error {
 		return err
 	}
 
+	// Resolve profile parameters
+	tileSize, jpegQuality, nvencPreset, x265Preset, x265CRF := pipelineParams(cfg)
+
 	// Hardware detection
+	gpuInfo := hardware.DetectGPU()
+	hasNVIDIA := gpuInfo.HasNVIDIA && cfg.GPU != -1
+
 	var decFlags, encFlags []string
-	if hardware.HasNVIDIA() && cfg.GPU != -1 {
+	if hasNVIDIA {
 		log.Info("NVIDIA GPU detected — enabling NVDEC hardware-accelerated decoding and NVENC hardware-accelerated encoding.")
 		decFlags = []string{"-hwaccel", "cuda"}
 		encFlags = []string{"-c:v", "hevc_nvenc", "-pix_fmt", "yuv420p"}
+		if nvencPreset != "" {
+			encFlags = append([]string{"-preset", nvencPreset}, encFlags...)
+		}
 	} else {
 		log.Warn("Running in CPU mode — falling back to CPU (libx265).")
 		decFlags = []string{}
-		encFlags = []string{"-c:v", "libx265", "-preset", "medium", "-crf", "22", "-pix_fmt", "yuv420p"}
+		encFlags = []string{"-c:v", "libx265", "-preset", x265Preset, "-crf", fmt.Sprintf("%d", x265CRF), "-pix_fmt", "yuv420p"}
+	}
+
+	// Log profile info
+	if cfg.Profile != nil {
+		log.Info(hardware.ProfileSummary(gpuInfo, cfg.Profile))
+		if cfg.Verbose {
+			log.Info(hardware.ProfileDisplay(gpuInfo, cfg.Profile))
+		}
+	} else {
+		log.Info(fmt.Sprintf("Tile: %d | JPEG: %d | Model: %s (legacy defaults)", tileSize, jpegQuality, cfg.Model))
+	}
+
+	// Tile safety check — warn if tile size may exceed VRAM budget
+	if warning := hardware.CheckTileSafety(gpuInfo, tileSize, cfg.Model); warning != "" {
+		log.Warn(warning)
 	}
 
 	// Media probes
@@ -135,7 +180,7 @@ func Run(cfg *config.Config, log Logger) error {
 	)
 	extractArgs = append(extractArgs,
 		"-i", cfg.Input,
-		"-f", "image2", "-vcodec", "mjpeg", "-q:v", "2",
+		"-f", "image2", "-vcodec", "mjpeg", "-q:v", fmt.Sprintf("%d", jpegQuality),
 		filepath.Join(tempIn, "frame_%05d.jpg"),
 	)
 	if err := runCmd(ctx, cfg.Verbose, "ffmpeg", extractArgs...); err != nil {
@@ -151,7 +196,7 @@ func Run(cfg *config.Config, log Logger) error {
 	// ── Stage 2: Neural upscale ──────────────────────────────────────────
 	log.Step(fmt.Sprintf("[2/3] Neural upscaling (%d×) via Real-ESRGAN...", cfg.Scale))
 	log.Progress(2, 0, frameCount)
-	if err := upscale(ctx, cfg, log, tempIn, tempOut, frameCount); err != nil {
+	if err := upscale(ctx, cfg, log, tempIn, tempOut, frameCount, tileSize); err != nil {
 		return fmt.Errorf("upscaling: %w", err)
 	}
 	log.Progress(2, frameCount, frameCount)
@@ -188,14 +233,14 @@ func Run(cfg *config.Config, log Logger) error {
 }
 
 // upscale runs realesrgan-ncnn-vulkan and reports progress via the logger.
-func upscale(ctx context.Context, cfg *config.Config, log Logger, tempIn, tempOut string, total int) error {
+func upscale(ctx context.Context, cfg *config.Config, log Logger, tempIn, tempOut string, total, tileSize int) error {
 	cmd := exec.CommandContext(ctx, "realesrgan-ncnn-vulkan",
 		"-i", tempIn,
 		"-o", tempOut,
 		"-n", cfg.Model,
 		"-s", fmt.Sprintf("%d", cfg.Scale),
 		"-g", fmt.Sprintf("%d", cfg.GPU),
-		"-t", "400", // Safe tile size to prevent GPU VRAM overflow
+		"-t", fmt.Sprintf("%d", tileSize),
 	)
 	if cfg.Verbose {
 		cmd.Stdout = os.Stdout

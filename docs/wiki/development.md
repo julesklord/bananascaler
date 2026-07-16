@@ -62,13 +62,15 @@ make help
 ```
 src/
 ├── main.go                          # Entrypoint
-├── cmd/root.go                      # Cobra CLI + TTY detection
+├── cmd/root.go                      # Cobra CLI + TTY detection + profile flags
 ├── internal/
-│   ├── config/config.go             # Config struct + validation
-│   ├── hardware/detect.go           # GPU + media probing
+│   ├── config/config.go             # Config struct + validation + profile resolution
+│   ├── hardware/
+│   │   ├── detect.go                # GPU + media probing
+│   │   └── profile.go               # Hardware profiles, tier detection, VRAM safety
 │   ├── pipeline/pipeline.go         # Core 3-stage engine + Logger interface
 │   └── tui/                         # Bubbletea TUI layer
-│       ├── model.go                 # Bubbletea Model (Init/Update/View)
+│       ├── model.go                 # Bubbletea Model (Init/Update/View) + profile cycling
 │       ├── styles.go                # Lipgloss styles
 │       ├── messages.go              # Event types
 │       └── pipeline_adapter.go      # Logger → tea.Msg bridge

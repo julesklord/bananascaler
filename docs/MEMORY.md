@@ -9,6 +9,7 @@ Persistent notes for agents working on **bananascaler**. Update as decisions are
 - Audio remux assumes single audio stream (`-map 1:a`). Multi-audio files may need explicit stream selection.
 - Bubbletea TUI only renders in terminals. When piped or with `--no-tui`, falls back to plain text via `StdoutLogger`.
 - The `--gpu` flag is passed directly to realesrgan-ncnn-vulkan. No validation that the GPU index is actually available on the system.
+- **Tile/Model VRAM safety**: `realesrgan-x4plus` and `realesrgan-x4plus-anime` are heavier than `realesr-animevideov3-x2`. Using them with large tiles (>200) on GPUs with ≤8GB VRAM can cause SEGV crashes in Vulkan memory allocation. Profiles enforce conservative limits; `CheckTileSafety()` warns if manually overridden.
 
 ## Past Decisions
 
@@ -18,6 +19,8 @@ Persistent notes for agents working on **bananascaler**. Update as decisions are
 - **v0.2.0**: Rewrote pipeline in Go with `Logger` interface to decouple output from pipeline logic. This enables Bubbletea TUI, plain text, and future programmatic consumers.
 - **v0.2.0**: Added Bubbletea TUI with Lipgloss styling. TTY auto-detection: terminal → TUI, piped → plain text.
 - **v0.2.0**: `nvidia-smi` probe has 5s timeout to prevent hangs on broken driver states.
+- **v0.3.0**: Added file explorer TUI (`bananascaler tui`), NVDEC-accelerated extraction, VRAM-safe tiling (`-t 400`), system-wide `make install`.
+- **v0.4.0**: Introduced hardware profile system. Tier classification by VRAM: low-end ≤4GB, mid-range 4–8GB, high-end ≥8GB. Three presets per tier (fast/balanced/quality) controlling tile size, model, encoding params. Profiles prevent OOM crashes by pairing heavier models with smaller tiles. `CheckTileSafety()` added as runtime guard.
 
 ## Architecture Notes
 
@@ -25,3 +28,5 @@ Persistent notes for agents working on **bananascaler**. Update as decisions are
 - The TUI adapter (`tui.tuiLogger`) converts `Logger` calls into `PipelineEvent` structs sent through a channel to the Bubbletea model.
 - Pipeline runs in a goroutine when using TUI; the model's `waitForEvent()` cmd polls the event channel.
 - `cmd/root.go` is the decision point: checks `term.IsTerminal()` and `--no-tui` flag to choose between TUI and plain mode.
+- `hardware.profile.go` contains the profile database (4 tiers × 3 presets), GPU detection (`DetectGPU`), tier classification (`classifyTile`), and VRAM safety validation (`CheckTileSafety`).
+- `config.ResolveProfile()` must be called before `Validate()` — it bridges CLI flags (`--profile`, `--auto`) to the profile system.
