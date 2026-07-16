@@ -5,7 +5,8 @@ Specific instructions for the **Gemini CLI / Antigravity** agent. Pay attention.
 ## Working Context
 
 - This project follows the FMG Development Standard. Do not deviate.
-- The sole source file is `src/upscale.sh`. Every change starts there.
+- The project is written in Go with a Bubbletea TUI. Build with `make build`.
+- Source files are in `src/cmd/`, `src/internal/`, and `src/main.go`.
 - Use `grep_search` to navigate before editing. Read before writing.
 - Check `git status` before every commit.
 
@@ -17,5 +18,5 @@ Research → Strategy → Execution (Plan-Act-Validate). Do not skip steps.
 
 - Do not modify files in `docs/` unless documenting a real feature or decision.
 - Keep `CHANGELOG.md` updated with every `feat` or `fix`. No exceptions.
-- Do not add dependencies. This is a Bash script; it stays a Bash script.
+- Pipeline output must go through `pipeline.Logger`. Never add direct `fmt.Printf` to pipeline code.
 - Never force-push to `main`.

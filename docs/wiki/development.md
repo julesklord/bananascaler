@@ -4,23 +4,24 @@
 
 | Tool | Version | Purpose |
 |---|---|---|
-| `bash` | ≥ 4.0 | Script runtime |
-| `ffmpeg` | Any recent | Frame I/O, encoding |
-| `realesrgan-ncnn-vulkan` | v0.2.5.0+ | Neural upscaling |
-| `ffprobe` | Bundled with ffmpeg | Framerate detection |
-| NVIDIA drivers + CUDA | Optional | Hardware acceleration |
+| `go` | ≥ 1.22 | Compiler |
+| `ffmpeg` | Any recent | Frame I/O, encoding (runtime) |
+| `realesrgan-ncnn-vulkan` | v0.2.5.0+ | Neural upscaling (runtime) |
+| `ffprobe` | Bundled with ffmpeg | Framerate detection (runtime) |
+| NVIDIA drivers + CUDA | Optional | Hardware acceleration (runtime) |
 
 ## Local Setup
 
 ```bash
 # 1. Clone
-git clone https://github.com/julesklord/video-upscaler-gpu.git
-cd video-upscaler-gpu
+git clone https://github.com/julesklord/bananascaler.git
+cd bananascaler
 
-# 2. Make script executable
-chmod +x src/upscale.sh
+# 2. Build
+make build
+# Binary ready at ./bin/bananascaler
 
-# 3. Install dependencies (Arch Linux / CachyOS)
+# 3. Install runtime dependencies (Arch Linux / CachyOS)
 sudo pacman -S ffmpeg
 
 # Real-ESRGAN
@@ -34,19 +35,59 @@ ln -sf ~/.local/share/realesrgan/realesrgan-ncnn-vulkan ~/.local/bin/realesrgan-
 ## Useful Commands
 
 ```bash
-# Run with defaults (2× scale, auto output name)
-src/upscale.sh input.mp4
+# Build with vet
+make build
 
-# Run with explicit output and scale
-src/upscale.sh input.mp4 output_4k.mp4 4
+# Install system-wide
+make install
 
-# Background run with log capture
-nohup src/upscale.sh input.mp4 output.mp4 2 > upscale.log 2>&1 &
+# Run tests
+make test
 
-# Verify dependencies
-command -v ffmpeg && command -v realesrgan-ncnn-vulkan && echo "OK"
+# Static analysis
+make vet
+
+# Tidy dependencies
+make tidy
+
+# Clean build artifacts
+make clean
+
+# Show all targets
+make help
 ```
 
-## No Build Step
+## Project Layout
 
-This is a Bash script. There is nothing to compile. `chmod +x` is the only setup.
+```
+src/
+├── main.go                          # Entrypoint
+├── cmd/root.go                      # Cobra CLI + TTY detection
+├── internal/
+│   ├── config/config.go             # Config struct + validation
+│   ├── hardware/detect.go           # GPU + media probing
+│   ├── pipeline/pipeline.go         # Core 3-stage engine + Logger interface
+│   └── tui/                         # Bubbletea TUI layer
+│       ├── model.go                 # Bubbletea Model (Init/Update/View)
+│       ├── styles.go                # Lipgloss styles
+│       ├── messages.go              # Event types
+│       └── pipeline_adapter.go      # Logger → tea.Msg bridge
+├── go.mod
+└── go.sum
+```
+
+## Architecture
+
+The pipeline accepts a `Logger` interface. Two implementations exist:
+- **`StdoutLogger`**: Plain text with ANSI colors (used when piped or `--no-tui`).
+- **`tuiLogger`**: Sends events to the Bubbletea model via a channel (used in terminals).
+
+To add a new consumer, implement `pipeline.Logger` and pass it to `pipeline.Run(cfg, log)`.
+
+## Validation
+
+After changes, verify:
+1. `make build` succeeds (includes `go vet`)
+2. `bananascaler --help` shows all flags
+3. Running with a real video produces correct output
+4. TUI renders in terminal, plain text when piped

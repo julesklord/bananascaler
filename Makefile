@@ -8,9 +8,10 @@ GOFLAGS  := -ldflags="-s -w"
 
 .PHONY: build install clean test tidy help
 
-## build: Compile bananascaler to ./bin/bananascaler
+## build: Compile bananascaler to ./bin/bananascaler (with vet)
 build:
 	@mkdir -p $(BIN_DIR)
+	cd $(SRC_DIR) && go vet ./...
 	cd $(SRC_DIR) && go build $(GOFLAGS) -o ../$(BINARY) .
 	@echo "✅ Binary ready: $(BINARY)"
 

@@ -3,31 +3,31 @@
 package hardware
 
 import (
+	"context"
 	"fmt"
 	"os/exec"
 	"strings"
+	"time"
 )
 
 // CheckDeps verifies all required external binaries are available in PATH.
-// Returns an error on the first missing dependency.
 func CheckDeps() error {
 	for _, dep := range []string{"ffmpeg", "ffprobe", "realesrgan-ncnn-vulkan"} {
 		if _, err := exec.LookPath(dep); err != nil {
-			return fmt.Errorf("required dependency not found in PATH: %q\nInstall it and ensure it is accessible via $PATH", dep)
+			return fmt.Errorf("required dependency not found in PATH: %q. Install it and ensure it is accessible via $PATH", dep)
 		}
 	}
 	return nil
 }
 
-// HasNVIDIA returns true if nvidia-smi is present and exits cleanly,
-// indicating a functioning NVIDIA driver stack.
+// HasNVIDIA returns true if nvidia-smi is present and exits cleanly.
 func HasNVIDIA() bool {
-	return exec.Command("nvidia-smi").Run() == nil
+	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+	defer cancel()
+	return exec.CommandContext(ctx, "nvidia-smi").Run() == nil
 }
 
-// Framerate returns the rational frame rate of the first video stream
-// (e.g. "24000/1001", "30/1"). Returns an error if detection fails or
-// the file contains no video stream.
+// Framerate returns the rational frame rate of the first video stream.
 func Framerate(input string) (string, error) {
 	out, err := exec.Command("ffprobe",
 		"-v", "error",

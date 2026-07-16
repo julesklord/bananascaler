@@ -1,12 +1,20 @@
 # Identity: bananascaler
 
 **Name**: bananascaler  
-**Type**: CLI tool (Bash)  
-**Version**: 0.1.0  
+**Type**: CLI tool (Go + Bubbletea TUI)  
+**Version**: 0.2.0  
 **Author**: julesklord  
 **License**: MIT  
 **Repository**: https://github.com/julesklord/bananascaler  
 
 ## Purpose
 
-A single-file Bash pipeline for GPU-accelerated video super-resolution. `bananascaler.sh` combines Real-ESRGAN (Vulkan) and FFmpeg (NVENC/NVDEC) into an atomic, fault-tolerant processing chain.
+A GPU-accelerated neural video upscaler written in Go. Combines Real-ESRGAN (Vulkan) and FFmpeg (NVENC/NVDEC) into an atomic, fault-tolerant processing chain with an interactive Bubbletea TUI dashboard.
+
+## Stack
+
+- **Language**: Go ≥ 1.22
+- **CLI**: Cobra
+- **TUI**: Bubbletea + Lipgloss
+- **External tools**: ffmpeg, ffprobe, realesrgan-ncnn-vulkan
+- **Build**: Makefile (`make build`)

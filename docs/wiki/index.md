@@ -11,5 +11,6 @@ Technical documentation for **bananascaler**. Start here.
 
 ## Project Summary
 
-Single-file Bash pipeline. `src/bananascaler.sh` is the only source file.
-Dependencies: `ffmpeg`, `realesrgan-ncnn-vulkan`. No build step.
+Go CLI tool with Bubbletea TUI for GPU-accelerated neural video upscaling. Core pipeline in `src/internal/pipeline/`, TUI in `src/internal/tui/`, CLI in `src/cmd/`. Build with `make build`.
+
+Dependencies: `ffmpeg`, `realesrgan-ncnn-vulkan`, Go ≥ 1.22.

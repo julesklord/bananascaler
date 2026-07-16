@@ -5,19 +5,31 @@ Format: [keepachangelog.com](https://keepachangelog.com) · Versioning: [semver.
 
 ## [Unreleased]
 
+## [0.2.0] - 2026-07-16
+
+### Added
+
+- **Interactive TUI**: Full Bubbletea dashboard with live progress bars, stage tracking, and scrollable logs.
+- **Logger interface**: Pipeline output decoupled from `fmt.Printf` via `pipeline.Logger` interface.
+- **`--no-tui` flag**: Explicit opt-out of the TUI for scripting, CI, and `nohup` usage.
+- **`config.Validate()` method**: Centralized input validation in the config package.
+- **`config.DefaultModel` constant**: Single source of truth for the default Real-ESRGAN model name.
+- **TTY auto-detection**: Automatically uses TUI in terminals, plain text when piped.
+- Dependencies: `charmbracelet/bubbletea`, `charmbracelet/lipgloss`, `charmbracelet/bubbles`.
+
 ### Changed
 
-- `src/bananascaler.sh`: major logic overhaul
-  - Add `set -euo pipefail` for strict error propagation
-  - Replace string flags with Bash arrays — eliminates word-splitting on `$DEC_FLAGS`/`$ENC_FLAGS`
-  - Add `cleanup` trap on EXIT/ERR/INT — temp dirs and `.tmp` files always removed
-  - Add `--help` and `--gpu N` flags via proper argument parser loop
-  - Add upfront dependency check (ffmpeg, ffprobe, realesrgan-ncnn-vulkan) before any processing
-  - Add scale factor validation (must be 2, 3, or 4)
-  - Add audio stream detection via `ffprobe` — handles video-only files gracefully
-  - Add framerate validation — fails with clear error instead of silently producing broken output
-  - Add colored output (cyan/green/yellow/red) with TTY detection fallback
-  - Report extracted frame count after Stage 1
+- **Go rewrite**: Core pipeline ported from Bash to Go with idiomatic project layout (`cmd/`, `internal/`).
+- Pipeline `Run()` signature now accepts a `Logger` interface instead of writing to stdout directly.
+- `cmd/root.go`: TTY detection via `golang.org/x/term`, launches Bubbletea or plain fallback.
+- `Makefile`: `go vet` integrated into `build` target.
+
+### Fixed
+
+- `nvidia-smi` probe now has a 5-second timeout to prevent hanging on stuck drivers.
+- `signal.Stop(sigCh)` added to prevent goroutine leak on signal handling.
+- `cmd.Wait()` called after `cmd.Process.Kill()` to avoid race condition with done channel.
+- Error messages in `hardware/detect.go` no longer embed `\n` (idiomatic Go error wrapping).
 
 ## [0.1.0] - 2026-07-16
 
