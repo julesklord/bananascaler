@@ -3,8 +3,10 @@
 package pipeline
 
 import (
+	"bufio"
 	"context"
 	"fmt"
+	"io"
 	"os"
 	"os/exec"
 	"os/signal"
@@ -235,6 +237,8 @@ func Run(cfg *config.Config, log Logger) error {
 }
 
 // upscale runs realesrgan-ncnn-vulkan and reports progress via the logger.
+// Progress is derived from stderr output lines (realesrgan emits per-tile %)
+// combined with periodic output-file counting for accuracy.
 func upscale(ctx context.Context, cfg *config.Config, log Logger, tempIn, tempOut string, total, tileSize int) error {
 	cmd := exec.CommandContext(ctx, "realesrgan-ncnn-vulkan",
 		"-i", tempIn,
@@ -244,38 +248,74 @@ func upscale(ctx context.Context, cfg *config.Config, log Logger, tempIn, tempOu
 		"-g", fmt.Sprintf("%d", cfg.GPU),
 		"-t", fmt.Sprintf("%d", tileSize),
 	)
+
+	stderrPipe, err := cmd.StderrPipe()
+	if err != nil {
+		return fmt.Errorf("stderr pipe: %w", err)
+	}
 	if cfg.Verbose {
 		cmd.Stdout = os.Stdout
-		cmd.Stderr = os.Stderr
 	}
 
 	if err := cmd.Start(); err != nil {
 		return fmt.Errorf("start realesrgan: %w", err)
 	}
 
+	// Parse stderr progress lines in background.
+	// realesrgan emits lines like "50.00%" per tile processed.
+	stderrLines := make(chan string, 64)
+	go func() {
+		scanner := newLineScanner(stderrPipe)
+		for scanner.Scan() {
+			line := scanner.Text()
+			if cfg.Verbose {
+				fmt.Fprintln(os.Stderr, line)
+			}
+			// Pass progress-like lines (containing %) to the main loop
+			if strings.Contains(line, "%") {
+				select {
+				case stderrLines <- line:
+				default:
+				}
+			}
+		}
+		close(stderrLines)
+	}()
+
 	done := make(chan error, 1)
 	go func() { done <- cmd.Wait() }()
 
-	ticker := time.NewTicker(500 * time.Millisecond)
+	var prev int
+	var stderrHits int
+	ticker := time.NewTicker(200 * time.Millisecond)
 	defer ticker.Stop()
 
-	var prev int
 	for {
 		select {
 		case err := <-done:
-			if err == nil {
-				final, _ := countFiles(tempOut, ".png")
-				if final > prev {
-					log.Progress(2, final, total)
-				}
+			// Final count from output files
+			final, _ := countFiles(tempOut, ".png")
+			if final > prev {
+				log.Progress(2, final, total)
 			}
 			return err
 
 		case <-ticker.C:
+			// Prefer file count (accurate); fall back to stderr hits
 			n, _ := countFiles(tempOut, ".png")
 			if n > prev {
 				log.Progress(2, n, total)
 				prev = n
+			} else if stderrHits > 0 && prev == 0 {
+				// Files haven't appeared yet but work is happening
+				log.Progress(2, 0, total)
+			}
+
+		case _, ok := <-stderrLines:
+			if !ok {
+				stderrLines = nil
+			} else {
+				stderrHits++
 			}
 
 		case <-ctx.Done():
@@ -284,6 +324,23 @@ func upscale(ctx context.Context, cfg *config.Config, log Logger, tempIn, tempOu
 			return ctx.Err()
 		}
 	}
+}
+
+// lineScanner wraps bufio.Scanner for reading lines from io.Reader.
+type lineScanner struct {
+	scanner *bufio.Scanner
+}
+
+func newLineScanner(r io.Reader) *lineScanner {
+	return &lineScanner{scanner: bufio.NewScanner(r)}
+}
+
+func (s *lineScanner) Scan() bool {
+	return s.scanner.Scan()
+}
+
+func (s *lineScanner) Text() string {
+	return s.scanner.Text()
 }
 
 func runCmd(ctx context.Context, verbose bool, name string, args ...string) error {
