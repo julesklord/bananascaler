@@ -178,11 +178,13 @@ func classifyTier(info GPUInfo) HardwareTier {
 // Tile size / model VRAM guide (empirical):
 //
 //   realesr-animevideov3-x2  — lightweight: safe up to tile 400 on 4GB
-//   realesrgan-x4plus-anime  — medium:      needs ≤ tile 200 on 6GB, ≤ tile 400 on 10GB
+//   realesrgan-x4plus-anime  — medium:      needs ≤ tile 400 on 10GB
 //   realesrgan-x4plus        — heavy:       needs ≤ tile 256 on 8GB, ≤ tile 512 on 12GB
 //
 // Rule of thumb: heavier model → smaller tile for same VRAM budget.
 // Always keep a 1–2 GB margin for desktop compositor + OS.
+// Mid-range tier (4-8GB) is limited to the lightweight model only —
+// heavier models at 4× scale cause SEGV on 6GB VRAM even at tile=200.
 
 func profileDB() map[HardwareTier]map[PresetLevel]*UpscaleProfile {
 	return map[HardwareTier]map[PresetLevel]*UpscaleProfile{
@@ -237,7 +239,7 @@ func profileDB() map[HardwareTier]map[PresetLevel]*UpscaleProfile {
 				NVEncPreset: "p3",
 				X265Preset:  "fast",
 				X265CRF:     26,
-				MaxScale:    3,
+				MaxScale:    2,
 			},
 			PresetBalanced: {
 				Tier:        TierMidRange,
@@ -249,19 +251,19 @@ func profileDB() map[HardwareTier]map[PresetLevel]*UpscaleProfile {
 				NVEncPreset: "p5",
 				X265Preset:  "medium",
 				X265CRF:     22,
-				MaxScale:    4,
+				MaxScale:    2,
 			},
 			PresetQuality: {
 				Tier:        TierMidRange,
 				Preset:      PresetQuality,
-				Description: "Quality mode for mid-range GPUs. Heavier model, smaller tiles.",
-				TileSize:    200,
-				Model:       "realesrgan-x4plus-anime",
-				JPEGQuality: 2,
+				Description: "Quality mode for mid-range GPUs. Best encode settings, 2× upscale.",
+				TileSize:    300,
+				Model:       "realesr-animevideov3-x2",
+				JPEGQuality: 1,
 				NVEncPreset: "p7",
 				X265Preset:  "slow",
-				X265CRF:     20,
-				MaxScale:    4,
+				X265CRF:     18,
+				MaxScale:    2,
 			},
 		},
 		// ── High-end: ≥8 GB VRAM (RTX 3080, RTX 4090, RX 6800 XT) ────────

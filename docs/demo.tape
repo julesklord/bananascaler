@@ -1,30 +1,20 @@
-# Output path for the animated GIF
+# bananascaler demo — TUI with live progress bars
 Output docs/demo.gif
 
-# Visual Settings
 Set FontSize 14
 Set FontFamily "monospace"
 Set Width 1000
 Set Height 600
 Set Theme "TokyoNight"
 Set Padding 10
+Set Margin 0
 
-# Command to launch the application (hidden from the viewer)
+# Start the TUI (hidden so the viewer only sees the rendered output)
 Hide
-Type "PATH=/tmp:\$PATH ./bin/bananascaler input_cut.mp4 -o output_demo.mp4 --scale 2"
+Type "PATH=/tmp:$PATH ./bin/bananascaler /tmp/demo_video.mp4 -o /tmp/demo_video_out.mp4 --scale 2 --profile balanced"
 Enter
-Sleep 1.5s
+Sleep 1s
 Show
 
-# --- Interaction Sequence ---
-# 1. Wait while frame extraction finishes and upscaling starts
-Sleep 4.5s
-
-# 2. Wait while the upscaling progress bar runs (since it's only 2 seconds of video / 60 frames, it should be quick)
-Sleep 8s
-
-# 3. Wait for the re-encoding stage to finish and show the "Done!" message
-Sleep 4s
-
-# 4. Stay on the completion screen for a moment to let the viewer see it
-Sleep 3s
+# Let the TUI render: extraction (~2s) → upscaling (~6s) → re-encode (~1s)
+Sleep 12s
