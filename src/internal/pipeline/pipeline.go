@@ -208,7 +208,7 @@ func Run(cfg *config.Config, log Logger) error {
 	encArgs := []string{
 		"-y", "-stats", "-loglevel", "warning",
 		"-framerate", framerate,
-		"-i", filepath.Join(tempOut, "frame_%05d.jpg"),
+		"-i", filepath.Join(tempOut, "frame_%05d.png"),
 		"-i", cfg.Input,
 		"-map", "0:v",
 	}
@@ -262,7 +262,7 @@ func upscale(ctx context.Context, cfg *config.Config, log Logger, tempIn, tempOu
 		select {
 		case err := <-done:
 			if err == nil {
-				final, _ := countFiles(tempOut, ".jpg")
+				final, _ := countFiles(tempOut, ".png")
 				if final > prev {
 					log.Progress(2, final, total)
 				}
@@ -270,7 +270,7 @@ func upscale(ctx context.Context, cfg *config.Config, log Logger, tempIn, tempOu
 			return err
 
 		case <-ticker.C:
-			n, _ := countFiles(tempOut, ".jpg")
+			n, _ := countFiles(tempOut, ".png")
 			if n > prev {
 				log.Progress(2, n, total)
 				prev = n
