@@ -1,5 +1,9 @@
 # FMG Standard Gitignore - Hardened
 
+# Go build artifacts
+bin/
+*.exe
+
 # Logs and temporals
 *.log
 *.tmp

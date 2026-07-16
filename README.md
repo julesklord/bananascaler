@@ -1,5 +1,8 @@
 <table border="0">
   <tr>
+    <td width="200" align="center" valign="middle">
+      <img src="docs/assets/logo.jpg" width="180" alt="bananascaler logo">
+    </td>
     <td valign="top">
       <h1>bananascaler</h1>
       <p><strong>GPU-accelerated neural video upscaling via Real-ESRGAN + FFmpeg.</strong><br/>

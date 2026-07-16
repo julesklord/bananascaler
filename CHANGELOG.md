@@ -5,6 +5,20 @@ Format: [keepachangelog.com](https://keepachangelog.com) · Versioning: [semver.
 
 ## [Unreleased]
 
+### Changed
+
+- `src/bananascaler.sh`: major logic overhaul
+  - Add `set -euo pipefail` for strict error propagation
+  - Replace string flags with Bash arrays — eliminates word-splitting on `$DEC_FLAGS`/`$ENC_FLAGS`
+  - Add `cleanup` trap on EXIT/ERR/INT — temp dirs and `.tmp` files always removed
+  - Add `--help` and `--gpu N` flags via proper argument parser loop
+  - Add upfront dependency check (ffmpeg, ffprobe, realesrgan-ncnn-vulkan) before any processing
+  - Add scale factor validation (must be 2, 3, or 4)
+  - Add audio stream detection via `ffprobe` — handles video-only files gracefully
+  - Add framerate validation — fails with clear error instead of silently producing broken output
+  - Add colored output (cyan/green/yellow/red) with TTY detection fallback
+  - Report extracted frame count after Stage 1
+
 ## [0.1.0] - 2026-07-16
 
 ### Added
