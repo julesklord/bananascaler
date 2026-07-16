@@ -51,6 +51,8 @@
 - [License](#license)
 <!--toc:end-->
 
+<img src="docs/demo.gif" alt="bananascaler demo">
+
 ## Overview
 
 **bananascaler** is a Go CLI tool that enhances video resolution using neural super-resolution. It orchestrates `realesrgan-ncnn-vulkan` for per-frame AI upscaling and `ffmpeg` for lossless audio muxing and hardware-accelerated re-encoding.
