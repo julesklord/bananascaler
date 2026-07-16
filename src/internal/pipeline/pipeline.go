@@ -61,12 +61,13 @@ func Run(cfg *config.Config, log Logger) error {
 
 	// Hardware detection
 	var decFlags, encFlags []string
-	if hardware.HasNVIDIA() {
-		log.Info("NVIDIA GPU detected — enabling NVDEC + NVENC.")
+	if hardware.HasNVIDIA() && cfg.GPU != -1 {
+		log.Info("NVIDIA GPU detected — enabling NVDEC hardware-accelerated decoding and NVENC hardware-accelerated encoding.")
 		decFlags = []string{"-hwaccel", "cuda"}
 		encFlags = []string{"-c:v", "hevc_nvenc", "-pix_fmt", "yuv420p"}
 	} else {
-		log.Warn("No NVIDIA GPU — falling back to CPU (libx265).")
+		log.Warn("Running in CPU mode — falling back to CPU (libx265).")
+		decFlags = []string{}
 		encFlags = []string{"-c:v", "libx265", "-preset", "medium", "-crf", "22", "-pix_fmt", "yuv420p"}
 	}
 
@@ -194,6 +195,7 @@ func upscale(ctx context.Context, cfg *config.Config, log Logger, tempIn, tempOu
 		"-n", cfg.Model,
 		"-s", fmt.Sprintf("%d", cfg.Scale),
 		"-g", fmt.Sprintf("%d", cfg.GPU),
+		"-t", "400", // Safe tile size to prevent GPU VRAM overflow
 	)
 	if cfg.Verbose {
 		cmd.Stdout = os.Stdout

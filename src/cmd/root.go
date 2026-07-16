@@ -58,16 +58,16 @@ func Execute() {
 }
 
 func init() {
-	rootCmd.Flags().StringVarP(&cfg.Output, "output", "o", "",
+	rootCmd.PersistentFlags().StringVarP(&cfg.Output, "output", "o", "",
 		"Output file path (default: <input>_upscaled.mp4)")
-	rootCmd.Flags().IntVarP(&cfg.Scale, "scale", "s", 2,
+	rootCmd.PersistentFlags().IntVarP(&cfg.Scale, "scale", "s", 2,
 		"Upscale factor: 2, 3, or 4")
-	rootCmd.Flags().IntVarP(&cfg.GPU, "gpu", "g", 0,
+	rootCmd.PersistentFlags().IntVarP(&cfg.GPU, "gpu", "g", 0,
 		"GPU device index for Real-ESRGAN (-1 = CPU)")
-	rootCmd.Flags().StringVarP(&cfg.Model, "model", "m", config.DefaultModel,
+	rootCmd.PersistentFlags().StringVarP(&cfg.Model, "model", "m", config.DefaultModel,
 		"Real-ESRGAN model name")
-	rootCmd.Flags().BoolVarP(&cfg.Verbose, "verbose", "v", false,
+	rootCmd.PersistentFlags().BoolVarP(&cfg.Verbose, "verbose", "v", false,
 		"Forward ffmpeg/realesrgan output to terminal")
-	rootCmd.Flags().BoolVar(&cfg.NoTUI, "no-tui", false,
+	rootCmd.PersistentFlags().BoolVar(&cfg.NoTUI, "no-tui", false,
 		"Disable interactive TUI (use plain text output)")
 }

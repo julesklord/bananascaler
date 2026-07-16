@@ -10,7 +10,7 @@
       <p>
         <a href="LICENSE"><img src="https://img.shields.io/badge/license-MIT-blue?style=plastic" alt="License MIT"></a>
         <img src="https://img.shields.io/badge/Built%20With-Go-00ADD8?style=plastic" alt="Built with Go">
-        <img src="https://img.shields.io/badge/version-0.2.0-informational?style=plastic" alt="Version 0.2.0">
+        <img src="https://img.shields.io/badge/version-0.3.0-informational?style=plastic" alt="Version 0.3.0">
         <img src="https://img.shields.io/badge/GPU-NVIDIA%20NVENC%2FNVDEC-76B900?style=plastic" alt="NVIDIA GPU">
         <img src="https://img.shields.io/badge/AI-Real--ESRGAN-orange?style=plastic" alt="Real-ESRGAN">
         <img src="https://img.shields.io/badge/TUI-Bubbletea-FF69B4?style=plastic" alt="Bubbletea TUI">
@@ -36,6 +36,8 @@
 - [Processing Pipeline](#processing-pipeline)
   - [Key Engineering Decisions](#key-engineering-decisions)
 - [Usage](#usage)
+  - [CLI Mode](#cli-mode)
+  - [TUI File-Selection Mode](#tui-file-selection-mode)
   - [Flags](#flags)
   - [Examples](#examples)
 - [TUI Dashboard](#tui-dashboard)
@@ -49,6 +51,8 @@
 **bananascaler** is a Go CLI tool that enhances video resolution using neural super-resolution. It orchestrates `realesrgan-ncnn-vulkan` for per-frame AI upscaling and `ffmpeg` for lossless audio muxing and hardware-accelerated re-encoding.
 
 When run in a terminal, it renders an interactive **Bubbletea TUI** with live progress bars, stage tracking, and a scrollable log. When piped or run with `--no-tui`, it falls back to plain text output suitable for scripting and CI.
+
+Since **v0.3.0**, running `bananascaler tui` opens an interactive file-browser so you can pick any video file in the current directory and start upscaling — no arguments required.
 
 ---
 
@@ -91,8 +95,11 @@ make build
 ### System-wide Install
 
 ```bash
-make install
-# Available as bananascaler in $GOPATH/bin
+sudo make install
+# Installs to /usr/local/bin/bananascaler
+
+# Custom prefix:
+sudo PREFIX=/usr make install   # → /usr/bin/bananascaler
 ```
 
 ### Dependencies (Arch Linux / CachyOS)
@@ -114,7 +121,9 @@ ln -sf ~/.local/share/realesrgan/realesrgan-ncnn-vulkan ~/.local/bin/realesrgan-
 
 ## Key Features
 
-*   **Interactive TUI**: Live Bubbletea dashboard with progress bars, stage tracking, and scrollable logs. Auto-detected in terminals; falls back to plain text when piped.
+*   **Interactive TUI with file browser**: `bananascaler tui` opens a keyboard-navigable file picker in the current directory. Select a video and press Enter — the pipeline launches immediately inside the same TUI.
+*   **Full GPU pipeline**: NVDEC hardware-accelerated decoding in frame extraction + Vulkan-accelerated Real-ESRGAN upscaling + NVENC hardware-accelerated encoding. All three stages run on the GPU.
+*   **VRAM-safe tiling**: Real-ESRGAN uses tile-based processing (`-t 400`) to prevent out-of-memory crashes on high-resolution or 4× scale runs.
 *   **Neural Super-Resolution**: Frame-level upscaling via `realesr-animevideov3-x2`, supporting 2×, 3×, and 4× scale factors.
 *   **Automatic GPU Detection**: Detects NVIDIA via `nvidia-smi` at runtime; activates NVDEC + NVENC or falls back to `libx265`.
 *   **Atomic Output**: Encodes to a `.tmp` file; renames to final destination only on success. Interrupted runs leave no corrupt files.
@@ -133,6 +142,9 @@ The pipeline is a sequential 3-stage process coordinated by a Go CLI. External t
 ``` 
 graph TD 
     User([User]) -->|"bananascaler input.mp4"| CLI(Cobra CLI)
+    User -->|"bananascaler tui"| TUICmd(tui subcommand)
+    TUICmd --> Explorer[File Explorer TUI]
+    Explorer -->|"Enter on video"| Pipeline
 
     subgraph bananascaler
         CLI -->|"TTY detected?"| TTY{Terminal?}
@@ -143,15 +155,15 @@ graph TD
 
         subgraph Pipeline
             Pipeline -->|"Hardware detection"| Detect[nvidia-smi]
-            Detect --> Stage1[Stage 1: FFmpeg Extract]
-            Stage1 --> Stage2[Stage 2: Real-ESRGAN Upscale]
-            Stage2 --> Stage3[Stage 3: FFmpeg Re-encode]
+            Detect --> Stage1[Stage 1: FFmpeg Extract\nNVDEC hw-accel]
+            Stage1 --> Stage2[Stage 2: Real-ESRGAN\nVulkan + tile safety]
+            Stage2 --> Stage3[Stage 3: FFmpeg Re-encode\nNVENC hw-accel]
             Stage3 --> Atomic[Atomic Rename]
         end
     end
 
-    Stage1 -.->|"NVDEC"| GPU[(NVIDIA GPU)]
-    Stage3 -.->|"NVENC / libx265"| GPU
+    Stage1 -..->|"NVDEC"| GPU[(NVIDIA GPU)]
+    Stage3 -..->|"NVENC / libx265"| GPU
     Stage2 -->|"Vulkan compute"| GPU
     Atomic --> Output[(output.mp4)]
 ```
@@ -159,8 +171,9 @@ graph TD
 ### Core Components
 
 - **`cmd/root.go`**: Cobra CLI definition. Detects TTY, launches Bubbletea or plain logger.
+- **`cmd/tui.go`**: `tui` subcommand — launches the file-selection TUI in the working directory.
 - **`internal/pipeline/pipeline.go`**: Core engine. Orchestrates the 3-stage processing chain via a `Logger` interface.
-- **`internal/tui/`**: Bubbletea TUI layer — model, styles, messages, and pipeline adapter.
+- **`internal/tui/`**: Bubbletea TUI layer — model (explorer + pipeline states), design system (styles), messages, and pipeline adapter.
 - **`internal/hardware/detect.go`**: GPU detection and media probing via external tools.
 - **`internal/config/config.go`**: Configuration struct with validation.
 
@@ -175,7 +188,7 @@ stateDiagram-v2
     [*] --> Initialized : bananascaler called
     Initialized --> HardwareCheck : validate input + deps
     HardwareCheck --> ExtractFrames : nvidia-smi probe complete
-    ExtractFrames --> UpscaleFrames : ffmpeg extraction success
+    ExtractFrames --> UpscaleFrames : ffmpeg NVDEC extraction success
     UpscaleFrames --> ReEncodeVideo : Real-ESRGAN success
 
     state ReEncodeVideo {
@@ -196,6 +209,8 @@ stateDiagram-v2
 
 ### Key Engineering Decisions
 
+- **NVDEC hardware decoding in extraction**: `-hwaccel cuda` passed to FFmpeg in stage 1 so the GPU handles video demux and decode, reducing CPU load and extraction time.
+- **Tile-based VRAM protection**: `realesrgan-ncnn-vulkan -t 400` subdivides frames into 400×400 blocks before Vulkan dispatch. Prevents driver-level OOM kills on 1080p+ inputs with 4× scale.
 - **JPEG for intermediate frames, not PNG**: Reduces temp disk usage by ~60–70% and lowers I/O pressure on NVMe.
 - **Vulkan backend (ncnn) over CUDA-only**: `realesrgan-ncnn-vulkan` works on any GPU vendor via Vulkan, making the tool portable.
 - **Atomic write (`output.tmp` → rename)**: A `SIGKILL` mid-encode will leave a `.tmp` artifact, never a silently corrupt `.mp4`.
@@ -205,9 +220,24 @@ stateDiagram-v2
 
 ## Usage
 
+### CLI Mode
+
+Pass a video file directly — flags are optional:
+
 ```bash
 bananascaler <input> [flags]
 ```
+
+### TUI File-Selection Mode
+
+Launch the interactive file browser in the current directory:
+
+```bash
+bananascaler tui [flags]
+```
+
+Navigate with `↑`/`↓` (or `j`/`k`), enter directories with `Enter` or `→`, go up with `Backspace` or `h`.
+Cycle settings before launching: `s` (scale), `g` (GPU), `m` (model). Press `Enter` on a video file to start.
 
 ### Flags
 
@@ -220,7 +250,15 @@ bananascaler <input> [flags]
 | `--verbose` | `-v` | `false` | Forward ffmpeg/realesrgan output |
 | `--no-tui` | | `false` | Disable interactive TUI |
 
+All flags are available on both the root command and the `tui` subcommand.
+
 ### Examples
+
+**Interactive file picker (v0.3.0+):**
+```bash
+bananascaler tui
+bananascaler tui --scale 4 --gpu 0
+```
 
 **Auto-name output, default 2× scale (with TUI):**
 ```bash
@@ -246,30 +284,48 @@ nohup bananascaler input.mp4 --output out.mp4 --scale 4 --no-tui > run.log 2>&1 
 
 ## TUI Dashboard
 
-When run in a terminal, bananascaler renders an interactive dashboard:
+### File Selection (v0.3.0+)
 
 ```
-┌─────────────────────────────────────────────────────────┐
-│  🍌 bananascaler                                         │
-│                                                          │
-│  GPU device 0 (NVDEC+NVENC)  │  Model: realesr-animevideov3-x2  │  Scale: 2×
-│  In: movie.mp4  │  Out: movie_upscaled.mp4               │
-├─────────────────────────────────────────────────────────┤
-│                                                          │
-│  [✓] Stage 1/3 — Frame Extraction                        │
-│      ████████████████████████████████████  12847/12847   │
-│                                                          │
-│  [▶] Stage 2/3 — Neural Upscaling                        │
-│      ██████████████░░░░░░░░░░░░░░░░░░░░░  4127/12847    │
-│                                                          │
-│  [·] Stage 3/3 — Re-encode + Mux                         │
-│      waiting...                                          │
-├─────────────────────────────────────────────────────────┤
-│  [INFO] NVIDIA GPU detected — enabling NVDEC + NVENC     │
-│  [ OK ] 12847 frames extracted.                          │
-├─────────────────────────────────────────────────────────┤
-│  q: cancel  │  v: toggle verbose                         │
-└─────────────────────────────────────────────────────────┘
+  🍌 bananascaler  file selector
+  /home/user/Videos
+──────────────────────────────────────────────────
+    archive/
+    exports/
+  ▌ movie.mp4                                    ▌  ← selected (gold highlight)
+    clip.mkv
+    poster.jpg
+
+──────────────────────────────────────────────────
+  Scale: 2×  [s]   │   GPU: GPU 0  [g]   │   Model: animevideov3-x2  [m]
+
+  ↑↓ / jk navigate  ·  Enter open / select  ·  ⌫ / h go up  ·  q quit
+```
+
+### Pipeline Progress
+
+```
+  🍌 bananascaler
+  GPU: GPU 0 · NVDEC+NVENC   Model: animevideov3-x2   Scale: 2×
+  in  movie.mp4
+  out movie_upscaled.mp4
+──────────────────────────────────────────────────
+
+  ✔  1/3  Frame Extraction
+       ████████████████████████████████████████  100%  12847/12847
+
+  ▶  2/3  Neural Upscaling
+       ████████████████▓░░░░░░░░░░░░░░░░░░░░░░   34%  4412/12847
+
+  ○  3/3  Re-encode + Mux
+       ──────────────────────────────────────  waiting
+
+──────────────────────────────────────────────────
+  ✔ ok   NVIDIA GPU detected — NVDEC+NVENC enabled
+  ◆ step [2/3] Neural upscaling (2×) via Real-ESRGAN...
+  · info 4412 frames upscaled
+──────────────────────────────────────────────────
+  q / Esc cancel  ·  v verbose
 ```
 
 **Keybinds**: `q`/`Ctrl+C`/`Esc` to cancel, `v` to toggle verbose output.
@@ -282,7 +338,7 @@ When run in a terminal, bananascaler renders an interactive dashboard:
 |---|---|---|
 | **v0.1.0** | ✅ | Core pipeline: extract → upscale → re-encode → atomic output (Bash) |
 | **v0.2.0** | ✅ | Go rewrite + Bubbletea TUI + Logger interface + quality fixes |
-| **v0.3.0** | ⏳ | Model selection with validation + GPU index validation |
+| **v0.3.0** | ✅ | `bananascaler tui` file picker · Full GPU pipeline (NVDEC+NVENC) · VRAM-safe tiling · Premium TUI redesign · System-wide `make install` |
 | **v0.4.0** | ⏳ | Parallel frame extraction/upscaling for multi-GPU setups |
 
 ---

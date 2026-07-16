@@ -5,6 +5,35 @@ Format: [keepachangelog.com](https://keepachangelog.com) · Versioning: [semver.
 
 ## [Unreleased]
 
+## [0.3.0] - 2026-07-16
+
+### Added
+
+- **`bananascaler tui` subcommand**: Launches an interactive file-selection TUI in the current working directory, allowing users to browse folders, pick a video, and start upscaling — all without providing CLI arguments.
+- **File explorer view**: Full keyboard-navigable file browser (`↑/↓`, `j/k`, `Enter`, `Backspace/h`) with visual distinction between directories, video files, and other files.
+- **In-TUI settings**: Cycle scale factor (`s`), GPU index (`g`), and model (`m`) interactively before launching the pipeline from the explorer.
+- **GPU-accelerated frame extraction**: Added `-hwaccel cuda` to the FFmpeg extraction stage so NVDEC decodes input frames on the GPU rather than the CPU.
+- **Tile-based VRAM safety** for Real-ESRGAN: Added `-t 400` flag to `realesrgan-ncnn-vulkan` to prevent out-of-memory crashes on high-resolution or high-scale-factor runs.
+- **`src/Makefile`**: Secondary Makefile inside `src/` for running `make build/install/test/tidy/clean` directly from the Go module directory.
+- **System-wide installation via `make install`**: Both Makefiles now use `install(1)` with `PREFIX ?= /usr/local`, placing the binary in `/usr/local/bin/bananascaler` when invoked with `sudo`.
+
+### Changed
+
+- **Redesigned TUI design system** (`internal/tui/styles.go`, `model.go`):
+  - New 9-color curated palette: warm gold `#F5C542`, mint green `#3DD68C`, calm blue `#5B9CF6`, amber `#FBBF24`, lavender `#A78BFA`, and a full blue-gray scale for hierarchy.
+  - Premium progress bar with leading-edge glow (filled body `█` + amber lead `▓` + empty `░`); completes in green.
+  - Stage rows show `n/3 — Name`, status icon, progress bar, and `% n/total` in a compact single-width layout.
+  - Log entries now use icon prefixes: `✔ ok`, `⚠ warn`, `✖ err`, `◆ step`, `· info`.
+  - Completion and error banners rendered in rounded-border boxes (`╭─╮`) colored green or red.
+  - Footer keybind row: key in gold + description in gray, separated by `·` dividers — consistent across both views.
+  - File-list selection rendered as full-width highlighted block (dark background + gold text) instead of a simple `❯` prefix.
+- **PersistentFlags** in `cmd/root.go`: All flags (`--output`, `--scale`, `--gpu`, `--model`, `--verbose`, `--no-tui`) promoted to `PersistentFlags()` so they are inherited by the `tui` subcommand.
+- **Conditional pipeline start** in `RunTUI`: The background goroutine is only launched if `cfg.Input != ""`, deferring launch to file selection when in explorer mode.
+
+### Fixed
+
+- `make install` previously used `go install` (installed to `$GOPATH/bin`); now correctly installs system-wide via the standard `install(1)` utility.
+
 ## [0.2.0] - 2026-07-16
 
 ### Added

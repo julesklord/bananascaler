@@ -81,12 +81,14 @@ func parseStep(msg string) (int, string) {
 func RunTUI(cfg *config.Config) error {
 	m := NewModel(cfg)
 
-	// Start pipeline in background
-	go func() {
-		log := &tuiLogger{events: m.Events()}
-		err := pipeline.Run(cfg, log)
-		m.SetDone(err)
-	}()
+	// Start pipeline in background only if input is already selected (CLI mode)
+	if cfg.Input != "" {
+		go func() {
+			log := &tuiLogger{events: m.Events()}
+			err := pipeline.Run(cfg, log)
+			m.SetDone(err)
+		}()
+	}
 
 	p := tea.NewProgram(m, tea.WithAltScreen())
 	if _, err := p.Run(); err != nil {

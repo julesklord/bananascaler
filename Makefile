@@ -5,6 +5,7 @@ BIN_DIR  := bin
 BINARY   := $(BIN_DIR)/bananascaler
 SRC_DIR  := src
 GOFLAGS  := -ldflags="-s -w"
+PREFIX   ?= /usr/local
 
 .PHONY: build install clean test tidy help
 
@@ -15,10 +16,11 @@ build:
 	cd $(SRC_DIR) && go build $(GOFLAGS) -o ../$(BINARY) .
 	@echo "✅ Binary ready: $(BINARY)"
 
-## install: Install bananascaler to GOPATH/bin (available system-wide)
-install:
-	cd $(SRC_DIR) && go install $(GOFLAGS) .
-	@echo "✅ Installed to $$(go env GOPATH)/bin/bananascaler"
+## install: Install bananascaler system-wide (e.g. /usr/local/bin)
+install: build
+	install -d $(DESTDIR)$(PREFIX)/bin
+	install -m 0755 $(BINARY) $(DESTDIR)$(PREFIX)/bin/bananascaler
+	@echo "✅ Installed system-wide to $(DESTDIR)$(PREFIX)/bin/bananascaler"
 
 ## tidy: Sync go.mod and download dependencies (requires internet)
 tidy:
