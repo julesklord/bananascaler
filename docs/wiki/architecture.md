@@ -1,192 +1,125 @@
-# Architecture and Decisions (ADRs) — bananascaler
+# Advanced Architecture and Engineering Design — bananascaler
 
-Design decisions for **bananascaler**.
-
-## System Overview
-
-A 3-stage sequential pipeline coordinated by a Go CLI with a Bubbletea TUI:
-1. **Extract** — FFmpeg decodes source video to JPEG frames.
-2. **Upscale** — Real-ESRGAN (ncnn-vulkan) applies neural super-resolution per frame.
-3. **Re-encode** — FFmpeg re-assembles frames + muxes original audio → atomic rename.
+This document details the internal design, concurrency patterns, and technical decisions behind **bananascaler**.
 
 ---
 
-## ADRs
+## 1. System Overview
 
-### ADR 0001: JPEG for intermediate frames
+**bananascaler** is built as a coordinator orchestrating high-performance media binaries. Instead of doing CPU-heavy frame operations in Go, the application delegates decoding, upscaling, and encoding to specialized C/C++ utilities (`ffmpeg` and `realesrgan-ncnn-vulkan`), while the Go runtime manages state, concurrency, safety guarantees, and the user interface.
 
-**Status**: Accepted  
-**Date**: 2026-07-16
-
-#### Context
-
-Frame extraction produces thousands of intermediate images. PNG (lossless) is the naive choice but generates 3–5× more disk I/O than JPEG.
-
-#### Decision
-
-Use JPEG at `-q:v 2` (near-lossless). Real-ESRGAN input quality at this level introduces no perceptible difference in the upscaled output.
-
-#### Consequences
-
-- **Positive**: ~60–70% reduction in `/tmp/` disk usage; lower I/O pressure on NVMe storage.
-- **Negative**: Technically lossy intermediate. Unacceptable for archival workflows requiring pixel-perfect round-trips.
-
----
-
-### ADR 0002: ncnn-Vulkan backend over CUDA-only
-
-**Status**: Accepted  
-**Date**: 2026-07-16
-
-#### Context
-
-Real-ESRGAN offers both a CUDA-only binary and an ncnn-Vulkan binary. CUDA requires NVIDIA; Vulkan runs on NVIDIA, AMD, and Intel Arc.
-
-#### Decision
-
-Use `realesrgan-ncnn-vulkan`. GPU vendor portability outweighs any CUDA-specific optimizations.
-
-#### Consequences
-
-- **Positive**: Works on any Vulkan-capable GPU, including iGPUs.
-- **Negative**: ncnn may be slightly slower than native CUDA on high-end NVIDIA cards.
+```
+                  +-----------------------------------+
+                  |        bananascaler (Go)          |
+                  |                                   |
+                  |  +-------------+  +------------+  |
+                  |  | Bubbletea   |  | Pipeline   |  |
+                  |  | TUI Loop    |  | Goroutine  |  |
+                  |  +------+------+  +-----+------+  |
+                  +---------|---------------|---------+
+                            |               |
+             Render / Event |               | Spawn / Monitor
+                            v               v
+                     +------------+   +-----------+
+                     |  Terminal  |   | FFmpeg /  |
+                     |  Display   |   | Real-ESRG |
+                     +------------+   +-----------+
+```
 
 ---
 
-### ADR 0003: Atomic output via `.tmp` rename
+## 2. Concurrency and Event Architecture
 
-**Status**: Accepted  
-**Date**: 2026-07-16
+To keep the UI responsive during resource-intensive upscaling, **bananascaler** decouples TUI rendering from pipeline execution using Go's concurrency primitives.
 
-#### Context
+### Concurrency Flow Diagram
+```mermaid
+sequenceDiagram
+    participant T as TUI Main Thread
+    participant M as Bubbletea Model
+    participant P as Pipeline Goroutine
+    participant O as External Binaries (FFmpeg/ESRGAN)
 
-A multi-hour encode interrupted at 99% leaves a corrupt file that passes size checks and silently deceives the user.
+    Note over T,M: stateSelectFile active
+    User->>M: Press Enter on video file
+    M->>P: Spawn pipeline goroutine
+    Note over M: Transition to statePipeline
+    loop Running stages
+        P->>O: Spawn process (exec.CommandContext)
+        loop Watch progress
+            O-->>P: Generate frames/logs
+            P-->>M: Send PipelineEvent (via channel)
+            Note over T,M: Model updates state & triggers redraw
+        end
+        O-->>P: Process exits 0
+    end
+    P-->>M: Set Done (error/nil)
+    Note over M: Finished state rendered
+```
 
-#### Decision
-
-Encode to `output.mp4.tmp`. Rename to `output.mp4` only on exit code 0.
-
-#### Consequences
-
-- **Positive**: Interrupted runs always leave either a valid output or a clearly-named `.tmp` artifact.
-- **Negative**: Requires disk space for both `.tmp` and final file simultaneously during the rename moment (negligible: rename is instantaneous on same filesystem).
-
----
-
-### ADR 0004: Logger interface for pipeline decoupling
-
-**Status**: Accepted  
-**Date**: 2026-07-16
-
-#### Context
-
-The pipeline needs to display progress and log messages, but the output method varies: interactive TUI in terminals, plain text when piped, and potentially programmatic consumers in the future.
-
-#### Decision
-
-Define a `pipeline.Logger` interface with methods `Info`, `OK`, `Warn`, `Step`, `Err`, and `Progress`. The pipeline accepts this interface in `Run()` and never writes to stdout/stderr directly.
-
-#### Consequences
-
-- **Positive**: Pipeline is fully decoupled from output. TUI, plain text, or test mocks can all consume pipeline events.
-- **Negative**: Slight overhead from interface method calls (negligible for this use case).
+### Event Dispatch Mechanism
+- **Pipeline Goroutine**: Runs the 3-stage process. As it progresses, it sends `PipelineEvent` structs containing logs, active stages, and progress ratios through an unbuffered channel `events chan PipelineEvent`.
+- **TUI Update Loop**: Bubletea's `Update` function listens to the channel using a recurring `tea.Cmd`. When an event arrives, it updates the progress bar ratios, appends logs, and issues a new `waitForEvent` command.
 
 ---
 
-### ADR 0005: Bubbletea TUI with auto-detection
+## 3. The 3-Stage Processing Pipeline
 
-**Status**: Accepted  
-**Date**: 2026-07-16
+```mermaid
+graph TD
+    A[Input Video] -->|Stage 1: FFmpeg decodes via NVDEC| B(tempIn/frame_*.jpg)
+    B -->|Stage 2: Real-ESRGAN Vulkan + Tiling| C(tempOut/frame_*.png)
+    C & A -->|Stage 3: FFmpeg NVENC + Audio Copy| D[output.mp4.tmp]
+    D -->|Atomic Rename| E[Final output.mp4]
+```
 
-#### Context
+### Stage 1: Frame Extraction (GPU Decoded)
+- **Tool**: `ffmpeg`
+- **GPU Acceleration**: Utilizes `-hwaccel cuda` (NVDEC) to decode the input stream directly inside GPU VRAM, falling back to CPU decoding if unavailable.
+- **Format**: Decodes frames and encodes them as MJPEG JPEGs (`-vcodec mjpeg -q:v 2`) into the input directory.
+- **Optimizations**:
+  - Near-lossless JPEG compression (`-q:v 2`) is chosen over PNG to reduce temp directory disk writes and lower I/O pressure by ~70% on NVMe SSDs.
+  - VRAM-to-system memory copies are handled automatically by CUDA.
 
-A 3-stage pipeline running for minutes to hours needs real-time feedback. A static progress bar is insufficient for showing multiple stages, logs, and system info simultaneously.
+### Stage 2: Neural Upscaling (Vulkan Compute)
+- **Tool**: `realesrgan-ncnn-vulkan`
+- **GPU Acceleration**: Dispatched to GPU Vulkan compute kernels.
+- **Tiling Safety**:
+  - To prevent Vulkan driver memory allocation crashes (OOM/SEGV), the frames are subdivided into tiles (configured to a safe `-t 400` default or dynamically parsed from profiles).
+  - Neural models (`realesr-animevideov3-x2`, `realesrgan-x4plus`) apply super-resolution on tiles and reconstruct them seamlessly.
+  - Outputs lossless `.png` frames to the output directory.
 
-#### Decision
-
-Use Charm's Bubbletea framework for an interactive TUI dashboard. Auto-detect TTY via `term.IsTerminal()`: if stdout is a terminal, launch TUI; otherwise fall back to plain text. Add `--no-tui` flag for explicit opt-out.
-
-#### Consequences
-
-- **Positive**: Rich, real-time dashboard with stage tracking, progress bars, and scrollable logs. Graceful degradation to plain text.
-- **Negative**: Adds ~800KB to binary size (5.0MB total). Requires terminal for full experience.
-
----
-
-### ADR 0006: Go rewrite from Bash
-
-**Status**: Accepted  
-**Date**: 2026-07-16
-
-#### Context
-
-The original Bash script (`bananascaler.sh`) works but lacks structured error handling, progress reporting, and a TUI. Bash limitations make it difficult to add features like parallel processing or programmatic APIs.
-
-#### Decision
-
-Rewrite in Go with idiomatic project layout (`cmd/`, `internal/`). Preserve the same pipeline logic and engineering patterns (atomic output, session isolation, hardware detection).
-
-#### Consequences
-
-- **Positive**: Structured error handling, interfaces for extensibility, Bubbletea TUI, proper signal handling, and a path to parallel processing.
-- **Negative**: Requires Go compiler for building. Binary is larger than a script. Bash version retained for reference.
+### Stage 3: Re-encoding and Audio Muxing (GPU Encoded)
+- **Tool**: `ffmpeg`
+- **Format**: Reads PNG frames from the output directory using the `-framerate` detected during initialization.
+- **Audio Copy**: Maps and remuxes the audio track from the original input file without re-encoding (`-c:a copy`) to preserve quality.
+- **GPU Acceleration**: Encodes using H.265/HEVC hardware acceleration (`hevc_nvenc`), falling back to CPU (`libx265`) if unavailable.
+- **Output**: Writes the stream into an atomic target file (`output.mp4.tmp`).
 
 ---
 
-### ADR 0007: Hardware profile system with tier-based parameterization
+## 4. Reliability and Safety Guarantees
 
-**Status**: Accepted  
-**Date**: 2026-07-16
+### Session Isolation
+Parallel instances of **bananascaler** do not interfere with each other. Each run generates a unique session ID based on Unix timestamps and the host Process ID (PID):
+```go
+sessionID := fmt.Sprintf("bananascaler_%d_%d", time.Now().Unix(), os.Getpid())
+tempIn := filepath.Join(os.TempDir(), sessionID+"_in")
+tempOut := filepath.Join(os.TempDir(), sessionID+"_out")
+```
+This isolates frame directories completely.
 
-#### Context
+### Atomic Write Pattern
+To prevent leaving corrupt files if a run is interrupted:
+1. All writing occurs in `output.mp4.tmp`.
+2. Only when all stages return exit code `0` is the file atomically swapped to the target location:
+   ```go
+   os.Rename(tmpOutput, cfg.Output)
+   ```
+3. Temporary folders are immediately purged in a deferred cleanup hook.
 
-The pipeline used hardcoded parameters (tile size 400, JPEG quality 2, no NVENC preset, x265 medium/CRF22) regardless of GPU capability. This caused SEGV crashes when the profile system (added in v0.4.0) paired heavier Real-ESRGAN models with large tiles on GPUs with insufficient VRAM (e.g., `x4plus-anime` + tile=400 on GTX 1060 6GB).
-
-#### Decision
-
-Introduce a 4-tier × 3-preset profile matrix stored in `hardware/profile.go`:
-
-| Tier | VRAM | Example GPUs |
-|------|------|-------------|
-| low-end | ≤4 GB | GTX 1050 Ti, GTX 1650, RX 570 |
-| mid-range | 4–8 GB | GTX 1060 6GB, RTX 2060, RX 5700 XT |
-| high-end | ≥8 GB | RTX 3080, RTX 4090, RX 6800 XT |
-| unknown | no NVIDIA | CPU-only / iGPU |
-
-Each tier defines 3 presets (fast / balanced / quality) controlling:
-- **Tile size** — VRAM-proportional, model-weight-aware
-- **Model** — lightweight (`animevideov3-x2`) for small VRAM, heavy (`x4plus`) for large
-- **JPEG quality** — intermediate frame compression
-- **NVENC preset** — p1 (fastest) to p7 (best quality)
-- **x265 preset/CRF** — CPU fallback encoding
-- **Max scale** — cap on upscale factor
-
-Tile/model pairing rules (empirical):
-- `animevideov3-x2` (lightweight): safe up to tile 400 on 4GB
-- `x4plus-anime` (medium): safe up to tile 200 on 6GB, tile 400 on 10GB
-- `x4plus` (heavy): safe up to tile 200 on 8GB, tile 512 on 12GB
-
-#### Consequences
-
-- **Positive**: No more OOM crashes from tile/model mismatch. Predictable performance per hardware class. Users can choose fast/balanced/quality without knowing tile sizes.
-- **Negative**: Adds complexity to config resolution. Profile database must be maintained as new models/GPUs emerge.
-
----
-
-### ADR 0008: Runtime tile safety validation
-
-**Status**: Accepted  
-**Date**: 2026-07-16
-
-#### Context
-
-Even with conservative profiles, users may manually override `--model` or use legacy defaults that pair a heavy model with a large tile on insufficient VRAM.
-
-#### Decision
-
-Add `CheckTileSafety()` in `hardware/profile.go` that compares the active tile size against a VRAM/model lookup table. If the tile exceeds the safe limit, a warning is logged at pipeline startup. This does not block execution (user may know their hardware better than the heuristic).
-
-#### Consequences
-
-- **Positive**: Early warning before a multi-hour pipeline crashes. Users see the warning and can reduce tile size.
-- **Negative**: Heuristic-based — may false-positive on well-cooled overclocked cards or false-negative on cards with shared VRAM.
+### Graceful Cancellation (Signal Handling)
+If a user presses `q` or issues a `SIGINT`/`SIGTERM` to the process:
+- A `context.Context` cancellation is propagated.
+- Underneath, `exec.CommandContext` automatically sends `SIGKILL` to the running children processes (`ffmpeg`/`realesrgan`).
+- The deferred cleanup block purges `tempIn`, `tempOut`, and the partial `.tmp` output file, leaving the system clean.

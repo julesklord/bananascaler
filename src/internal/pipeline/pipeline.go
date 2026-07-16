@@ -91,15 +91,17 @@ func Run(cfg *config.Config, log Logger) error {
 	if hasNVIDIA {
 		log.Info("NVIDIA GPU detected — enabling NVDEC hardware-accelerated decoding and NVENC hardware-accelerated encoding.")
 		decFlags = []string{"-hwaccel", "cuda"}
-		encFlags = []string{"-c:v", "hevc_nvenc", "-pix_fmt", "yuv420p"}
+		encFlags = []string{"-c:v", "hevc_nvenc"}
 		if nvencPreset != "" {
-			encFlags = append([]string{"-preset", nvencPreset}, encFlags...)
+			encFlags = append(encFlags, "-preset", nvencPreset)
 		}
+		encFlags = append(encFlags, "-pix_fmt", "yuv420p")
 	} else {
 		log.Warn("Running in CPU mode — falling back to CPU (libx265).")
 		decFlags = []string{}
 		encFlags = []string{"-c:v", "libx265", "-preset", x265Preset, "-crf", fmt.Sprintf("%d", x265CRF), "-pix_fmt", "yuv420p"}
 	}
+	encFlags = append([]string{"-f", "mp4"}, encFlags...)
 
 	// Log profile info
 	if cfg.Profile != nil {
