@@ -284,9 +284,9 @@ func upscale(ctx context.Context, cfg *config.Config, log Logger, tempIn, tempOu
 
 	// Renice after start — same strategy DaVinci Resolve uses to stay out of
 	// the user's way. niceLevel=0 means no change; >0 = lower OS priority.
-	// ponytail: syscall.Setpriority covers Linux/macOS; no-op if it fails (no sudo needed for self-renice).
+	// ponytail: abstracted via setPriority to compile cleanly on Windows and Unix.
 	if niceLevel > 0 && cmd.Process != nil {
-		_ = syscall.Setpriority(syscall.PRIO_PROCESS, cmd.Process.Pid, niceLevel)
+		setPriority(cmd.Process.Pid, niceLevel)
 	}
 
 	done := make(chan error, 1)

@@ -24,13 +24,17 @@ jobs:
       - name: Run tests
         run: go test -v ./...
 
-      - name: Build AMD64 binary
+      - name: Build binaries
         run: |
+          mkdir -p bin
+          # Linux
           GOOS=linux GOARCH=amd64 go build -ldflags="-s -w" -o bin/bananascaler-linux-amd64 .
-
-      - name: Build ARM64 binary
-        run: |
           GOOS=linux GOARCH=arm64 go build -ldflags="-s -w" -o bin/bananascaler-linux-arm64 .
+          # Windows
+          GOOS=windows GOARCH=amd64 go build -ldflags="-s -w" -o bin/bananascaler-windows-amd64.exe .
+          # macOS
+          GOOS=darwin GOARCH=amd64 go build -ldflags="-s -w" -o bin/bananascaler-darwin-amd64 .
+          GOOS=darwin GOARCH=arm64 go build -ldflags="-s -w" -o bin/bananascaler-darwin-arm64 .
 
       - name: Create GitHub Release and Upload Assets
         uses: softprops/action-gh-release@v2
@@ -38,6 +42,9 @@ jobs:
           files: |
             bin/bananascaler-linux-amd64
             bin/bananascaler-linux-arm64
+            bin/bananascaler-windows-amd64.exe
+            bin/bananascaler-darwin-amd64
+            bin/bananascaler-darwin-arm64
           draft: false
           prerelease: false
           generate_release_notes: true
