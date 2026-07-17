@@ -1,6 +1,8 @@
 package tui
 
 import (
+	"time"
+
 	tea "github.com/charmbracelet/bubbletea"
 	"github.com/julesklord/bananascaler/internal/config"
 	"github.com/julesklord/bananascaler/internal/pipeline"
@@ -36,7 +38,7 @@ func (l *tuiLogger) Err(msg string) {
 	l.events <- PipelineEvent{Kind: EventLog, Level: LevelErr, Message: msg}
 }
 
-func (l *tuiLogger) Progress(stage, current, total int) {
+func (l *tuiLogger) Progress(stage, current, total int, eta time.Duration) {
 	if current == 0 && total == 0 {
 		return // initial call, stage already started
 	}
@@ -49,6 +51,7 @@ func (l *tuiLogger) Progress(stage, current, total int) {
 		Stage:   stage,
 		Current: current,
 		Total:   total,
+		ETA:     eta,
 	}
 }
 

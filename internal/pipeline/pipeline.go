@@ -24,7 +24,9 @@ type Logger interface {
 	Warn(msg string)
 	Step(msg string)
 	Err(msg string)
-	Progress(stage, current, total int)
+	// Progress reports stage advancement. eta is the estimated time remaining
+	// (zero value = unknown). Callers should pass time.Duration(0) when unknown.
+	Progress(stage, current, total int, eta time.Duration)
 }
 
 // StdoutLogger writes pipeline events to the terminal with ANSI colors.
@@ -47,14 +49,27 @@ func (l *StdoutLogger) OK(msg string)    { fmt.Printf("%s%s[ OK ]%s %s\n", cBold
 func (l *StdoutLogger) Warn(msg string)  { fmt.Printf("%s%s[WARN]%s %s\n", cBold, cYellow, cReset, msg) }
 func (l *StdoutLogger) Step(msg string)  { fmt.Printf("\n%s%s🍌 %s%s\n", cBold, cYellow, msg, cReset) }
 func (l *StdoutLogger) Err(msg string)   { fmt.Fprintf(os.Stderr, "%s%s[ERR ]%s %s\n", cBold, cRed, cReset, msg) }
-func (l *StdoutLogger) Progress(stage, current, total int) {
+func (l *StdoutLogger) Progress(stage, current, total int, eta time.Duration) {
 	if total > 0 {
 		pct := float64(current) / float64(total) * 100
-		fmt.Printf("\r%s%s  %d/%d (%.0f%%)%s", cBold, cCyan, current, total, pct, cReset)
+		etaStr := ""
+		if eta > 0 {
+			etaStr = fmt.Sprintf(" ETA %s", fmtETA(eta))
+		}
+		fmt.Printf("\r%s%s  %d/%d (%.0f%%)%s%s", cBold, cCyan, current, total, pct, etaStr, cReset)
 		if current >= total {
 			fmt.Println()
 		}
 	}
+}
+
+// fmtETA formats a duration as "Xm Ys" or "Xs".
+func fmtETA(d time.Duration) string {
+	d = d.Round(time.Second)
+	if d < time.Minute {
+		return fmt.Sprintf("%ds", int(d.Seconds()))
+	}
+	return fmt.Sprintf("%dm %ds", int(d.Minutes()), int(d.Seconds())%60)
 }
 
 // pipelineParams extracts the effective parameters for this run,
@@ -181,9 +196,9 @@ func Run(cfg *config.Config, log Logger) error {
 		cancel()
 	}()
 
-	// ── Stage 1: Frame extraction ─────────────────────────────────────────
+	// Stage 1: Frame extraction
 	log.Step("[1/3] Extracting frames...")
-	log.Progress(1, 0, 0)
+	log.Progress(1, 0, 0, 0)
 	extractArgs := append(
 		[]string{"-y", "-stats", "-loglevel", "warning"},
 		decFlags...,
@@ -200,21 +215,25 @@ func Run(cfg *config.Config, log Logger) error {
 	if err != nil {
 		return err
 	}
-	log.Progress(1, frameCount, frameCount)
+	log.Progress(1, frameCount, frameCount, 0)
 	log.OK(fmt.Sprintf("%d frames extracted.", frameCount))
 
-	// ── Stage 2: Neural upscale ──────────────────────────────────────────
+	// Stage 2: Neural upscale
 	log.Step(fmt.Sprintf("[2/3] Neural upscaling (%d×) via Real-ESRGAN...", cfg.Scale))
-	log.Progress(2, 0, frameCount)
-	if err := upscale(ctx, cfg, log, tempIn, tempOut, frameCount, tileSize); err != nil {
+	log.Progress(2, 0, frameCount, 0)
+	niceLevel := 0
+	if cfg.Profile != nil {
+		niceLevel = cfg.Profile.ProcessNice
+	}
+	if err := upscale(ctx, cfg, log, tempIn, tempOut, frameCount, tileSize, niceLevel); err != nil {
 		return fmt.Errorf("upscaling: %w", err)
 	}
-	log.Progress(2, frameCount, frameCount)
+	log.Progress(2, frameCount, frameCount, 0)
 	log.OK("Upscaling complete.")
 
-	// ── Stage 3: Re-encode + audio mux → atomic write ────────────────────
+	// Stage 3: Re-encode + audio mux → atomic write
 	log.Step("[3/3] Re-encoding and muxing audio...")
-	log.Progress(3, 0, 0)
+	log.Progress(3, 0, 0, 0)
 	encArgs := []string{
 		"-y", "-stats", "-loglevel", "warning",
 		"-framerate", framerate,
@@ -231,7 +250,7 @@ func Run(cfg *config.Config, log Logger) error {
 	if err := runCmd(ctx, cfg.Verbose, "ffmpeg", encArgs...); err != nil {
 		return fmt.Errorf("video assembly: %w", err)
 	}
-	log.Progress(3, 1, 1)
+	log.Progress(3, 1, 1, 0)
 
 	// Atomic rename
 	if err := os.Rename(tmpOutput, cfg.Output); err != nil {
@@ -242,9 +261,10 @@ func Run(cfg *config.Config, log Logger) error {
 	return nil
 }
 
-// upscale runs realesrgan-ncnn-vulkan and reports progress via the logger.
+// upscale runs realesrgan-ncnn-vulkan and reports progress + ETA via the logger.
 // Output files are counted at 200 ms intervals to derive progress.
-func upscale(ctx context.Context, cfg *config.Config, log Logger, tempIn, tempOut string, total, tileSize int) error {
+// niceLevel is applied via syscall after start so the process yields to the desktop.
+func upscale(ctx context.Context, cfg *config.Config, log Logger, tempIn, tempOut string, total, tileSize, niceLevel int) error {
 	cmd := exec.CommandContext(ctx, "realesrgan-ncnn-vulkan",
 		"-i", tempIn,
 		"-o", tempOut,
@@ -262,26 +282,37 @@ func upscale(ctx context.Context, cfg *config.Config, log Logger, tempIn, tempOu
 		return fmt.Errorf("start realesrgan: %w", err)
 	}
 
+	// Renice after start — same strategy DaVinci Resolve uses to stay out of
+	// the user's way. niceLevel=0 means no change; >0 = lower OS priority.
+	// ponytail: syscall.Setpriority covers Linux/macOS; no-op if it fails (no sudo needed for self-renice).
+	if niceLevel > 0 && cmd.Process != nil {
+		_ = syscall.Setpriority(syscall.PRIO_PROCESS, cmd.Process.Pid, niceLevel)
+	}
+
 	done := make(chan error, 1)
 	go func() { done <- cmd.Wait() }()
 
 	ticker := time.NewTicker(200 * time.Millisecond)
 	defer ticker.Stop()
 
-	var prev int
+	var (
+		prev  int
+		start = time.Now()
+	)
 	for {
 		select {
 		case err := <-done:
 			final, _ := countFiles(tempOut, ".png")
 			if final > prev {
-				log.Progress(2, final, total)
+				log.Progress(2, final, total, 0)
 			}
 			return err
 
 		case <-ticker.C:
 			n, _ := countFiles(tempOut, ".png")
 			if n > prev {
-				log.Progress(2, n, total)
+				eta := calcETA(start, n, total)
+				log.Progress(2, n, total, eta)
 				prev = n
 			}
 
@@ -291,6 +322,17 @@ func upscale(ctx context.Context, cfg *config.Config, log Logger, tempIn, tempOu
 			return ctx.Err()
 		}
 	}
+}
+
+// calcETA estimates remaining time based on throughput so far.
+// ponytail: simple linear estimate — good enough; no need for a moving average.
+func calcETA(start time.Time, done, total int) time.Duration {
+	if done <= 0 || total <= done {
+		return 0
+	}
+	elapsed := time.Since(start)
+	rate := float64(elapsed) / float64(done) // ns per frame
+	return time.Duration(rate * float64(total-done))
 }
 
 func runCmd(ctx context.Context, verbose bool, name string, args ...string) error {

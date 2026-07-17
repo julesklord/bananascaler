@@ -149,36 +149,42 @@ bananascaler auto-detects your GPU's VRAM via `nvidia-smi` and selects optimized
 
 ### Hardware Tiers
 
-| Tier | VRAM | Example GPUs |
-|------|------|-------------|
-| **low-end** | ≤4 GB | GTX 1050 Ti, GTX 1650, RX 570 |
-| **mid-range** | 4–8 GB | GTX 1060 6GB, RTX 2060, RX 5700 XT |
-| **high-end** | ≥8 GB | RTX 3080, RTX 4090, RX 6800 XT |
+bananascaler's profiler classifies systems using 6 granular VRAM-based buckets mapped to 3 primary hardware tiers:
+
+| Tier | VRAM Buckets | Example GPUs |
+|------|--------------|-------------|
+| **low-end** | <3 GB (very tight)<br>3–5 GB (standard low) | GTX 1050, GTX 1650, GTX 1060 3GB |
+| **mid-range** | 5–7 GB (mid-low)<br>7–10 GB (true mid) | GTX 1060 6GB, RTX 2060, RTX 3070 |
+| **high-end** | 10–14 GB (high-end)<br>14 GB+ (enthusiast) | RTX 3080 10GB, RTX 4070 Ti, RTX 4090 |
 | **unknown** | no NVIDIA | CPU-only mode / integrated GPU |
 
-### Presets
+### Presets & Priority (Throttling)
 
-| Preset | Focus | When to use |
-|--------|-------|-------------|
-| **fast** | Speed | Quick preview, short videos, time-constrained |
-| **balanced** | Default | Recommended for most users |
-| **quality** | Best output | Final render, archival, when time doesn't matter |
+Each preset automatically configures the process priority (`nice` level) of the neural upscaler, ensuring the system remains fully responsive during execution (idle-priority behavior similar to DaVinci Resolve):
+
+| Preset | Focus | Process Nice Level | When to use |
+|--------|-------|--------------------|-------------|
+| **fast** | Speed | Low priority (`nice=5` to `nice=15`) | Quick preview, short videos, time-constrained |
+| **balanced** | Default | Low priority (`nice=5` to `nice=15`) | Recommended for most users |
+| **quality** | Best output | Low priority (`nice=5` to `nice=15`) | Final render, archival, when time doesn't matter |
+
+*CPU Fallback uses `nice=19` to protect the host machine from freezing during heavy multithreaded x265 processing.*
 
 ### Profile Table
 
-Each tier × preset combination sets tile size, model, NVENC preset, x265 preset/CRF, and max scale:
+Each tier × preset combination sets tile size, model, NVENC preset, x265 preset/CRF, maximum scale, and process priority:
 
-| Tier | Preset | Tile | Model | NVENC | x265 | CRF | Max Scale |
-|------|--------|------|-------|-------|------|-----|-----------|
-| low-end | fast | 64 | animevideov3-x2 | p1 | ultrafast | 28 | 2× |
-| low-end | balanced | 100 | animevideov3-x2 | p3 | fast | 26 | 2× |
-| low-end | quality | 150 | animevideov3-x2 | p5 | medium | 24 | 3× |
-| mid-range | fast | 150 | animevideov3-x2 | p3 | fast | 26 | 3× |
-| **mid-range** | **balanced** | **300** | **animevideov3-x2** | **p5** | **medium** | **22** | **4×** |
-| mid-range | quality | 200 | x4plus-anime | p7 | slow | 20 | 4× |
-| high-end | fast | 300 | x4plus-anime | p4 | medium | 22 | 4× |
-| high-end | balanced | 400 | x4plus | p6 | slow | 20 | 4× |
-| high-end | quality | 512 | x4plus | p7 | veryslow | 18 | 4× |
+| Tier | Preset | Tile | Model | NVENC | x265 | CRF | Max Scale | Nice Level |
+|------|--------|------|-------|-------|------|-----|-----------|------------|
+| low-end | fast | 64 | animevideov3-x2 | p1 | ultrafast | 28 | 2× | 15 |
+| low-end | balanced | 100 | animevideov3-x2 | p3 | fast | 26 | 2× | 15 |
+| low-end | quality | 150 | animevideov3-x2 | p5 | medium | 24 | 3× | 15 |
+| mid-range | fast | 200 | animevideov3-x2 | p3 | fast | 26 | 2× | 10 |
+| **mid-range** | **balanced** | **300** | **animevideov3-x2** | **p5** | **medium** | **22** | **2×** | **10** |
+| mid-range | quality | 350 | x4plus-anime | p7 | slow | 18 | 2× | 10 |
+| high-end | fast | 300 | x4plus-anime | p4 | medium | 22 | 4× | 5 |
+| high-end | balanced | 400 | x4plus | p6 | slow | 20 | 4× | 5 |
+| high-end | quality | 512 | x4plus | p7 | veryslow | 18 | 4× | 5 |
 
 The **bold** row is the default for mid-range GPUs (e.g., GTX 1060 6GB).
 
@@ -385,23 +391,23 @@ nohup bananascaler input.mp4 --output out.mp4 --scale 4 --no-tui > run.log 2>&1 
   Profile: mid-range · balanced   GPU: GPU 0 · NVDEC+NVENC   Model: animevideov3-x2   Scale: 2×
   in  movie.mp4
   out movie_upscaled.mp4
-──────────────────────────────────────────────────
-
-  ✔  1/3  Frame Extraction
-       ████████████████████████████████████████  100%  12847/12847
-
-  ▶  2/3  Neural Upscaling
-       ████████████████▓░░░░░░░░░░░░░░░░░░░░░░   34%  4412/12847
-
-  ○  3/3  Re-encode + Mux
-       ──────────────────────────────────────  waiting
-
-──────────────────────────────────────────────────
-  ✔ ok   NVIDIA GPU detected — NVDEC+NVENC enabled
-  ◆ step [2/3] Neural upscaling (2×) via Real-ESRGAN...
-  · info 4412 frames upscaled
-──────────────────────────────────────────────────
-  q / Esc cancel  ·  v verbose
+ ──────────────────────────────────────────────────
+ 
+   ✔  1/3  Frame Extraction
+        ████████████████████████████████████████  100%  12847/12847
+ 
+   ▶  2/3  Neural Upscaling
+        ████████████████▓░░░░░░░░░░░░░░░░░░░░░░   34%  4412/12847  ETA 1m 45s
+ 
+   ○  3/3  Re-encode + Mux
+        ──────────────────────────────────────  waiting
+ 
+ ──────────────────────────────────────────────────
+   ✔ ok   NVIDIA GPU detected — NVDEC+NVENC enabled
+   ◆ step [2/3] Neural upscaling (2×) via Real-ESRGAN...
+   · info 4412 frames upscaled
+ ──────────────────────────────────────────────────
+   q / Esc cancel  ·  v verbose
 ```
 
 **Keybinds**: `q`/`Ctrl+C`/`Esc` to cancel, `v` to toggle verbose output.

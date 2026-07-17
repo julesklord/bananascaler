@@ -5,11 +5,11 @@ package hardware
 import (
 	"context"
 	"fmt"
-	"os/exec"
 	"runtime"
 	"strconv"
 	"strings"
 	"time"
+	"os/exec"
 )
 
 // PresetLevel defines the speed/quality tradeoff.
@@ -80,6 +80,11 @@ type UpscaleProfile struct {
 
 	// Scale limits
 	MaxScale int
+
+	// OS process priority for realesrgan-ncnn-vulkan.
+	// 0 = normal, 10 = background (like DaVinci Resolve's idle-priority mode).
+	// ponytail: Unix nice(2) via syscall; Windows IDLE_PRIORITY_CLASS if ever ported.
+	ProcessNice int
 }
 
 // String returns a short human-readable summary.
@@ -96,7 +101,7 @@ func shortModelName(m string) string {
 
 // ── Hardware detection ───────────────────────────────────────────────────────
 
-// DetectGPU queries nvidia-smi for GPU name and VRAM.
+// DetectGPU queries nvidia-smi for GPU name and VRAM in a single call.
 // Returns zero-value GPUInfo if no NVIDIA GPU is found.
 func DetectGPU() GPUInfo {
 	info := GPUInfo{
@@ -106,33 +111,31 @@ func DetectGPU() GPUInfo {
 	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
 	defer cancel()
 
-	// Query GPU name
-	if out, err := exec.CommandContext(ctx, "nvidia-smi",
-		"--query-gpu=name", "--format=csv,noheader",
-	).Output(); err == nil {
-		name := strings.TrimSpace(string(out))
-		if name != "" {
-			info.Name = name
-			info.HasNVIDIA = true
-		}
-	}
-
-	if !info.HasNVIDIA {
+	// ponytail: single nvidia-smi call with two fields instead of two separate spawns
+	out, err := exec.CommandContext(ctx, "nvidia-smi",
+		"--query-gpu=name,memory.total",
+		"--format=csv,noheader,nounits",
+	).Output()
+	if err != nil {
 		return info
 	}
-
-	// Query VRAM in MB
-	ctx2, cancel2 := context.WithTimeout(context.Background(), 5*time.Second)
-	defer cancel2()
-	if out, err := exec.CommandContext(ctx2, "nvidia-smi",
-		"--query-gpu=memory.total", "--format=csv,noheader,nounits",
-	).Output(); err == nil {
-		vramStr := strings.TrimSpace(string(out))
-		if vram, err := strconv.Atoi(vramStr); err == nil {
+	line := strings.TrimSpace(string(out))
+	if line == "" {
+		return info
+	}
+	parts := strings.SplitN(line, ",", 2)
+	if len(parts) < 1 {
+		return info
+	}
+	info.Name = strings.TrimSpace(parts[0])
+	if info.Name != "" {
+		info.HasNVIDIA = true
+	}
+	if len(parts) == 2 {
+		if vram, err := strconv.Atoi(strings.TrimSpace(parts[1])); err == nil {
 			info.VRAMMB = vram
 		}
 	}
-
 	return info
 }
 
@@ -159,16 +162,24 @@ func DetectGPUCount() int {
 
 // ── Tier classification ──────────────────────────────────────────────────────
 
+// classifyTier maps VRAM to a hardware tier.
+// 6 buckets give the profiler enough granularity without over-engineering.
 func classifyTier(info GPUInfo) HardwareTier {
 	if !info.HasNVIDIA {
 		return TierUnknown
 	}
 	switch {
-	case info.VRAMMB < 4000:
+	case info.VRAMMB < 3000: // GTX 1050, GTX 960 — very tight
 		return TierLowEnd
-	case info.VRAMMB < 8000:
+	case info.VRAMMB < 5000: // GTX 1650, GTX 1060 3GB
+		return TierLowEnd
+	case info.VRAMMB < 7000: // GTX 1060 6GB, RTX 2060 — mid-low
 		return TierMidRange
-	default:
+	case info.VRAMMB < 10000: // RTX 2070, RTX 3070 — true mid
+		return TierMidRange
+	case info.VRAMMB < 14000: // RTX 3080 10GB, RTX 4070 Ti
+		return TierHighEnd
+	default: // RTX 3090, RTX 4090, A100
 		return TierHighEnd
 	}
 }
@@ -188,12 +199,13 @@ func classifyTier(info GPUInfo) HardwareTier {
 
 func profileDB() map[HardwareTier]map[PresetLevel]*UpscaleProfile {
 	return map[HardwareTier]map[PresetLevel]*UpscaleProfile{
-		// ── Low-end: ≤4 GB VRAM (GTX 1050 Ti, GTX 1650, RX 570) ──────────
+		// ── Low-end: ≤5 GB VRAM (GTX 1050 Ti, GTX 1650, GTX 1060 3GB) ──────
+		// ProcessNice=15: runs at background priority — desktop stays smooth
 		TierLowEnd: {
 			PresetFast: {
 				Tier:        TierLowEnd,
 				Preset:      PresetFast,
-				Description: "Fast mode for low-end GPUs (≤4GB). Speed over quality.",
+				Description: "Fast mode for low-end GPUs (≤5GB). Speed over quality.",
 				TileSize:    64,
 				Model:       "realesr-animevideov3-x2",
 				JPEGQuality: 4,
@@ -201,6 +213,7 @@ func profileDB() map[HardwareTier]map[PresetLevel]*UpscaleProfile {
 				X265Preset:  "ultrafast",
 				X265CRF:     28,
 				MaxScale:    2,
+				ProcessNice: 15,
 			},
 			PresetBalanced: {
 				Tier:        TierLowEnd,
@@ -213,6 +226,7 @@ func profileDB() map[HardwareTier]map[PresetLevel]*UpscaleProfile {
 				X265Preset:  "fast",
 				X265CRF:     26,
 				MaxScale:    2,
+				ProcessNice: 15,
 			},
 			PresetQuality: {
 				Tier:        TierLowEnd,
@@ -225,21 +239,24 @@ func profileDB() map[HardwareTier]map[PresetLevel]*UpscaleProfile {
 				X265Preset:  "medium",
 				X265CRF:     24,
 				MaxScale:    3,
+				ProcessNice: 15,
 			},
 		},
-		// ── Mid-range: 4–8 GB VRAM (GTX 1060 6GB, RTX 2060, RX 5700 XT) ──
+		// ── Mid-range: 5–10 GB VRAM (GTX 1060 6GB, RTX 2060/2070, RTX 3070) ─
+		// ProcessNice=10: noticeable background priority, still fast enough
 		TierMidRange: {
 			PresetFast: {
 				Tier:        TierMidRange,
 				Preset:      PresetFast,
-				Description: "Fast mode for mid-range GPUs (4-8GB). Quick upscaling.",
-				TileSize:    150,
+				Description: "Fast mode for mid-range GPUs (5-10GB). Quick upscaling.",
+				TileSize:    200,
 				Model:       "realesr-animevideov3-x2",
 				JPEGQuality: 3,
 				NVEncPreset: "p3",
 				X265Preset:  "fast",
 				X265CRF:     26,
 				MaxScale:    2,
+				ProcessNice: 10,
 			},
 			PresetBalanced: {
 				Tier:        TierMidRange,
@@ -252,26 +269,29 @@ func profileDB() map[HardwareTier]map[PresetLevel]*UpscaleProfile {
 				X265Preset:  "medium",
 				X265CRF:     22,
 				MaxScale:    2,
+				ProcessNice: 10,
 			},
 			PresetQuality: {
 				Tier:        TierMidRange,
 				Preset:      PresetQuality,
 				Description: "Quality mode for mid-range GPUs. Best encode settings, 2× upscale.",
-				TileSize:    300,
-				Model:       "realesr-animevideov3-x2",
+				TileSize:    350,
+				Model:       "realesrgan-x4plus-anime",
 				JPEGQuality: 1,
 				NVEncPreset: "p7",
 				X265Preset:  "slow",
 				X265CRF:     18,
 				MaxScale:    2,
+				ProcessNice: 10,
 			},
 		},
-		// ── High-end: ≥8 GB VRAM (RTX 3080, RTX 4090, RX 6800 XT) ────────
+		// ── High-end: ≥10 GB VRAM (RTX 3080, RTX 4090, RX 6800 XT) ─────────
+		// ProcessNice=5: slight background priority; these GPUs handle it
 		TierHighEnd: {
 			PresetFast: {
 				Tier:        TierHighEnd,
 				Preset:      PresetFast,
-				Description: "Fast mode for high-end GPUs (8GB+). Quick with heavy models.",
+				Description: "Fast mode for high-end GPUs (10GB+). Quick with heavy models.",
 				TileSize:    300,
 				Model:       "realesrgan-x4plus-anime",
 				JPEGQuality: 2,
@@ -279,6 +299,7 @@ func profileDB() map[HardwareTier]map[PresetLevel]*UpscaleProfile {
 				X265Preset:  "medium",
 				X265CRF:     22,
 				MaxScale:    4,
+				ProcessNice: 5,
 			},
 			PresetBalanced: {
 				Tier:        TierHighEnd,
@@ -291,6 +312,7 @@ func profileDB() map[HardwareTier]map[PresetLevel]*UpscaleProfile {
 				X265Preset:  "slow",
 				X265CRF:     20,
 				MaxScale:    4,
+				ProcessNice: 5,
 			},
 			PresetQuality: {
 				Tier:        TierHighEnd,
@@ -303,9 +325,11 @@ func profileDB() map[HardwareTier]map[PresetLevel]*UpscaleProfile {
 				X265Preset:  "veryslow",
 				X265CRF:     18,
 				MaxScale:    4,
+				ProcessNice: 5,
 			},
 		},
 		// ── Unknown: no NVIDIA GPU (CPU-only / Vulkan via iGPU) ────────────
+		// ProcessNice=19: max background; CPU-only is already slow, keep desktop alive
 		TierUnknown: {
 			PresetFast: {
 				Tier:        TierUnknown,
@@ -318,6 +342,7 @@ func profileDB() map[HardwareTier]map[PresetLevel]*UpscaleProfile {
 				X265Preset:  "ultrafast",
 				X265CRF:     28,
 				MaxScale:    2,
+				ProcessNice: 19,
 			},
 			PresetBalanced: {
 				Tier:        TierUnknown,
@@ -330,6 +355,7 @@ func profileDB() map[HardwareTier]map[PresetLevel]*UpscaleProfile {
 				X265Preset:  "fast",
 				X265CRF:     24,
 				MaxScale:    3,
+				ProcessNice: 19,
 			},
 			PresetQuality: {
 				Tier:        TierUnknown,
@@ -342,6 +368,7 @@ func profileDB() map[HardwareTier]map[PresetLevel]*UpscaleProfile {
 				X265Preset:  "medium",
 				X265CRF:     22,
 				MaxScale:    3,
+				ProcessNice: 19,
 			},
 		},
 	}

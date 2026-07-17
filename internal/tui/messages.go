@@ -1,6 +1,10 @@
 package tui
 
-import "github.com/julesklord/bananascaler/internal/config"
+import (
+	"time"
+
+	"github.com/julesklord/bananascaler/internal/config"
+)
 
 // EventKind represents the type of pipeline event.
 type EventKind int
@@ -31,6 +35,7 @@ type PipelineEvent struct {
 	StageName string
 	Current   int
 	Total     int
+	ETA       time.Duration // estimated time remaining; 0 = unknown
 }
 
 // --- Bubbletea message wrappers ---

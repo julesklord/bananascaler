@@ -5,11 +5,16 @@ Format: [keepachangelog.com](https://keepachangelog.com) · Versioning: [semver.
 
 ## [Unreleased]
 
-## [0.4.0] - 2026-07-16
-
 ### Added
 
-- **Hardware profile system** (`internal/hardware/profile.go`): Auto-detects GPU tier (low-end / mid-range / high-end) via VRAM query through `nvidia-smi` and applies optimized pipeline parameters (tile size, model, encoding preset, CRF).
+- **System Priority Control (Throttling)**: Added automatic process priority (`nice` level) control during the upscaling stage. Lowers the OS priority of `realesrgan-ncnn-vulkan` (from `nice=5` to `nice=15` depending on profile) to keep the desktop environment smooth and responsive, preventing host slowdowns (DaVinci Resolve style). CPU mode falls back to `nice=19`.
+- **Stage ETA Tracking & Percentage Display**: The pipeline now dynamically calculates frame processing throughput and estimates remaining time (ETA), displaying it directly beside the progress bars in both CLI and TUI modes.
+- **Granular 6-bucket VRAM classification**: Refined VRAM classification to support 6 buckets (<3GB, 3-5GB, 5-7GB, 7-10GB, 10-14GB, 14GB+), matching tile sizes and models more accurately to safe VRAM configurations.
+
+### Changed
+
+- **nvidia-smi Process Optimization**: Merged separate GPU name and total VRAM queries into a single query to spawn fewer processes during hardware detection.
+
 - **3 performance presets**: `--profile fast|balanced|quality` adapts speed/quality tradeoff to detected hardware. Each preset is customized per tier with VRAM-safe tile/model pairings.
 - **`--auto` flag**: Explicitly enable auto-detection and apply the balanced preset. Profiles are also auto-detected when using the TUI without any `--profile` flag.
 - **`bananascaler detect` subcommand**: Scans hardware and displays all available profiles (fast/balanced/quality) adapted to the detected GPU, plus a full reference table of all tier×preset combinations.

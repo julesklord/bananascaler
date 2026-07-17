@@ -6,6 +6,7 @@ import (
 	"context"
 	"fmt"
 	"os/exec"
+	"strconv"
 	"strings"
 	"time"
 )
@@ -59,4 +60,21 @@ func HasAudio(input string) (bool, error) {
 		return false, fmt.Errorf("ffprobe audio detection: %w", err)
 	}
 	return strings.TrimSpace(string(out)) != "", nil
+}
+
+// FrameCount returns the total number of frames in the first video stream.
+// Falls back to 0 if ffprobe cannot determine the count (e.g. container has no nb_frames).
+func FrameCount(input string) int {
+	out, err := exec.Command("ffprobe",
+		"-v", "error",
+		"-select_streams", "v:0",
+		"-show_entries", "stream=nb_frames",
+		"-of", "default=noprint_wrappers=1:nokey=1",
+		input,
+	).Output()
+	if err != nil {
+		return 0
+	}
+	n, _ := strconv.Atoi(strings.TrimSpace(string(out)))
+	return n
 }

@@ -5,6 +5,7 @@ import (
 	"os"
 	"path/filepath"
 	"strings"
+	"time"
 
 	tea "github.com/charmbracelet/bubbletea"
 	"github.com/charmbracelet/lipgloss"
@@ -44,6 +45,7 @@ type stageState struct {
 	status  stageStatus
 	current int
 	total   int
+	eta     time.Duration // 0 = unknown
 }
 
 type logEntry struct {
@@ -336,6 +338,7 @@ func (m Model) handlePipelineEvent(e PipelineEvent) (tea.Model, tea.Cmd) {
 	case EventStageProgress:
 		if e.Stage >= 1 && e.Stage <= 3 {
 			m.stages[e.Stage-1].current = e.Current
+			m.stages[e.Stage-1].eta = e.ETA
 			if e.Total > 0 {
 				m.stages[e.Stage-1].total = e.Total
 			}
@@ -345,6 +348,7 @@ func (m Model) handlePipelineEvent(e PipelineEvent) (tea.Model, tea.Cmd) {
 			idx := e.Stage - 1
 			m.stages[idx].status = stageDone
 			m.stages[idx].current = m.stages[idx].total
+			m.stages[idx].eta = 0
 		}
 	}
 	return m, m.waitForEvent()
@@ -600,7 +604,7 @@ func (m Model) renderStage(num string, s stageState, innerW int) string {
 		bar := renderBar(s.current, max(s.total, 1), barWidth, false)
 		count := ""
 		if s.total > 0 {
-			count = renderPct(s.current, s.total)
+			count = renderPct(s.current, s.total, s.eta)
 		} else {
 			count = barCountStyle.Render("processing…")
 		}
@@ -608,7 +612,7 @@ func (m Model) renderStage(num string, s stageState, innerW int) string {
 
 	case stageDone:
 		bar := renderBar(s.current, max(s.total, 1), barWidth, true)
-		count := renderPct(s.current, s.total)
+		count := renderPct(s.current, s.total, 0)
 		b.WriteString(fmt.Sprintf("       %s  %s\n", bar, count))
 
 	case stagePending:
@@ -669,4 +673,16 @@ func max(a, b int) int {
 		return a
 	}
 	return b
+}
+
+// fmtETA formats a duration as "Xm Ys" or "Xs".
+func fmtETA(d time.Duration) string {
+	d = d.Round(time.Second)
+	if d <= 0 {
+		return ""
+	}
+	if d < time.Minute {
+		return fmt.Sprintf("%ds", int(d.Seconds()))
+	}
+	return fmt.Sprintf("%dm %ds", int(d.Minutes()), int(d.Seconds())%60)
 }

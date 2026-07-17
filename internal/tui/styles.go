@@ -3,6 +3,7 @@ package tui
 import (
 	"fmt"
 	"strings"
+	"time"
 
 	"github.com/charmbracelet/lipgloss"
 )
@@ -163,14 +164,19 @@ func renderBar(current, total, width int, done bool) string {
 	return bar.String()
 }
 
-// renderPct returns a formatted percentage label.
-func renderPct(current, total int) string {
+// renderPct returns a formatted percentage + optional ETA label.
+func renderPct(current, total int, eta time.Duration) string {
 	if total <= 0 {
 		return barCountStyle.Render("···")
 	}
 	pct := int(float64(current) / float64(total) * 100)
-	return barPctStyle.Render(fmt.Sprintf("%3d%%", pct)) +
+	base := barPctStyle.Render(fmt.Sprintf("%3d%%", pct)) +
 		barCountStyle.Render(fmt.Sprintf("  %d/%d", current, total))
+	if e := fmtETA(eta); e != "" {
+		base += barCountStyle.Render("  ETA ") +
+			lipgloss.NewStyle().Foreground(colAmber).Bold(true).Render(e)
+	}
+	return base
 }
 
 // ── Helper ────────────────────────────────────────────────────────────────────

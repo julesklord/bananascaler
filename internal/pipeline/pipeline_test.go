@@ -4,6 +4,7 @@ import (
 	"os"
 	"path/filepath"
 	"testing"
+	"time"
 
 	"github.com/julesklord/bananascaler/internal/config"
 )
@@ -21,7 +22,7 @@ func (m *mockLogger) OK(msg string)    { m.infos = append(m.infos, "OK: "+msg) }
 func (m *mockLogger) Warn(msg string)  { m.infos = append(m.infos, "WARN: "+msg) }
 func (m *mockLogger) Step(msg string)  { m.infos = append(m.infos, "STEP: "+msg) }
 func (m *mockLogger) Err(msg string)   { m.infos = append(m.infos, "ERR: "+msg) }
-func (m *mockLogger) Progress(stage, current, total int) {
+func (m *mockLogger) Progress(stage, current, total int, eta time.Duration) {
 	m.stages = append(m.stages, stage)
 	if current == total {
 		m.done = true
