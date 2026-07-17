@@ -2,7 +2,7 @@
 
 **Name**: bananascaler  
 **Type**: CLI tool (Go + Bubbletea TUI)  
-**Version**: 0.4.0  
+**Version**: 0.4.1  
 **Author**: julesklord  
 **License**: MIT  
 **Repository**: https://github.com/julesklord/bananascaler  

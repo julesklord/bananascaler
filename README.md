@@ -10,7 +10,7 @@
       <p>
         <a href="LICENSE"><img src="https://img.shields.io/badge/license-MIT-blue?style=plastic" alt="License MIT"></a>
         <img src="https://img.shields.io/badge/Built%20With-Go-00ADD8?style=plastic" alt="Built with Go">
-        <img src="https://img.shields.io/badge/version-0.4.0-informational?style=plastic" alt="Version 0.4.0">
+        <img src="https://img.shields.io/badge/version-0.4.1-informational?style=plastic" alt="Version 0.4.1">
         <img src="https://img.shields.io/badge/GPU-NVIDIA%20NVENC%2FNVDEC-76B900?style=plastic" alt="NVIDIA GPU">
         <img src="https://img.shields.io/badge/AI-Real--ESRGAN-orange?style=plastic" alt="Real-ESRGAN">
         <img src="https://img.shields.io/badge/TUI-Bubbletea-FF69B4?style=plastic" alt="Bubbletea TUI">
@@ -422,6 +422,7 @@ nohup bananascaler input.mp4 --output out.mp4 --scale 4 --no-tui > run.log 2>&1 
 | **v0.2.0** | ✅ | Go rewrite + Bubbletea TUI + Logger interface + quality fixes |
 | **v0.3.0** | ✅ | `bananascaler tui` file picker · Full GPU pipeline (NVDEC+NVENC) · VRAM-safe tiling · Premium TUI redesign · System-wide `make install` |
 | **v0.4.0** | ✅ | Hardware profile system (4 tiers × 3 presets) · `bananascaler detect` · VRAM safety validation · Profile-aware encoding · TUI profile cycling |
+| **v0.4.1** | ✅ | Process nice priority control, stage ETA/percentage progress display, and refined 6-bucket hardware profiler |
 | **v0.5.0** | ⏳ | Parallel frame extraction/upscaling for multi-GPU setups |
 
 ---

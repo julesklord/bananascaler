@@ -5,6 +5,8 @@ Format: [keepachangelog.com](https://keepachangelog.com) · Versioning: [semver.
 
 ## [Unreleased]
 
+## [0.4.1] - 2026-07-17
+
 ### Added
 
 - **System Priority Control (Throttling)**: Added automatic process priority (`nice` level) control during the upscaling stage. Lowers the OS priority of `realesrgan-ncnn-vulkan` (from `nice=5` to `nice=15` depending on profile) to keep the desktop environment smooth and responsive, preventing host slowdowns (DaVinci Resolve style). CPU mode falls back to `nice=19`.
@@ -15,7 +17,13 @@ Format: [keepachangelog.com](https://keepachangelog.com) · Versioning: [semver.
 
 - **nvidia-smi Process Optimization**: Merged separate GPU name and total VRAM queries into a single query to spawn fewer processes during hardware detection.
 
+## [0.4.0] - 2026-07-16
+
+### Added
+
+- **Hardware profile system** (`internal/hardware/profile.go`): Auto-detects GPU tier (low-end / mid-range / high-end) via VRAM query through `nvidia-smi` and applies optimized pipeline parameters (tile size, model, encoding preset, CRF).
 - **3 performance presets**: `--profile fast|balanced|quality` adapts speed/quality tradeoff to detected hardware. Each preset is customized per tier with VRAM-safe tile/model pairings.
+
 - **`--auto` flag**: Explicitly enable auto-detection and apply the balanced preset. Profiles are also auto-detected when using the TUI without any `--profile` flag.
 - **`bananascaler detect` subcommand**: Scans hardware and displays all available profiles (fast/balanced/quality) adapted to the detected GPU, plus a full reference table of all tier×preset combinations.
 - **Tile-model VRAM safety check** (`CheckTileSafety`): Warns at pipeline start if the tile size may exceed safe limits for the detected VRAM and model, preventing OOM/SEGV crashes.
