@@ -1,16 +1,16 @@
-⚡ Optimize `os.ReadDir` in TUI model
+# 🧹 [Code Health] Reduce memory allocations in profile lookups
 
-💡 **What:** Replaced `os.ReadDir(dir)` with `os.Open(dir)` followed by `f.ReadDir(-1)`. We now filter out hidden files *before* sorting, and sort `dirs` and `files` individually using `slices.SortFunc`.
+## 🎯 What
+Refactored `profileDB()` in `internal/hardware/profile.go` from a function returning a new map to a statically initialized package-level variable.
 
-🎯 **Why:** `os.ReadDir` internally reads all entries and immediately sorts them. For large directories containing many hidden files (like `.` files in version control or large caches), sorting everything first only to discard many elements is wasteful sync I/O in the event loop.
+## 💡 Why
+The previous implementation re-allocated a large map and multiple struct pointers every time `GetProfile()` was called. Converting this to a package-level variable initialization eliminates these repetitive allocations. This fulfills the request of addressing the issue without introducing an external JSON or YAML file that would have forced a major refactor of application initialization and fallback behavior. Additionally, `GetProfile` was updated to perform a shallow clone of the returned `UpscaleProfile` to ensure callers cannot accidentally mutate the global application state.
 
-📊 **Measured Improvement:**
-A benchmark simulating a directory with 10,000 hidden files and 1,000 visible files showed an almost 2x performance increase.
+## ✅ Verification
+1. Ensured all unit tests in the project (`go test ./...`) still pass.
+2. Verified using `go run main.go detect` that CLI logic around retrieving and printing hardware tier presets works correctly.
+3. Formatted with `go fmt ./...`.
+4. Got the modified code successfully reviewed.
 
-```
-goos: linux
-goarch: amd64
-cpu: Intel(R) Xeon(R) Processor @ 2.30GHz
-BenchmarkReadDir-4            	     144	   8260646 ns/op
-BenchmarkReadDirOptimized-4   	     242	   4932681 ns/op
-```
+## ✨ Result
+Lower memory overhead and garbage collection pressure when running queries against hardware profiles, while preserving strict global safety against state mutation.
