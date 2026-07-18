@@ -44,11 +44,13 @@ const (
 	cCyan   = "\033[36m"
 )
 
-func (l *StdoutLogger) Info(msg string)  { fmt.Printf("%s%s[INFO]%s %s\n", cBold, cCyan, cReset, msg) }
-func (l *StdoutLogger) OK(msg string)    { fmt.Printf("%s%s[ OK ]%s %s\n", cBold, cGreen, cReset, msg) }
-func (l *StdoutLogger) Warn(msg string)  { fmt.Printf("%s%s[WARN]%s %s\n", cBold, cYellow, cReset, msg) }
-func (l *StdoutLogger) Step(msg string)  { fmt.Printf("\n%s%s🍌 %s%s\n", cBold, cYellow, msg, cReset) }
-func (l *StdoutLogger) Err(msg string)   { fmt.Fprintf(os.Stderr, "%s%s[ERR ]%s %s\n", cBold, cRed, cReset, msg) }
+func (l *StdoutLogger) Info(msg string) { fmt.Printf("%s%s[INFO]%s %s\n", cBold, cCyan, cReset, msg) }
+func (l *StdoutLogger) OK(msg string)   { fmt.Printf("%s%s[ OK ]%s %s\n", cBold, cGreen, cReset, msg) }
+func (l *StdoutLogger) Warn(msg string) { fmt.Printf("%s%s[WARN]%s %s\n", cBold, cYellow, cReset, msg) }
+func (l *StdoutLogger) Step(msg string) { fmt.Printf("\n%s%s🍌 %s%s\n", cBold, cYellow, msg, cReset) }
+func (l *StdoutLogger) Err(msg string) {
+	fmt.Fprintf(os.Stderr, "%s%s[ERR ]%s %s\n", cBold, cRed, cReset, msg)
+}
 func (l *StdoutLogger) Progress(stage, current, total int, eta time.Duration) {
 	if total > 0 {
 		pct := float64(current) / float64(total) * 100
@@ -163,16 +165,17 @@ func Run(cfg *config.Config, log Logger) error {
 	log.Info(fmt.Sprintf("Output → %s", cfg.Output))
 
 	// Session temp dirs
-	sessionID := fmt.Sprintf("bananascaler_%d_%d", time.Now().Unix(), os.Getpid())
-	tempIn := filepath.Join(os.TempDir(), sessionID+"_in")
-	tempOut := filepath.Join(os.TempDir(), sessionID+"_out")
-	tmpOutput := cfg.Output + ".tmp"
-
-	for _, d := range []string{tempIn, tempOut} {
-		if err := os.MkdirAll(d, 0o755); err != nil {
-			return fmt.Errorf("create temp dir %q: %w", d, err)
-		}
+	tempIn, err := os.MkdirTemp("", "bananascaler_*_in")
+	if err != nil {
+		return fmt.Errorf("create temp in dir: %w", err)
 	}
+
+	tempOut, err := os.MkdirTemp("", "bananascaler_*_out")
+	if err != nil {
+		os.RemoveAll(tempIn)
+		return fmt.Errorf("create temp out dir: %w", err)
+	}
+	tmpOutput := cfg.Output + ".tmp"
 
 	// Cleanup
 	cleanup := func() {
