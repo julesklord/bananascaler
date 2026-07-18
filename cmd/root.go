@@ -125,13 +125,9 @@ performance profiles (fast/balanced/quality) adapted to your hardware.`,
 		fmt.Printf("\n\033[1mAvailable Profiles\033[0m\n\n")
 
 		for _, preset := range hardware.AllPresets() {
-			profile := hardware.GetProfile(
-				hardware.TierLowEnd, preset,
-			)
-			_ = profile // just checking we can get them
 
 			// Get the profile for detected hardware
-			profile, _ = hardware.AutoProfileWithPreset(preset)
+			profile, _ := hardware.AutoProfileWithPreset(preset)
 			icon := "  "
 			if preset == "balanced" {
 				icon = "★ "
