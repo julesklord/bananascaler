@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"os"
 	"path/filepath"
+	"slices"
 	"strings"
 	"time"
 
@@ -141,7 +142,12 @@ func (m Model) readDirCmd() tea.Cmd {
 				return readDirMsg{err: err}
 			}
 		}
-		entries, err := os.ReadDir(dir)
+		f, err := os.Open(dir)
+		if err != nil {
+			return readDirMsg{err: err}
+		}
+		defer f.Close()
+		entries, err := f.ReadDir(-1)
 		if err != nil {
 			return readDirMsg{err: err}
 		}
@@ -156,6 +162,12 @@ func (m Model) readDirCmd() tea.Cmd {
 				files = append(files, e)
 			}
 		}
+		slices.SortFunc(dirs, func(a, b os.DirEntry) int {
+			return strings.Compare(a.Name(), b.Name())
+		})
+		slices.SortFunc(files, func(a, b os.DirEntry) int {
+			return strings.Compare(a.Name(), b.Name())
+		})
 		return readDirMsg{dir: dir, files: append(dirs, files...)}
 	}
 }
