@@ -5,11 +5,11 @@ package hardware
 import (
 	"context"
 	"fmt"
+	"os/exec"
 	"runtime"
 	"strconv"
 	"strings"
 	"time"
-	"os/exec"
 )
 
 // PresetLevel defines the speed/quality tradeoff.
@@ -452,13 +452,16 @@ func ProfileDisplay(info GPUInfo, p *UpscaleProfile) string {
 // maxSafeTile returns the maximum tile size considered safe for a given
 // VRAM and model. These are conservative heuristics — not benchmarks.
 func maxSafeTile(vramMB int, model string) int {
+	hasX4Plus := strings.Contains(model, "x4plus")
+	hasAnime := strings.Contains(model, "anime")
+
 	switch {
 	case vramMB >= 12000:
 		// 12 GB+: generous
 		switch {
-		case strings.Contains(model, "x4plus") && !strings.Contains(model, "anime"):
+		case hasX4Plus && !hasAnime:
 			return 600
-		case strings.Contains(model, "x4plus-anime"):
+		case hasX4Plus && hasAnime:
 			return 500
 		default: // animevideov3
 			return 512
@@ -466,9 +469,9 @@ func maxSafeTile(vramMB int, model string) int {
 	case vramMB >= 8000:
 		// 8–12 GB
 		switch {
-		case strings.Contains(model, "x4plus") && !strings.Contains(model, "anime"):
+		case hasX4Plus && !hasAnime:
 			return 400
-		case strings.Contains(model, "x4plus-anime"):
+		case hasX4Plus && hasAnime:
 			return 350
 		default:
 			return 400
@@ -476,9 +479,9 @@ func maxSafeTile(vramMB int, model string) int {
 	case vramMB >= 4000:
 		// 4–8 GB
 		switch {
-		case strings.Contains(model, "x4plus") && !strings.Contains(model, "anime"):
+		case hasX4Plus && !hasAnime:
 			return 200
-		case strings.Contains(model, "x4plus-anime"):
+		case hasX4Plus && hasAnime:
 			return 200
 		default:
 			return 300
@@ -486,7 +489,7 @@ func maxSafeTile(vramMB int, model string) int {
 	default:
 		// <4 GB
 		switch {
-		case strings.Contains(model, "x4plus"):
+		case hasX4Plus:
 			return 100
 		default:
 			return 150
