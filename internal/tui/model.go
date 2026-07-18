@@ -419,19 +419,9 @@ func (m Model) viewExplorer() string {
 			f := m.files[i]
 			name := f.Name()
 
-			var icon, rendered string
-			if f.IsDir() {
-				icon = "  "
-				rendered = explorerDirStyle.Render(name + "/")
-			} else if isVideoFile(name) {
-				icon = "  "
-				rendered = explorerVideoStyle.Render(name)
-			} else {
-				icon = "  "
-				rendered = explorerFileStyle.Render(name)
-			}
+			icon := "  "
+			var line string
 
-			line := icon + rendered
 			if i == m.cursor {
 				// Pad line to fill width so highlight stretches
 				raw := icon + name
@@ -443,7 +433,16 @@ func (m Model) viewExplorer() string {
 					padding = 0
 				}
 				line = explorerCursorStyle.Render(" " + icon[1:] + name + strings.Repeat(" ", padding+1))
-				_ = rendered // suppress unused warning
+			} else {
+				var rendered string
+				if f.IsDir() {
+					rendered = explorerDirStyle.Render(name + "/")
+				} else if isVideoFile(name) {
+					rendered = explorerVideoStyle.Render(name)
+				} else {
+					rendered = explorerFileStyle.Render(name)
+				}
+				line = icon + rendered
 			}
 			b.WriteString(line + "\n")
 		}
