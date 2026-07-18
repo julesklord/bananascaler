@@ -434,9 +434,11 @@ func (m Model) viewExplorer() string {
 			line := icon + rendered
 			if i == m.cursor {
 				// Pad line to fill width so highlight stretches
-				raw := icon + name
+				var raw string
 				if f.IsDir() {
-					raw += "/"
+					raw = icon + name + "/"
+				} else {
+					raw = icon + name
 				}
 				padding := innerW - len(raw)
 				if padding < 0 {
