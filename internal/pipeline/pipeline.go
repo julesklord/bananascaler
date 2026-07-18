@@ -198,69 +198,19 @@ func Run(cfg *config.Config, log Logger) error {
 		log.Err("Interrupted — cancelling and cleaning up...")
 		cancel()
 	}()
-
-	// Stage 1: Frame extraction
-	log.Step("[1/3] Extracting frames...")
-	log.Progress(1, 0, 0, 0)
-	extractArgs := append(
-		[]string{"-y", "-stats", "-loglevel", "warning"},
-		decFlags...,
-	)
-	extractArgs = append(extractArgs,
-		"-i", cfg.Input,
-		"-f", "image2", "-vcodec", "mjpeg", "-q:v", fmt.Sprintf("%d", jpegQuality),
-		filepath.Join(tempIn, "frame_%05d.jpg"),
-	)
-	if err := runCmd(ctx, cfg.Verbose, "ffmpeg", extractArgs...); err != nil {
-		return fmt.Errorf("frame extraction: %w", err)
-	}
-	frameCount, err := countFiles(tempIn, ".jpg")
+	frameCount, err := extractFrames(ctx, cfg, log, decFlags, jpegQuality, tempIn)
 	if err != nil {
 		return err
 	}
-	log.Progress(1, frameCount, frameCount, 0)
-	log.OK(fmt.Sprintf("%d frames extracted.", frameCount))
 
-	// Stage 2: Neural upscale
-	log.Step(fmt.Sprintf("[2/3] Neural upscaling (%d×) via Real-ESRGAN...", cfg.Scale))
-	log.Progress(2, 0, frameCount, 0)
-	niceLevel := 0
-	if cfg.Profile != nil {
-		niceLevel = cfg.Profile.ProcessNice
-	}
-	if err := upscale(ctx, cfg, log, tempIn, tempOut, frameCount, tileSize, niceLevel); err != nil {
-		return fmt.Errorf("upscaling: %w", err)
-	}
-	log.Progress(2, frameCount, frameCount, 0)
-	log.OK("Upscaling complete.")
-
-	// Stage 3: Re-encode + audio mux → atomic write
-	log.Step("[3/3] Re-encoding and muxing audio...")
-	log.Progress(3, 0, 0, 0)
-	encArgs := []string{
-		"-y", "-stats", "-loglevel", "warning",
-		"-framerate", framerate,
-		"-i", filepath.Join(tempOut, "frame_%05d.png"),
-		"-i", cfg.Input,
-		"-map", "0:v",
-	}
-	if hasAudio {
-		encArgs = append(encArgs, "-map", "1:a", "-c:a", "copy")
-	}
-	encArgs = append(encArgs, encFlags...)
-	encArgs = append(encArgs, tmpOutput)
-
-	if err := runCmd(ctx, cfg.Verbose, "ffmpeg", encArgs...); err != nil {
-		return fmt.Errorf("video assembly: %w", err)
-	}
-	log.Progress(3, 1, 1, 0)
-
-	// Atomic rename
-	if err := os.Rename(tmpOutput, cfg.Output); err != nil {
-		return fmt.Errorf("atomic rename: %w", err)
+	if err := runUpscaleStage(ctx, cfg, log, tempIn, tempOut, frameCount, tileSize); err != nil {
+		return err
 	}
 
-	log.OK(fmt.Sprintf("Done! → %s", cfg.Output))
+	if err := encodeVideo(ctx, cfg, log, encFlags, tempOut, tmpOutput, framerate, hasAudio); err != nil {
+		return err
+	}
+
 	return nil
 }
 
@@ -359,4 +309,76 @@ func countFiles(dir, ext string) (int, error) {
 		}
 	}
 	return n, nil
+}
+
+func extractFrames(ctx context.Context, cfg *config.Config, log Logger, decFlags []string, jpegQuality int, tempIn string) (int, error) {
+	log.Step("[1/3] Extracting frames...")
+	log.Progress(1, 0, 0, 0)
+	extractArgs := append(
+		[]string{"-y", "-stats", "-loglevel", "warning"},
+		decFlags...,
+	)
+	extractArgs = append(extractArgs,
+		"-i", cfg.Input,
+		"-f", "image2", "-vcodec", "mjpeg", "-q:v", fmt.Sprintf("%d", jpegQuality),
+		filepath.Join(tempIn, "frame_%05d.jpg"),
+	)
+	if err := runCmd(ctx, cfg.Verbose, "ffmpeg", extractArgs...); err != nil {
+		return 0, fmt.Errorf("frame extraction: %w", err)
+	}
+	frameCount, err := countFiles(tempIn, ".jpg")
+	if err != nil {
+		return 0, err
+	}
+	log.Progress(1, frameCount, frameCount, 0)
+	log.OK(fmt.Sprintf("%d frames extracted.", frameCount))
+
+	return frameCount, nil
+}
+
+func runUpscaleStage(ctx context.Context, cfg *config.Config, log Logger, tempIn, tempOut string, frameCount, tileSize int) error {
+	log.Step(fmt.Sprintf("[2/3] Neural upscaling (%d×) via Real-ESRGAN...", cfg.Scale))
+	log.Progress(2, 0, frameCount, 0)
+	niceLevel := 0
+	if cfg.Profile != nil {
+		niceLevel = cfg.Profile.ProcessNice
+	}
+	if err := upscale(ctx, cfg, log, tempIn, tempOut, frameCount, tileSize, niceLevel); err != nil {
+		return fmt.Errorf("upscaling: %w", err)
+	}
+	log.Progress(2, frameCount, frameCount, 0)
+	log.OK("Upscaling complete.")
+
+	return nil
+}
+
+func encodeVideo(ctx context.Context, cfg *config.Config, log Logger, encFlags []string, tempOut, tmpOutput, framerate string, hasAudio bool) error {
+	log.Step("[3/3] Re-encoding and muxing audio...")
+	log.Progress(3, 0, 0, 0)
+	encArgs := []string{
+		"-y", "-stats", "-loglevel", "warning",
+		"-framerate", framerate,
+		"-i", filepath.Join(tempOut, "frame_%05d.png"),
+		"-i", cfg.Input,
+		"-map", "0:v",
+	}
+	if hasAudio {
+		encArgs = append(encArgs, "-map", "1:a", "-c:a", "copy")
+	}
+	encArgs = append(encArgs, encFlags...)
+	encArgs = append(encArgs, tmpOutput)
+
+	if err := runCmd(ctx, cfg.Verbose, "ffmpeg", encArgs...); err != nil {
+		return fmt.Errorf("video assembly: %w", err)
+	}
+	log.Progress(3, 1, 1, 0)
+
+	// Atomic rename
+	if err := os.Rename(tmpOutput, cfg.Output); err != nil {
+		return fmt.Errorf("atomic rename: %w", err)
+	}
+
+	log.OK(fmt.Sprintf("Done! → %s", cfg.Output))
+
+	return nil
 }
