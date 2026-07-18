@@ -5,11 +5,11 @@ package hardware
 import (
 	"context"
 	"fmt"
+	"os/exec"
 	"runtime"
 	"strconv"
 	"strings"
 	"time"
-	"os/exec"
 )
 
 // PresetLevel defines the speed/quality tradeoff.
