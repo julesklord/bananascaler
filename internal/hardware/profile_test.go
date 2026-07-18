@@ -4,61 +4,47 @@ import (
 	"testing"
 )
 
-func TestParsePreset(t *testing.T) {
+func TestMaxSafeTile(t *testing.T) {
 	tests := []struct {
-		name        string
-		input       string
-		expected    PresetLevel
-		expectError bool
+		name     string
+		vramMB   int
+		model    string
+		expected int
 	}{
-		// Valid inputs for PresetFast
-		{"fast lower", "fast", PresetFast, false},
-		{"fast short lower", "f", PresetFast, false},
-		{"fast upper", "FAST", PresetFast, false},
-		{"fast short upper", "F", PresetFast, false},
+		// 12 GB+ boundaries (vramMB >= 12000)
+		{"12GB+ x4plus", 12000, "realesrgan-x4plus", 600},
+		{"12GB+ x4plus above boundary", 24000, "realesrgan-x4plus", 600},
+		{"12GB+ x4plus-anime", 12000, "realesrgan-x4plus-anime", 500},
+		{"12GB+ default", 12000, "realesr-animevideov3-x2", 512},
 
-		// Valid inputs for PresetBalanced
-		{"balanced lower", "balanced", PresetBalanced, false},
-		{"balanced short lower", "b", PresetBalanced, false},
-		{"balanced mid lower", "bal", PresetBalanced, false},
-		{"balanced upper", "BALANCED", PresetBalanced, false},
-		{"balanced short upper", "B", PresetBalanced, false},
-		{"balanced mid upper", "BAL", PresetBalanced, false},
-		{"balanced mixed case", "Bal", PresetBalanced, false},
+		// 8-12 GB boundaries (8000 <= vramMB < 12000)
+		{"8GB+ x4plus", 8000, "realesrgan-x4plus", 400},
+		{"8GB+ x4plus near upper boundary", 11999, "realesrgan-x4plus", 400},
+		{"8GB+ x4plus-anime", 8000, "realesrgan-x4plus-anime", 350},
+		{"8GB+ x4plus-anime near upper boundary", 11999, "realesrgan-x4plus-anime", 350},
+		{"8GB+ default", 8000, "realesr-animevideov3-x2", 400},
+		{"8GB+ default near upper boundary", 11999, "realesr-animevideov3-x2", 400},
 
-		// Valid inputs for PresetQuality
-		{"quality lower", "quality", PresetQuality, false},
-		{"quality short lower", "q", PresetQuality, false},
-		{"quality mid lower", "qual", PresetQuality, false},
-		{"quality upper", "QUALITY", PresetQuality, false},
-		{"quality short upper", "Q", PresetQuality, false},
-		{"quality mid upper", "QUAL", PresetQuality, false},
-		{"quality mixed case", "Qual", PresetQuality, false},
+		// 4-8 GB boundaries (4000 <= vramMB < 8000)
+		{"4GB+ x4plus", 4000, "realesrgan-x4plus", 200},
+		{"4GB+ x4plus near upper boundary", 7999, "realesrgan-x4plus", 200},
+		{"4GB+ x4plus-anime", 4000, "realesrgan-x4plus-anime", 200},
+		{"4GB+ x4plus-anime near upper boundary", 7999, "realesrgan-x4plus-anime", 200},
+		{"4GB+ default", 4000, "realesr-animevideov3-x2", 300},
+		{"4GB+ default near upper boundary", 7999, "realesr-animevideov3-x2", 300},
 
-		// Invalid inputs
-		{"empty string", "", "", true},
-		{"unknown preset", "unknown", "", true},
-		{"typo", "fastt", "", true},
+		// <4 GB boundaries (vramMB < 4000)
+		{"<4GB x4plus near upper boundary", 3999, "realesrgan-x4plus", 100},
+		{"<4GB x4plus-anime near upper boundary", 3999, "realesrgan-x4plus-anime", 100},
+		{"<4GB default near upper boundary", 3999, "realesr-animevideov3-x2", 150},
+		{"<4GB default lower bound", 0, "realesr-animevideov3-x2", 150},
 	}
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			result, err := ParsePreset(tt.input)
-
-			if tt.expectError {
-				if err == nil {
-					t.Errorf("expected error for input %q, got none", tt.input)
-				}
-				if result != "" {
-					t.Errorf("expected empty result on error, got %q", result)
-				}
-			} else {
-				if err != nil {
-					t.Errorf("unexpected error for input %q: %v", tt.input, err)
-				}
-				if result != tt.expected {
-					t.Errorf("expected %q, got %q", tt.expected, result)
-				}
+			result := maxSafeTile(tt.vramMB, tt.model)
+			if result != tt.expected {
+				t.Errorf("maxSafeTile(%d, %q) = %d; expected %d", tt.vramMB, tt.model, result, tt.expected)
 			}
 		})
 	}
