@@ -197,193 +197,194 @@ func classifyTier(info GPUInfo) HardwareTier {
 // Mid-range tier (4-8GB) is limited to the lightweight model only —
 // heavier models at 4× scale cause SEGV on 6GB VRAM even at tile=200.
 
-func profileDB() map[HardwareTier]map[PresetLevel]*UpscaleProfile {
-	return map[HardwareTier]map[PresetLevel]*UpscaleProfile{
-		// ── Low-end: ≤5 GB VRAM (GTX 1050 Ti, GTX 1650, GTX 1060 3GB) ──────
-		// ProcessNice=15: runs at background priority — desktop stays smooth
-		TierLowEnd: {
-			PresetFast: {
-				Tier:        TierLowEnd,
-				Preset:      PresetFast,
-				Description: "Fast mode for low-end GPUs (≤5GB). Speed over quality.",
-				TileSize:    64,
-				Model:       "realesr-animevideov3-x2",
-				JPEGQuality: 4,
-				NVEncPreset: "p1",
-				X265Preset:  "ultrafast",
-				X265CRF:     28,
-				MaxScale:    2,
-				ProcessNice: 15,
-			},
-			PresetBalanced: {
-				Tier:        TierLowEnd,
-				Preset:      PresetBalanced,
-				Description: "Balanced mode for low-end GPUs. Good speed/quality ratio.",
-				TileSize:    100,
-				Model:       "realesr-animevideov3-x2",
-				JPEGQuality: 3,
-				NVEncPreset: "p3",
-				X265Preset:  "fast",
-				X265CRF:     26,
-				MaxScale:    2,
-				ProcessNice: 15,
-			},
-			PresetQuality: {
-				Tier:        TierLowEnd,
-				Preset:      PresetQuality,
-				Description: "Quality mode for low-end GPUs. Best possible at this tier.",
-				TileSize:    150,
-				Model:       "realesr-animevideov3-x2",
-				JPEGQuality: 2,
-				NVEncPreset: "p5",
-				X265Preset:  "medium",
-				X265CRF:     24,
-				MaxScale:    3,
-				ProcessNice: 15,
-			},
+var profileDB = map[HardwareTier]map[PresetLevel]*UpscaleProfile{
+
+	// ── Low-end: ≤5 GB VRAM (GTX 1050 Ti, GTX 1650, GTX 1060 3GB) ──────
+	// ProcessNice=15: runs at background priority — desktop stays smooth
+	TierLowEnd: {
+		PresetFast: {
+			Tier:        TierLowEnd,
+			Preset:      PresetFast,
+			Description: "Fast mode for low-end GPUs (≤5GB). Speed over quality.",
+			TileSize:    64,
+			Model:       "realesr-animevideov3-x2",
+			JPEGQuality: 4,
+			NVEncPreset: "p1",
+			X265Preset:  "ultrafast",
+			X265CRF:     28,
+			MaxScale:    2,
+			ProcessNice: 15,
 		},
-		// ── Mid-range: 5–10 GB VRAM (GTX 1060 6GB, RTX 2060/2070, RTX 3070) ─
-		// ProcessNice=10: noticeable background priority, still fast enough
-		TierMidRange: {
-			PresetFast: {
-				Tier:        TierMidRange,
-				Preset:      PresetFast,
-				Description: "Fast mode for mid-range GPUs (5-10GB). Quick upscaling.",
-				TileSize:    200,
-				Model:       "realesr-animevideov3-x2",
-				JPEGQuality: 3,
-				NVEncPreset: "p3",
-				X265Preset:  "fast",
-				X265CRF:     26,
-				MaxScale:    2,
-				ProcessNice: 10,
-			},
-			PresetBalanced: {
-				Tier:        TierMidRange,
-				Preset:      PresetBalanced,
-				Description: "Balanced mode for mid-range GPUs. Recommended for most users.",
-				TileSize:    300,
-				Model:       "realesr-animevideov3-x2",
-				JPEGQuality: 2,
-				NVEncPreset: "p5",
-				X265Preset:  "medium",
-				X265CRF:     22,
-				MaxScale:    2,
-				ProcessNice: 10,
-			},
-			PresetQuality: {
-				Tier:        TierMidRange,
-				Preset:      PresetQuality,
-				Description: "Quality mode for mid-range GPUs. Best encode settings, 2× upscale.",
-				TileSize:    350,
-				Model:       "realesrgan-x4plus-anime",
-				JPEGQuality: 1,
-				NVEncPreset: "p7",
-				X265Preset:  "slow",
-				X265CRF:     18,
-				MaxScale:    2,
-				ProcessNice: 10,
-			},
+		PresetBalanced: {
+			Tier:        TierLowEnd,
+			Preset:      PresetBalanced,
+			Description: "Balanced mode for low-end GPUs. Good speed/quality ratio.",
+			TileSize:    100,
+			Model:       "realesr-animevideov3-x2",
+			JPEGQuality: 3,
+			NVEncPreset: "p3",
+			X265Preset:  "fast",
+			X265CRF:     26,
+			MaxScale:    2,
+			ProcessNice: 15,
 		},
-		// ── High-end: ≥10 GB VRAM (RTX 3080, RTX 4090, RX 6800 XT) ─────────
-		// ProcessNice=5: slight background priority; these GPUs handle it
-		TierHighEnd: {
-			PresetFast: {
-				Tier:        TierHighEnd,
-				Preset:      PresetFast,
-				Description: "Fast mode for high-end GPUs (10GB+). Quick with heavy models.",
-				TileSize:    300,
-				Model:       "realesrgan-x4plus-anime",
-				JPEGQuality: 2,
-				NVEncPreset: "p4",
-				X265Preset:  "medium",
-				X265CRF:     22,
-				MaxScale:    4,
-				ProcessNice: 5,
-			},
-			PresetBalanced: {
-				Tier:        TierHighEnd,
-				Preset:      PresetBalanced,
-				Description: "Balanced mode for high-end GPUs. Excellent quality and speed.",
-				TileSize:    400,
-				Model:       "realesrgan-x4plus",
-				JPEGQuality: 2,
-				NVEncPreset: "p6",
-				X265Preset:  "slow",
-				X265CRF:     20,
-				MaxScale:    4,
-				ProcessNice: 5,
-			},
-			PresetQuality: {
-				Tier:        TierHighEnd,
-				Preset:      PresetQuality,
-				Description: "Quality mode for high-end GPUs. Maximum quality, no compromises.",
-				TileSize:    512,
-				Model:       "realesrgan-x4plus",
-				JPEGQuality: 1,
-				NVEncPreset: "p7",
-				X265Preset:  "veryslow",
-				X265CRF:     18,
-				MaxScale:    4,
-				ProcessNice: 5,
-			},
+		PresetQuality: {
+			Tier:        TierLowEnd,
+			Preset:      PresetQuality,
+			Description: "Quality mode for low-end GPUs. Best possible at this tier.",
+			TileSize:    150,
+			Model:       "realesr-animevideov3-x2",
+			JPEGQuality: 2,
+			NVEncPreset: "p5",
+			X265Preset:  "medium",
+			X265CRF:     24,
+			MaxScale:    3,
+			ProcessNice: 15,
 		},
-		// ── Unknown: no NVIDIA GPU (CPU-only / Vulkan via iGPU) ────────────
-		// ProcessNice=19: max background; CPU-only is already slow, keep desktop alive
-		TierUnknown: {
-			PresetFast: {
-				Tier:        TierUnknown,
-				Preset:      PresetFast,
-				Description: "Fast fallback (no NVIDIA GPU detected). CPU-only mode.",
-				TileSize:    64,
-				Model:       "realesr-animevideov3-x2",
-				JPEGQuality: 4,
-				NVEncPreset: "",
-				X265Preset:  "ultrafast",
-				X265CRF:     28,
-				MaxScale:    2,
-				ProcessNice: 19,
-			},
-			PresetBalanced: {
-				Tier:        TierUnknown,
-				Preset:      PresetBalanced,
-				Description: "Balanced fallback (no NVIDIA GPU detected). CPU-only mode.",
-				TileSize:    100,
-				Model:       "realesr-animevideov3-x2",
-				JPEGQuality: 3,
-				NVEncPreset: "",
-				X265Preset:  "fast",
-				X265CRF:     24,
-				MaxScale:    3,
-				ProcessNice: 19,
-			},
-			PresetQuality: {
-				Tier:        TierUnknown,
-				Preset:      PresetQuality,
-				Description: "Quality fallback (no NVIDIA GPU detected). CPU-only mode.",
-				TileSize:    150,
-				Model:       "realesr-animevideov3-x2",
-				JPEGQuality: 2,
-				NVEncPreset: "",
-				X265Preset:  "medium",
-				X265CRF:     22,
-				MaxScale:    3,
-				ProcessNice: 19,
-			},
+	},
+	// ── Mid-range: 5–10 GB VRAM (GTX 1060 6GB, RTX 2060/2070, RTX 3070) ─
+	// ProcessNice=10: noticeable background priority, still fast enough
+	TierMidRange: {
+		PresetFast: {
+			Tier:        TierMidRange,
+			Preset:      PresetFast,
+			Description: "Fast mode for mid-range GPUs (5-10GB). Quick upscaling.",
+			TileSize:    200,
+			Model:       "realesr-animevideov3-x2",
+			JPEGQuality: 3,
+			NVEncPreset: "p3",
+			X265Preset:  "fast",
+			X265CRF:     26,
+			MaxScale:    2,
+			ProcessNice: 10,
 		},
-	}
+		PresetBalanced: {
+			Tier:        TierMidRange,
+			Preset:      PresetBalanced,
+			Description: "Balanced mode for mid-range GPUs. Recommended for most users.",
+			TileSize:    300,
+			Model:       "realesr-animevideov3-x2",
+			JPEGQuality: 2,
+			NVEncPreset: "p5",
+			X265Preset:  "medium",
+			X265CRF:     22,
+			MaxScale:    2,
+			ProcessNice: 10,
+		},
+		PresetQuality: {
+			Tier:        TierMidRange,
+			Preset:      PresetQuality,
+			Description: "Quality mode for mid-range GPUs. Best encode settings, 2× upscale.",
+			TileSize:    350,
+			Model:       "realesrgan-x4plus-anime",
+			JPEGQuality: 1,
+			NVEncPreset: "p7",
+			X265Preset:  "slow",
+			X265CRF:     18,
+			MaxScale:    2,
+			ProcessNice: 10,
+		},
+	},
+	// ── High-end: ≥10 GB VRAM (RTX 3080, RTX 4090, RX 6800 XT) ─────────
+	// ProcessNice=5: slight background priority; these GPUs handle it
+	TierHighEnd: {
+		PresetFast: {
+			Tier:        TierHighEnd,
+			Preset:      PresetFast,
+			Description: "Fast mode for high-end GPUs (10GB+). Quick with heavy models.",
+			TileSize:    300,
+			Model:       "realesrgan-x4plus-anime",
+			JPEGQuality: 2,
+			NVEncPreset: "p4",
+			X265Preset:  "medium",
+			X265CRF:     22,
+			MaxScale:    4,
+			ProcessNice: 5,
+		},
+		PresetBalanced: {
+			Tier:        TierHighEnd,
+			Preset:      PresetBalanced,
+			Description: "Balanced mode for high-end GPUs. Excellent quality and speed.",
+			TileSize:    400,
+			Model:       "realesrgan-x4plus",
+			JPEGQuality: 2,
+			NVEncPreset: "p6",
+			X265Preset:  "slow",
+			X265CRF:     20,
+			MaxScale:    4,
+			ProcessNice: 5,
+		},
+		PresetQuality: {
+			Tier:        TierHighEnd,
+			Preset:      PresetQuality,
+			Description: "Quality mode for high-end GPUs. Maximum quality, no compromises.",
+			TileSize:    512,
+			Model:       "realesrgan-x4plus",
+			JPEGQuality: 1,
+			NVEncPreset: "p7",
+			X265Preset:  "veryslow",
+			X265CRF:     18,
+			MaxScale:    4,
+			ProcessNice: 5,
+		},
+	},
+	// ── Unknown: no NVIDIA GPU (CPU-only / Vulkan via iGPU) ────────────
+	// ProcessNice=19: max background; CPU-only is already slow, keep desktop alive
+	TierUnknown: {
+		PresetFast: {
+			Tier:        TierUnknown,
+			Preset:      PresetFast,
+			Description: "Fast fallback (no NVIDIA GPU detected). CPU-only mode.",
+			TileSize:    64,
+			Model:       "realesr-animevideov3-x2",
+			JPEGQuality: 4,
+			NVEncPreset: "",
+			X265Preset:  "ultrafast",
+			X265CRF:     28,
+			MaxScale:    2,
+			ProcessNice: 19,
+		},
+		PresetBalanced: {
+			Tier:        TierUnknown,
+			Preset:      PresetBalanced,
+			Description: "Balanced fallback (no NVIDIA GPU detected). CPU-only mode.",
+			TileSize:    100,
+			Model:       "realesr-animevideov3-x2",
+			JPEGQuality: 3,
+			NVEncPreset: "",
+			X265Preset:  "fast",
+			X265CRF:     24,
+			MaxScale:    3,
+			ProcessNice: 19,
+		},
+		PresetQuality: {
+			Tier:        TierUnknown,
+			Preset:      PresetQuality,
+			Description: "Quality fallback (no NVIDIA GPU detected). CPU-only mode.",
+			TileSize:    150,
+			Model:       "realesr-animevideov3-x2",
+			JPEGQuality: 2,
+			NVEncPreset: "",
+			X265Preset:  "medium",
+			X265CRF:     22,
+			MaxScale:    3,
+			ProcessNice: 19,
+		},
+	},
 }
 
 // GetProfile returns a specific profile by tier and preset.
 func GetProfile(tier HardwareTier, preset PresetLevel) *UpscaleProfile {
-	db := profileDB()
+	db := profileDB
 	if tierProfiles, ok := db[tier]; ok {
 		if p, ok := tierProfiles[preset]; ok {
-			return p
+			clone := *p
+			return &clone
 		}
 	}
 	// Fallback: unknown tier, balanced preset
-	return db[TierUnknown][PresetBalanced]
+	fallback := *db[TierUnknown][PresetBalanced]
+	return &fallback
 }
 
 // GetDefaultProfile returns the "balanced" profile for a given tier.
