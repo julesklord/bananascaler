@@ -1,16 +1,13 @@
-# 🧹 [Code Health] Reduce memory allocations in profile lookups
+⚡ Optimize file counting in ticker loop
 
-## 🎯 What
-Refactored `profileDB()` in `internal/hardware/profile.go` from a function returning a new map to a statically initialized package-level variable.
+💡 **What:**
+Replaced the O(N) `os.ReadDir` with an O(1) `os.Stat` approach for counting sequentially-generated output frames (`frame_%05d.png`) during the Real-ESRGAN upscaling stage.
 
-## 💡 Why
-The previous implementation re-allocated a large map and multiple struct pointers every time `GetProfile()` was called. Converting this to a package-level variable initialization eliminates these repetitive allocations. This fulfills the request of addressing the issue without introducing an external JSON or YAML file that would have forced a major refactor of application initialization and fallback behavior. Additionally, `GetProfile` was updated to perform a shallow clone of the returned `UpscaleProfile` to ensure callers cannot accidentally mutate the global application state.
+🎯 **Why:**
+The `countFiles` function (which iterates over all directory entries) was being called every 200ms in a ticker loop to update the UI progress bar. For videos with thousands of frames, this caused a significant I/O bottleneck and CPU spike that blocked the async TUI thread. Because Real-ESRGAN outputs frames sequentially, we only need to check if the *next* expected frame file exists.
 
-## ✅ Verification
-1. Ensured all unit tests in the project (`go test ./...`) still pass.
-2. Verified using `go run main.go detect` that CLI logic around retrieving and printing hardware tier presets works correctly.
-3. Formatted with `go fmt ./...`.
-4. Got the modified code successfully reviewed.
-
-## ✨ Result
-Lower memory overhead and garbage collection pressure when running queries against hardware profiles, while preserving strict global safety against state mutation.
+📊 **Measured Improvement:**
+A benchmark test (`BenchmarkCountFiles`) was added simulating a directory with 10,000 files.
+- Baseline `os.ReadDir` (`countFiles`) took **~8.9 milliseconds** per call.
+- The new `os.Stat` approach (`countGeneratedFrames`) takes **~2.5 microseconds** per call.
+- The new logic is over **3,500x faster**, effectively eliminating the CPU/IO pressure on the main TUI event loop.

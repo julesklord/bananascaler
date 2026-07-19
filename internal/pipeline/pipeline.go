@@ -305,14 +305,14 @@ func upscale(ctx context.Context, cfg *config.Config, log Logger, tempIn, tempOu
 	for {
 		select {
 		case err := <-done:
-			final, _ := countFiles(tempOut, ".png")
+			final := countGeneratedFrames(tempOut, prev, ".png")
 			if final > prev {
 				log.Progress(2, final, total, 0)
 			}
 			return err
 
 		case <-ticker.C:
-			n, _ := countFiles(tempOut, ".png")
+			n := countGeneratedFrames(tempOut, prev, ".png")
 			if n > prev {
 				eta := calcETA(start, n, total)
 				log.Progress(2, n, total, eta)
@@ -345,6 +345,20 @@ func runCmd(ctx context.Context, verbose bool, name string, args ...string) erro
 		cmd.Stdout = os.Stdout
 	}
 	return cmd.Run()
+}
+
+// countGeneratedFrames tracks sequentially generated frames using O(1) checks.
+// It relies on the fact that files are named frame_00001.png, frame_00002.png, etc.
+func countGeneratedFrames(dir string, prev int, ext string) int {
+	for {
+		_, err := os.Stat(filepath.Join(dir, fmt.Sprintf("frame_%05d%s", prev+1, ext)))
+		if err == nil {
+			prev++
+		} else {
+			break
+		}
+	}
+	return prev
 }
 
 func countFiles(dir, ext string) (int, error) {
