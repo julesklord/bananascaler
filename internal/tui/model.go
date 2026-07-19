@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"os"
 	"path/filepath"
+	"slices"
 	"strings"
 	"time"
 
@@ -141,7 +142,12 @@ func (m Model) readDirCmd() tea.Cmd {
 				return readDirMsg{err: err}
 			}
 		}
-		entries, err := os.ReadDir(dir)
+		f, err := os.Open(dir)
+		if err != nil {
+			return readDirMsg{err: err}
+		}
+		defer f.Close()
+		entries, err := f.ReadDir(-1)
 		if err != nil {
 			return readDirMsg{err: err}
 		}
@@ -156,6 +162,12 @@ func (m Model) readDirCmd() tea.Cmd {
 				files = append(files, e)
 			}
 		}
+		slices.SortFunc(dirs, func(a, b os.DirEntry) int {
+			return strings.Compare(a.Name(), b.Name())
+		})
+		slices.SortFunc(files, func(a, b os.DirEntry) int {
+			return strings.Compare(a.Name(), b.Name())
+		})
 		return readDirMsg{dir: dir, files: append(dirs, files...)}
 	}
 }
@@ -419,31 +431,32 @@ func (m Model) viewExplorer() string {
 			f := m.files[i]
 			name := f.Name()
 
-			var icon, rendered string
-			if f.IsDir() {
-				icon = "  "
-				rendered = explorerDirStyle.Render(name + "/")
-			} else if isVideoFile(name) {
-				icon = "  "
-				rendered = explorerVideoStyle.Render(name)
-			} else {
-				icon = "  "
-				rendered = explorerFileStyle.Render(name)
-			}
+			icon := "  "
+			var line string
 
-			line := icon + rendered
 			if i == m.cursor {
 				// Pad line to fill width so highlight stretches
-				raw := icon + name
+				var raw string
 				if f.IsDir() {
-					raw += "/"
+					raw = icon + name + "/"
+				} else {
+					raw = icon + name
 				}
 				padding := innerW - len(raw)
 				if padding < 0 {
 					padding = 0
 				}
 				line = explorerCursorStyle.Render(" " + icon[1:] + name + strings.Repeat(" ", padding+1))
-				_ = rendered // suppress unused warning
+			} else {
+				var rendered string
+				if f.IsDir() {
+					rendered = explorerDirStyle.Render(name + "/")
+				} else if isVideoFile(name) {
+					rendered = explorerVideoStyle.Render(name)
+				} else {
+					rendered = explorerFileStyle.Render(name)
+				}
+				line = icon + rendered
 			}
 			b.WriteString(line + "\n")
 		}

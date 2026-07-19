@@ -44,11 +44,13 @@ const (
 	cCyan   = "\033[36m"
 )
 
-func (l *StdoutLogger) Info(msg string)  { fmt.Printf("%s%s[INFO]%s %s\n", cBold, cCyan, cReset, msg) }
-func (l *StdoutLogger) OK(msg string)    { fmt.Printf("%s%s[ OK ]%s %s\n", cBold, cGreen, cReset, msg) }
-func (l *StdoutLogger) Warn(msg string)  { fmt.Printf("%s%s[WARN]%s %s\n", cBold, cYellow, cReset, msg) }
-func (l *StdoutLogger) Step(msg string)  { fmt.Printf("\n%s%s🍌 %s%s\n", cBold, cYellow, msg, cReset) }
-func (l *StdoutLogger) Err(msg string)   { fmt.Fprintf(os.Stderr, "%s%s[ERR ]%s %s\n", cBold, cRed, cReset, msg) }
+func (l *StdoutLogger) Info(msg string) { fmt.Printf("%s%s[INFO]%s %s\n", cBold, cCyan, cReset, msg) }
+func (l *StdoutLogger) OK(msg string)   { fmt.Printf("%s%s[ OK ]%s %s\n", cBold, cGreen, cReset, msg) }
+func (l *StdoutLogger) Warn(msg string) { fmt.Printf("%s%s[WARN]%s %s\n", cBold, cYellow, cReset, msg) }
+func (l *StdoutLogger) Step(msg string) { fmt.Printf("\n%s%s🍌 %s%s\n", cBold, cYellow, msg, cReset) }
+func (l *StdoutLogger) Err(msg string) {
+	fmt.Fprintf(os.Stderr, "%s%s[ERR ]%s %s\n", cBold, cRed, cReset, msg)
+}
 func (l *StdoutLogger) Progress(stage, current, total int, eta time.Duration) {
 	if total > 0 {
 		pct := float64(current) / float64(total) * 100
@@ -163,16 +165,17 @@ func Run(cfg *config.Config, log Logger) error {
 	log.Info(fmt.Sprintf("Output → %s", cfg.Output))
 
 	// Session temp dirs
-	sessionID := fmt.Sprintf("bananascaler_%d_%d", time.Now().Unix(), os.Getpid())
-	tempIn := filepath.Join(os.TempDir(), sessionID+"_in")
-	tempOut := filepath.Join(os.TempDir(), sessionID+"_out")
-	tmpOutput := cfg.Output + ".tmp"
-
-	for _, d := range []string{tempIn, tempOut} {
-		if err := os.MkdirAll(d, 0o755); err != nil {
-			return fmt.Errorf("create temp dir %q: %w", d, err)
-		}
+	tempIn, err := os.MkdirTemp("", "bananascaler_*_in")
+	if err != nil {
+		return fmt.Errorf("create temp in dir: %w", err)
 	}
+
+	tempOut, err := os.MkdirTemp("", "bananascaler_*_out")
+	if err != nil {
+		os.RemoveAll(tempIn)
+		return fmt.Errorf("create temp out dir: %w", err)
+	}
+	tmpOutput := cfg.Output + ".tmp"
 
 	// Cleanup
 	cleanup := func() {
@@ -195,69 +198,19 @@ func Run(cfg *config.Config, log Logger) error {
 		log.Err("Interrupted — cancelling and cleaning up...")
 		cancel()
 	}()
-
-	// Stage 1: Frame extraction
-	log.Step("[1/3] Extracting frames...")
-	log.Progress(1, 0, 0, 0)
-	extractArgs := append(
-		[]string{"-y", "-stats", "-loglevel", "warning"},
-		decFlags...,
-	)
-	extractArgs = append(extractArgs,
-		"-i", cfg.Input,
-		"-f", "image2", "-vcodec", "mjpeg", "-q:v", fmt.Sprintf("%d", jpegQuality),
-		filepath.Join(tempIn, "frame_%05d.jpg"),
-	)
-	if err := runCmd(ctx, cfg.Verbose, "ffmpeg", extractArgs...); err != nil {
-		return fmt.Errorf("frame extraction: %w", err)
-	}
-	frameCount, err := countFiles(tempIn, ".jpg")
+	frameCount, err := extractFrames(ctx, cfg, log, decFlags, jpegQuality, tempIn)
 	if err != nil {
 		return err
 	}
-	log.Progress(1, frameCount, frameCount, 0)
-	log.OK(fmt.Sprintf("%d frames extracted.", frameCount))
 
-	// Stage 2: Neural upscale
-	log.Step(fmt.Sprintf("[2/3] Neural upscaling (%d×) via Real-ESRGAN...", cfg.Scale))
-	log.Progress(2, 0, frameCount, 0)
-	niceLevel := 0
-	if cfg.Profile != nil {
-		niceLevel = cfg.Profile.ProcessNice
-	}
-	if err := upscale(ctx, cfg, log, tempIn, tempOut, frameCount, tileSize, niceLevel); err != nil {
-		return fmt.Errorf("upscaling: %w", err)
-	}
-	log.Progress(2, frameCount, frameCount, 0)
-	log.OK("Upscaling complete.")
-
-	// Stage 3: Re-encode + audio mux → atomic write
-	log.Step("[3/3] Re-encoding and muxing audio...")
-	log.Progress(3, 0, 0, 0)
-	encArgs := []string{
-		"-y", "-stats", "-loglevel", "warning",
-		"-framerate", framerate,
-		"-i", filepath.Join(tempOut, "frame_%05d.png"),
-		"-i", cfg.Input,
-		"-map", "0:v",
-	}
-	if hasAudio {
-		encArgs = append(encArgs, "-map", "1:a", "-c:a", "copy")
-	}
-	encArgs = append(encArgs, encFlags...)
-	encArgs = append(encArgs, tmpOutput)
-
-	if err := runCmd(ctx, cfg.Verbose, "ffmpeg", encArgs...); err != nil {
-		return fmt.Errorf("video assembly: %w", err)
-	}
-	log.Progress(3, 1, 1, 0)
-
-	// Atomic rename
-	if err := os.Rename(tmpOutput, cfg.Output); err != nil {
-		return fmt.Errorf("atomic rename: %w", err)
+	if err := runUpscaleStage(ctx, cfg, log, tempIn, tempOut, frameCount, tileSize); err != nil {
+		return err
 	}
 
-	log.OK(fmt.Sprintf("Done! → %s", cfg.Output))
+	if err := encodeVideo(ctx, cfg, log, encFlags, tempOut, tmpOutput, framerate, hasAudio); err != nil {
+		return err
+	}
+
 	return nil
 }
 
@@ -302,14 +255,14 @@ func upscale(ctx context.Context, cfg *config.Config, log Logger, tempIn, tempOu
 	for {
 		select {
 		case err := <-done:
-			final, _ := countFiles(tempOut, ".png")
+			final := countGeneratedFrames(tempOut, prev, ".png")
 			if final > prev {
 				log.Progress(2, final, total, 0)
 			}
 			return err
 
 		case <-ticker.C:
-			n, _ := countFiles(tempOut, ".png")
+			n := countGeneratedFrames(tempOut, prev, ".png")
 			if n > prev {
 				eta := calcETA(start, n, total)
 				log.Progress(2, n, total, eta)
@@ -344,6 +297,20 @@ func runCmd(ctx context.Context, verbose bool, name string, args ...string) erro
 	return cmd.Run()
 }
 
+// countGeneratedFrames tracks sequentially generated frames using O(1) checks.
+// It relies on the fact that files are named frame_00001.png, frame_00002.png, etc.
+func countGeneratedFrames(dir string, prev int, ext string) int {
+	for {
+		_, err := os.Stat(filepath.Join(dir, fmt.Sprintf("frame_%05d%s", prev+1, ext)))
+		if err == nil {
+			prev++
+		} else {
+			break
+		}
+	}
+	return prev
+}
+
 func countFiles(dir, ext string) (int, error) {
 	entries, err := os.ReadDir(dir)
 	if err != nil {
@@ -356,4 +323,76 @@ func countFiles(dir, ext string) (int, error) {
 		}
 	}
 	return n, nil
+}
+
+func extractFrames(ctx context.Context, cfg *config.Config, log Logger, decFlags []string, jpegQuality int, tempIn string) (int, error) {
+	log.Step("[1/3] Extracting frames...")
+	log.Progress(1, 0, 0, 0)
+	extractArgs := append(
+		[]string{"-y", "-stats", "-loglevel", "warning"},
+		decFlags...,
+	)
+	extractArgs = append(extractArgs,
+		"-i", cfg.Input,
+		"-f", "image2", "-vcodec", "mjpeg", "-q:v", fmt.Sprintf("%d", jpegQuality),
+		filepath.Join(tempIn, "frame_%05d.jpg"),
+	)
+	if err := runCmd(ctx, cfg.Verbose, "ffmpeg", extractArgs...); err != nil {
+		return 0, fmt.Errorf("frame extraction: %w", err)
+	}
+	frameCount, err := countFiles(tempIn, ".jpg")
+	if err != nil {
+		return 0, err
+	}
+	log.Progress(1, frameCount, frameCount, 0)
+	log.OK(fmt.Sprintf("%d frames extracted.", frameCount))
+
+	return frameCount, nil
+}
+
+func runUpscaleStage(ctx context.Context, cfg *config.Config, log Logger, tempIn, tempOut string, frameCount, tileSize int) error {
+	log.Step(fmt.Sprintf("[2/3] Neural upscaling (%d×) via Real-ESRGAN...", cfg.Scale))
+	log.Progress(2, 0, frameCount, 0)
+	niceLevel := 0
+	if cfg.Profile != nil {
+		niceLevel = cfg.Profile.ProcessNice
+	}
+	if err := upscale(ctx, cfg, log, tempIn, tempOut, frameCount, tileSize, niceLevel); err != nil {
+		return fmt.Errorf("upscaling: %w", err)
+	}
+	log.Progress(2, frameCount, frameCount, 0)
+	log.OK("Upscaling complete.")
+
+	return nil
+}
+
+func encodeVideo(ctx context.Context, cfg *config.Config, log Logger, encFlags []string, tempOut, tmpOutput, framerate string, hasAudio bool) error {
+	log.Step("[3/3] Re-encoding and muxing audio...")
+	log.Progress(3, 0, 0, 0)
+	encArgs := []string{
+		"-y", "-stats", "-loglevel", "warning",
+		"-framerate", framerate,
+		"-i", filepath.Join(tempOut, "frame_%05d.png"),
+		"-i", cfg.Input,
+		"-map", "0:v",
+	}
+	if hasAudio {
+		encArgs = append(encArgs, "-map", "1:a", "-c:a", "copy")
+	}
+	encArgs = append(encArgs, encFlags...)
+	encArgs = append(encArgs, tmpOutput)
+
+	if err := runCmd(ctx, cfg.Verbose, "ffmpeg", encArgs...); err != nil {
+		return fmt.Errorf("video assembly: %w", err)
+	}
+	log.Progress(3, 1, 1, 0)
+
+	// Atomic rename
+	if err := os.Rename(tmpOutput, cfg.Output); err != nil {
+		return fmt.Errorf("atomic rename: %w", err)
+	}
+
+	log.OK(fmt.Sprintf("Done! → %s", cfg.Output))
+
+	return nil
 }
