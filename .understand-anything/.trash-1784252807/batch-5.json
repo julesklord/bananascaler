@@ -1,0 +1,159 @@
+{
+  "nodes": [
+    {
+      "id": "document:AGENTS.md",
+      "type": "document",
+      "name": "AGENTS.md",
+      "filePath": "AGENTS.md",
+      "summary": "Root agent/skills registry for AI tooling: lists available skills (docx, pdf, frontend-design, etc.) and how to invoke them via openskills; scoped project instructions for agents working in this repo.",
+      "tags": [
+        "documentation",
+        "agent-guide",
+        "skills",
+        "conventions"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "document:CHANGELOG.md",
+      "type": "document",
+      "name": "CHANGELOG.md",
+      "filePath": "CHANGELOG.md",
+      "summary": "Keep-a-Changelog release history for bananascaler (0.1.0–0.4.0): hardware profiles, TUI file explorer, Bubbletea dashboard, Go rewrite, and VRAM/tile safety fixes.",
+      "tags": [
+        "documentation",
+        "changelog",
+        "release-notes",
+        "semver"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:Makefile",
+      "type": "file",
+      "name": "Makefile",
+      "filePath": "Makefile",
+      "summary": "Root build system for bananascaler: build (go vet + stripped binary to bin/bananascaler), install to PREFIX, tidy, test, vet, clean, and help targets.",
+      "tags": [
+        "build-system",
+        "infrastructure",
+        "make",
+        "go"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "document:README.md",
+      "type": "document",
+      "name": "README.md",
+      "filePath": "README.md",
+      "summary": "Primary project docs for bananascaler: GPU neural video upscaler overview, requirements, install, profiles/VRAM safety, architecture (Cobra/TUI/pipeline), usage, TUI dashboard, and roadmap.",
+      "tags": [
+        "documentation",
+        "readme",
+        "architecture",
+        "usage"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "config:go.mod",
+      "type": "config",
+      "name": "go.mod",
+      "filePath": "go.mod",
+      "summary": "Go module github.com/julesklord/bananascaler (go 1.24.2) declaring direct deps: bubbletea, lipgloss, cobra, and golang.org/x/term.",
+      "tags": [
+        "configuration",
+        "go-modules",
+        "dependencies"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "config:go.sum",
+      "type": "config",
+      "name": "go.sum",
+      "filePath": "go.sum",
+      "summary": "Checksum lockfile for go.mod module graph (direct and indirect Charmbracelet/Cobra/x packages).",
+      "tags": [
+        "configuration",
+        "go-modules",
+        "lockfile",
+        "checksums"
+      ],
+      "complexity": "simple"
+    }
+  ],
+  "edges": [
+    {
+      "source": "document:README.md",
+      "target": "file:main.go",
+      "type": "documents",
+      "direction": "forward",
+      "weight": 0.9
+    },
+    {
+      "source": "document:README.md",
+      "target": "document:CHANGELOG.md",
+      "type": "related",
+      "direction": "forward",
+      "weight": 0.6
+    },
+    {
+      "source": "document:CHANGELOG.md",
+      "target": "file:main.go",
+      "type": "documents",
+      "direction": "forward",
+      "weight": 0.5
+    },
+    {
+      "source": "document:AGENTS.md",
+      "target": "document:README.md",
+      "type": "related",
+      "direction": "forward",
+      "weight": 0.4
+    },
+    {
+      "source": "document:AGENTS.md",
+      "target": "file:main.go",
+      "type": "documents",
+      "direction": "forward",
+      "weight": 0.3
+    },
+    {
+      "source": "config:go.mod",
+      "target": "file:main.go",
+      "type": "configures",
+      "direction": "forward",
+      "weight": 0.9
+    },
+    {
+      "source": "config:go.sum",
+      "target": "config:go.mod",
+      "type": "depends_on",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:Makefile",
+      "target": "file:main.go",
+      "type": "depends_on",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:Makefile",
+      "target": "config:go.mod",
+      "type": "depends_on",
+      "direction": "forward",
+      "weight": 0.6
+    },
+    {
+      "source": "document:README.md",
+      "target": "file:Makefile",
+      "type": "documents",
+      "direction": "forward",
+      "weight": 0.5
+    }
+  ]
+}

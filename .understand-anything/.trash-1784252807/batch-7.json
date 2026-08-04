@@ -1,0 +1,99 @@
+{
+  "nodes": [
+    {
+      "id": "file:.understand-anything/.understandignore",
+      "type": "file",
+      "name": ".understandignore",
+      "filePath": ".understand-anything/.understandignore",
+      "summary": "Ignore patterns for the understand-anything knowledge-graph analyzer; suggested exclusions from gitignore and project layout.",
+      "tags": [
+        "configuration",
+        "ignore-rules",
+        "tooling"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "config:.understand-anything/config.json",
+      "type": "config",
+      "name": "config.json",
+      "filePath": ".understand-anything/config.json",
+      "summary": "Understand-anything project config storing output language and auto-update preferences for graph analysis.",
+      "tags": [
+        "configuration",
+        "tooling",
+        "knowledge-graph"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "config:.understand-anything/intermediate/scan-raw.json",
+      "type": "config",
+      "name": "scan-raw.json",
+      "filePath": ".understand-anything/intermediate/scan-raw.json",
+      "summary": "Intermediate scan artifact from the understand-anything pipeline listing discovered files, languages, and categories.",
+      "tags": [
+        "configuration",
+        "intermediate",
+        "tooling"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:docs/demo.tape",
+      "type": "file",
+      "name": "demo.tape",
+      "filePath": "docs/demo.tape",
+      "summary": "VHS/tape script that records a terminal demo of bananascaler for generating docs/demo.gif.",
+      "tags": [
+        "documentation",
+        "demo",
+        "script"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:VERSION",
+      "type": "file",
+      "name": "VERSION",
+      "filePath": "VERSION",
+      "summary": "Single-line version string used by the Makefile and release process for the bananascaler binary.",
+      "tags": [
+        "versioning",
+        "release",
+        "build-system"
+      ],
+      "complexity": "simple"
+    }
+  ],
+  "edges": [
+    {
+      "source": "file:docs/demo.tape",
+      "target": "document:README.md",
+      "type": "related",
+      "direction": "forward",
+      "weight": 0.5
+    },
+    {
+      "source": "file:VERSION",
+      "target": "file:Makefile",
+      "type": "related",
+      "direction": "forward",
+      "weight": 0.5
+    },
+    {
+      "source": "config:.understand-anything/config.json",
+      "target": "file:.understand-anything/.understandignore",
+      "type": "related",
+      "direction": "forward",
+      "weight": 0.5
+    },
+    {
+      "source": "config:.understand-anything/intermediate/scan-raw.json",
+      "target": "config:.understand-anything/config.json",
+      "type": "related",
+      "direction": "forward",
+      "weight": 0.5
+    }
+  ]
+}

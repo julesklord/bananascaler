@@ -1,0 +1,49 @@
+{
+  "projectRoot": "/mnt/DEV/Proyectos/repos/video-upscaler-gpu",
+  "batchFiles": [
+    {
+      "path": "AGENTS.md",
+      "language": "markdown",
+      "sizeLines": 142,
+      "fileCategory": "docs"
+    },
+    {
+      "path": "CHANGELOG.md",
+      "language": "markdown",
+      "sizeLines": 96,
+      "fileCategory": "docs"
+    },
+    {
+      "path": "Makefile",
+      "language": "makefile",
+      "sizeLines": 43,
+      "fileCategory": "infra"
+    },
+    {
+      "path": "README.md",
+      "language": "markdown",
+      "sizeLines": 432,
+      "fileCategory": "docs"
+    },
+    {
+      "path": "go.mod",
+      "language": "mod",
+      "sizeLines": 35,
+      "fileCategory": "config"
+    },
+    {
+      "path": "go.sum",
+      "language": "sum",
+      "sizeLines": 60,
+      "fileCategory": "config"
+    }
+  ],
+  "batchImportData": {
+    "AGENTS.md": [],
+    "CHANGELOG.md": [],
+    "Makefile": [],
+    "README.md": [],
+    "go.mod": [],
+    "go.sum": []
+  }
+}

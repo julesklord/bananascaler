@@ -1,0 +1,1834 @@
+{
+  "version": "1.0.0",
+  "gitCommitHash": "da5519e55823e87d45fc911f77914bd4ad896de8",
+  "generatedAt": "2026-07-17T01:46:37.604Z",
+  "files": {
+    ".github/workflows/go.yml": {
+      "filePath": ".github/workflows/go.yml",
+      "contentHash": "8a8d82d340e68e9cd7ab0458f74f9bb03ce362bab630824c215354622d51b30b",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 29,
+      "hasStructuralAnalysis": true
+    },
+    ".understand-anything/.understandignore": {
+      "filePath": ".understand-anything/.understandignore",
+      "contentHash": "af752ee2b45c73dcc69a3c10176ff64081372cb1c6dd0870b588e370367554a9",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 46,
+      "hasStructuralAnalysis": false
+    },
+    ".understand-anything/config.json": {
+      "filePath": ".understand-anything/config.json",
+      "contentHash": "4b66f98f8a815dfeb2d3a29eeb73418e07c40ed020a1498c07e908b2254f0c8c",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 2,
+      "hasStructuralAnalysis": true
+    },
+    ".understand-anything/intermediate/scan-raw.json": {
+      "filePath": ".understand-anything/intermediate/scan-raw.json",
+      "contentHash": "924f997ad0052b5fbd79ee9058db9d0bd6f55695be4da1f89b1bfddb18f51067",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 214,
+      "hasStructuralAnalysis": true
+    },
+    "AGENTS.md": {
+      "filePath": "AGENTS.md",
+      "contentHash": "f4fab43498fc815965939a10a0cb184a3f31d71330519789a69ab59650ebc76e",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 143,
+      "hasStructuralAnalysis": true
+    },
+    "CHANGELOG.md": {
+      "filePath": "CHANGELOG.md",
+      "contentHash": "773c8d94aa1e55ef94c96754b9dd1ca10c3b2253243f4eb836c37b148380dd92",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 97,
+      "hasStructuralAnalysis": true
+    },
+    "cmd/root.go": {
+      "filePath": "cmd/root.go",
+      "contentHash": "ea145fe4a037440e8ac46858014e5cfc17c0af244c14e1923f1dea4226b3c8e5",
+      "functions": [
+        {
+          "name": "Execute",
+          "params": [],
+          "exported": true,
+          "lineCount": 6
+        },
+        {
+          "name": "init",
+          "params": [],
+          "exported": false,
+          "lineCount": 23
+        }
+      ],
+      "classes": [],
+      "imports": [
+        {
+          "source": "fmt",
+          "specifiers": [
+            "fmt"
+          ]
+        },
+        {
+          "source": "os",
+          "specifiers": [
+            "os"
+          ]
+        },
+        {
+          "source": "github.com/julesklord/bananascaler/internal/config",
+          "specifiers": [
+            "config"
+          ]
+        },
+        {
+          "source": "github.com/julesklord/bananascaler/internal/hardware",
+          "specifiers": [
+            "hardware"
+          ]
+        },
+        {
+          "source": "github.com/julesklord/bananascaler/internal/pipeline",
+          "specifiers": [
+            "pipeline"
+          ]
+        },
+        {
+          "source": "github.com/julesklord/bananascaler/internal/tui",
+          "specifiers": [
+            "tui"
+          ]
+        },
+        {
+          "source": "github.com/spf13/cobra",
+          "specifiers": [
+            "cobra"
+          ]
+        },
+        {
+          "source": "golang.org/x/term",
+          "specifiers": [
+            "term"
+          ]
+        }
+      ],
+      "exports": [
+        "Execute"
+      ],
+      "totalLines": 168,
+      "hasStructuralAnalysis": true
+    },
+    "cmd/tui.go": {
+      "filePath": "cmd/tui.go",
+      "contentHash": "d8605f13a6339e51027d6fdb24d052b7563f41bca17361347afae07f9c4602d0",
+      "functions": [
+        {
+          "name": "init",
+          "params": [],
+          "exported": false,
+          "lineCount": 3
+        }
+      ],
+      "classes": [],
+      "imports": [
+        {
+          "source": "github.com/julesklord/bananascaler/internal/tui",
+          "specifiers": [
+            "tui"
+          ]
+        },
+        {
+          "source": "github.com/spf13/cobra",
+          "specifiers": [
+            "cobra"
+          ]
+        }
+      ],
+      "exports": [],
+      "totalLines": 24,
+      "hasStructuralAnalysis": true
+    },
+    "docs/AGENT.md": {
+      "filePath": "docs/AGENT.md",
+      "contentHash": "281043c380d89b196d67f9c0c31c40c8c1fdca4452d3af117ceb5352584d87af",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 38,
+      "hasStructuralAnalysis": true
+    },
+    "docs/demo.tape": {
+      "filePath": "docs/demo.tape",
+      "contentHash": "762d345bcbfeb9d78841edc1c7376ba7ff761bd283f8f95e51e8f452f960ae98",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 21,
+      "hasStructuralAnalysis": false
+    },
+    "docs/GEMINI.md": {
+      "filePath": "docs/GEMINI.md",
+      "contentHash": "2ca33eaa642bcc455d435303ddb8674a519e2f4741a96083f6c159ffda4d6fb5",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 23,
+      "hasStructuralAnalysis": true
+    },
+    "docs/IDENTITY.md": {
+      "filePath": "docs/IDENTITY.md",
+      "contentHash": "df1bd8db859f005723f6bf9e1bd2edf3ba0c101e7aec32e706e0743817955db1",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 21,
+      "hasStructuralAnalysis": true
+    },
+    "docs/MEMORY.md": {
+      "filePath": "docs/MEMORY.md",
+      "contentHash": "0be10b7585b7509c29852c979f90859c01e30f7b3cc6b932a5a67888c070bc6d",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 33,
+      "hasStructuralAnalysis": true
+    },
+    "docs/SOUL.md": {
+      "filePath": "docs/SOUL.md",
+      "contentHash": "c8909946b7554c26b613a1da311169969f77870ae761060d0b1b6999f2a3a7e2",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 15,
+      "hasStructuralAnalysis": true
+    },
+    "go.mod": {
+      "filePath": "go.mod",
+      "contentHash": "0e878d3f102a6a7b812814f12ea93b7f5b00d184826b2a0473f31de5bbda6d39",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 36,
+      "hasStructuralAnalysis": false
+    },
+    "go.sum": {
+      "filePath": "go.sum",
+      "contentHash": "aa2605a73db4d0e2f1a761a4f949ca3141264ee4b11d75f423e3a9e76f33ecbf",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 61,
+      "hasStructuralAnalysis": false
+    },
+    "internal/config/config_test.go": {
+      "filePath": "internal/config/config_test.go",
+      "contentHash": "3b0cd63e251993cd84d699ace08576a23b606b06f8677a9ae8bb7e2814ca43b0",
+      "functions": [
+        {
+          "name": "TestConfigValidate",
+          "params": [
+            "t"
+          ],
+          "exported": true,
+          "lineCount": 85
+        }
+      ],
+      "classes": [],
+      "imports": [
+        {
+          "source": "os",
+          "specifiers": [
+            "os"
+          ]
+        },
+        {
+          "source": "path/filepath",
+          "specifiers": [
+            "filepath"
+          ]
+        },
+        {
+          "source": "testing",
+          "specifiers": [
+            "testing"
+          ]
+        }
+      ],
+      "exports": [
+        "TestConfigValidate"
+      ],
+      "totalLines": 94,
+      "hasStructuralAnalysis": true
+    },
+    "internal/config/config.go": {
+      "filePath": "internal/config/config.go",
+      "contentHash": "f8d69b882ebbbe79fbfa242d160e13978c2093fa9efc7659a1dc5ad7d00b2cb1",
+      "functions": [
+        {
+          "name": "ResolveProfile",
+          "params": [],
+          "returnType": "error",
+          "exported": true,
+          "lineCount": 33
+        },
+        {
+          "name": "applyProfileDefaults",
+          "params": [],
+          "exported": false,
+          "lineCount": 16
+        },
+        {
+          "name": "Validate",
+          "params": [],
+          "returnType": "error",
+          "exported": true,
+          "lineCount": 23
+        },
+        {
+          "name": "ProfileSummary",
+          "params": [],
+          "returnType": "string",
+          "exported": true,
+          "lineCount": 6
+        }
+      ],
+      "classes": [
+        {
+          "name": "Config",
+          "methods": [
+            "ResolveProfile",
+            "applyProfileDefaults",
+            "Validate",
+            "ProfileSummary"
+          ],
+          "properties": [
+            "Input",
+            "Output",
+            "Scale",
+            "GPU",
+            "Model",
+            "Verbose",
+            "NoTUI",
+            "Profile",
+            "AutoDetect",
+            "PresetStr"
+          ],
+          "exported": true,
+          "lineCount": 14
+        }
+      ],
+      "imports": [
+        {
+          "source": "fmt",
+          "specifiers": [
+            "fmt"
+          ]
+        },
+        {
+          "source": "os",
+          "specifiers": [
+            "os"
+          ]
+        },
+        {
+          "source": "path/filepath",
+          "specifiers": [
+            "filepath"
+          ]
+        },
+        {
+          "source": "strings",
+          "specifiers": [
+            "strings"
+          ]
+        },
+        {
+          "source": "github.com/julesklord/bananascaler/internal/hardware",
+          "specifiers": [
+            "hardware"
+          ]
+        }
+      ],
+      "exports": [
+        "Config",
+        "ResolveProfile",
+        "Validate",
+        "ProfileSummary"
+      ],
+      "totalLines": 118,
+      "hasStructuralAnalysis": true
+    },
+    "internal/hardware/detect.go": {
+      "filePath": "internal/hardware/detect.go",
+      "contentHash": "c1b4d76fca6063638f8594117e1b0e1ada7f1744ad7594a299ae27d3607d587d",
+      "functions": [
+        {
+          "name": "CheckDeps",
+          "params": [],
+          "returnType": "error",
+          "exported": true,
+          "lineCount": 8
+        },
+        {
+          "name": "HasNVIDIA",
+          "params": [],
+          "returnType": "bool",
+          "exported": true,
+          "lineCount": 5
+        },
+        {
+          "name": "Framerate",
+          "params": [
+            "input"
+          ],
+          "returnType": "(string, error)",
+          "exported": true,
+          "lineCount": 17
+        },
+        {
+          "name": "HasAudio",
+          "params": [
+            "input"
+          ],
+          "returnType": "(bool, error)",
+          "exported": true,
+          "lineCount": 13
+        }
+      ],
+      "classes": [],
+      "imports": [
+        {
+          "source": "context",
+          "specifiers": [
+            "context"
+          ]
+        },
+        {
+          "source": "fmt",
+          "specifiers": [
+            "fmt"
+          ]
+        },
+        {
+          "source": "os/exec",
+          "specifiers": [
+            "exec"
+          ]
+        },
+        {
+          "source": "strings",
+          "specifiers": [
+            "strings"
+          ]
+        },
+        {
+          "source": "time",
+          "specifiers": [
+            "time"
+          ]
+        }
+      ],
+      "exports": [
+        "CheckDeps",
+        "HasNVIDIA",
+        "Framerate",
+        "HasAudio"
+      ],
+      "totalLines": 63,
+      "hasStructuralAnalysis": true
+    },
+    "internal/hardware/profile.go": {
+      "filePath": "internal/hardware/profile.go",
+      "contentHash": "5d8387dc86bf546fdedbb8a1f3c69d37f7edb619d54689323b5de84b64938fdf",
+      "functions": [
+        {
+          "name": "AllPresets",
+          "params": [],
+          "returnType": "[]PresetLevel",
+          "exported": true,
+          "lineCount": 3
+        },
+        {
+          "name": "ParsePreset",
+          "params": [
+            "s"
+          ],
+          "returnType": "(PresetLevel, error)",
+          "exported": true,
+          "lineCount": 12
+        },
+        {
+          "name": "String",
+          "params": [],
+          "returnType": "string",
+          "exported": true,
+          "lineCount": 4
+        },
+        {
+          "name": "shortModelName",
+          "params": [
+            "m"
+          ],
+          "returnType": "string",
+          "exported": false,
+          "lineCount": 5
+        },
+        {
+          "name": "DetectGPU",
+          "params": [],
+          "returnType": "GPUInfo",
+          "exported": true,
+          "lineCount": 37
+        },
+        {
+          "name": "DetectGPUCount",
+          "params": [],
+          "returnType": "int",
+          "exported": true,
+          "lineCount": 19
+        },
+        {
+          "name": "classifyTier",
+          "params": [
+            "info"
+          ],
+          "returnType": "HardwareTier",
+          "exported": false,
+          "lineCount": 13
+        },
+        {
+          "name": "profileDB",
+          "params": [],
+          "returnType": "map[HardwareTier]map[PresetLevel]*UpscaleProfile",
+          "exported": false,
+          "lineCount": 160
+        },
+        {
+          "name": "GetProfile",
+          "params": [
+            "tier",
+            "preset"
+          ],
+          "returnType": "*UpscaleProfile",
+          "exported": true,
+          "lineCount": 10
+        },
+        {
+          "name": "GetDefaultProfile",
+          "params": [
+            "tier"
+          ],
+          "returnType": "*UpscaleProfile",
+          "exported": true,
+          "lineCount": 3
+        },
+        {
+          "name": "AutoProfile",
+          "params": [],
+          "returnType": "(*UpscaleProfile, GPUInfo)",
+          "exported": true,
+          "lineCount": 6
+        },
+        {
+          "name": "AutoProfileWithPreset",
+          "params": [
+            "preset"
+          ],
+          "returnType": "(*UpscaleProfile, GPUInfo)",
+          "exported": true,
+          "lineCount": 6
+        },
+        {
+          "name": "ProfileSummary",
+          "params": [
+            "info",
+            "p"
+          ],
+          "returnType": "string",
+          "exported": true,
+          "lineCount": 19
+        },
+        {
+          "name": "ProfileDisplay",
+          "params": [
+            "info",
+            "p"
+          ],
+          "returnType": "string",
+          "exported": true,
+          "lineCount": 15
+        },
+        {
+          "name": "maxSafeTile",
+          "params": [
+            "vramMB",
+            "model"
+          ],
+          "returnType": "int",
+          "exported": false,
+          "lineCount": 42
+        },
+        {
+          "name": "CheckTileSafety",
+          "params": [
+            "info",
+            "tile",
+            "model"
+          ],
+          "returnType": "string",
+          "exported": true,
+          "lineCount": 12
+        }
+      ],
+      "classes": [
+        {
+          "name": "GPUInfo",
+          "methods": [],
+          "properties": [
+            "Name",
+            "VRAMMB",
+            "HasNVIDIA",
+            "CPUCores"
+          ],
+          "exported": true,
+          "lineCount": 6
+        },
+        {
+          "name": "UpscaleProfile",
+          "methods": [
+            "String"
+          ],
+          "properties": [
+            "Tier",
+            "Preset",
+            "Description",
+            "TileSize",
+            "Model",
+            "JPEGQuality",
+            "NVEncPreset",
+            "X265Preset",
+            "X265CRF",
+            "MaxScale"
+          ],
+          "exported": true,
+          "lineCount": 22
+        }
+      ],
+      "imports": [
+        {
+          "source": "context",
+          "specifiers": [
+            "context"
+          ]
+        },
+        {
+          "source": "fmt",
+          "specifiers": [
+            "fmt"
+          ]
+        },
+        {
+          "source": "os/exec",
+          "specifiers": [
+            "exec"
+          ]
+        },
+        {
+          "source": "runtime",
+          "specifiers": [
+            "runtime"
+          ]
+        },
+        {
+          "source": "strconv",
+          "specifiers": [
+            "strconv"
+          ]
+        },
+        {
+          "source": "strings",
+          "specifiers": [
+            "strings"
+          ]
+        },
+        {
+          "source": "time",
+          "specifiers": [
+            "time"
+          ]
+        }
+      ],
+      "exports": [
+        "AllPresets",
+        "ParsePreset",
+        "GPUInfo",
+        "UpscaleProfile",
+        "String",
+        "DetectGPU",
+        "DetectGPUCount",
+        "GetProfile",
+        "GetDefaultProfile",
+        "AutoProfile",
+        "AutoProfileWithPreset",
+        "ProfileSummary",
+        "ProfileDisplay",
+        "CheckTileSafety"
+      ],
+      "totalLines": 484,
+      "hasStructuralAnalysis": true
+    },
+    "internal/pipeline/pipeline_test.go": {
+      "filePath": "internal/pipeline/pipeline_test.go",
+      "contentHash": "6526064487bdf330b19381e6740b087216b88027761dea9e56cbe8a9893ff80f",
+      "functions": [
+        {
+          "name": "Info",
+          "params": [
+            "msg"
+          ],
+          "exported": true,
+          "lineCount": 1
+        },
+        {
+          "name": "OK",
+          "params": [
+            "msg"
+          ],
+          "exported": true,
+          "lineCount": 1
+        },
+        {
+          "name": "Warn",
+          "params": [
+            "msg"
+          ],
+          "exported": true,
+          "lineCount": 1
+        },
+        {
+          "name": "Step",
+          "params": [
+            "msg"
+          ],
+          "exported": true,
+          "lineCount": 1
+        },
+        {
+          "name": "Err",
+          "params": [
+            "msg"
+          ],
+          "exported": true,
+          "lineCount": 1
+        },
+        {
+          "name": "Progress",
+          "params": [
+            "stage",
+            "current",
+            "total"
+          ],
+          "exported": true,
+          "lineCount": 6
+        },
+        {
+          "name": "TestPipelineIntegration",
+          "params": [
+            "t"
+          ],
+          "exported": true,
+          "lineCount": 145
+        },
+        {
+          "name": "TestCountFiles",
+          "params": [
+            "t"
+          ],
+          "exported": true,
+          "lineCount": 22
+        }
+      ],
+      "classes": [
+        {
+          "name": "mockLogger",
+          "methods": [
+            "Info",
+            "OK",
+            "Warn",
+            "Step",
+            "Err",
+            "Progress"
+          ],
+          "properties": [
+            "infos",
+            "progress",
+            "stages",
+            "done"
+          ],
+          "exported": false,
+          "lineCount": 6
+        }
+      ],
+      "imports": [
+        {
+          "source": "os",
+          "specifiers": [
+            "os"
+          ]
+        },
+        {
+          "source": "path/filepath",
+          "specifiers": [
+            "filepath"
+          ]
+        },
+        {
+          "source": "testing",
+          "specifiers": [
+            "testing"
+          ]
+        },
+        {
+          "source": "github.com/julesklord/bananascaler/internal/config",
+          "specifiers": [
+            "config"
+          ]
+        }
+      ],
+      "exports": [
+        "Info",
+        "OK",
+        "Warn",
+        "Step",
+        "Err",
+        "Progress",
+        "TestPipelineIntegration",
+        "TestCountFiles"
+      ],
+      "totalLines": 199,
+      "hasStructuralAnalysis": true
+    },
+    "internal/pipeline/pipeline.go": {
+      "filePath": "internal/pipeline/pipeline.go",
+      "contentHash": "ef277aabc2b3e72f05ad63037fa1d705aebc27135de4da1f03b105a66aa59126",
+      "functions": [
+        {
+          "name": "Info",
+          "params": [
+            "msg"
+          ],
+          "exported": true,
+          "lineCount": 1
+        },
+        {
+          "name": "OK",
+          "params": [
+            "msg"
+          ],
+          "exported": true,
+          "lineCount": 1
+        },
+        {
+          "name": "Warn",
+          "params": [
+            "msg"
+          ],
+          "exported": true,
+          "lineCount": 1
+        },
+        {
+          "name": "Step",
+          "params": [
+            "msg"
+          ],
+          "exported": true,
+          "lineCount": 1
+        },
+        {
+          "name": "Err",
+          "params": [
+            "msg"
+          ],
+          "exported": true,
+          "lineCount": 1
+        },
+        {
+          "name": "Progress",
+          "params": [
+            "stage",
+            "current",
+            "total"
+          ],
+          "exported": true,
+          "lineCount": 9
+        },
+        {
+          "name": "pipelineParams",
+          "params": [
+            "cfg"
+          ],
+          "returnType": "(tileSize int, jpegQuality int, nvencPreset string, x265Preset string, x265CRF int)",
+          "exported": false,
+          "lineCount": 18
+        },
+        {
+          "name": "Run",
+          "params": [
+            "cfg",
+            "log"
+          ],
+          "returnType": "error",
+          "exported": true,
+          "lineCount": 162
+        },
+        {
+          "name": "upscale",
+          "params": [
+            "ctx",
+            "cfg",
+            "log",
+            "tempIn",
+            "tempOut",
+            "total",
+            "tileSize"
+          ],
+          "returnType": "error",
+          "exported": false,
+          "lineCount": 48
+        },
+        {
+          "name": "runCmd",
+          "params": [
+            "ctx",
+            "verbose",
+            "name"
+          ],
+          "returnType": "error",
+          "exported": false,
+          "lineCount": 8
+        },
+        {
+          "name": "countFiles",
+          "params": [
+            "dir",
+            "ext"
+          ],
+          "returnType": "(int, error)",
+          "exported": false,
+          "lineCount": 13
+        }
+      ],
+      "classes": [
+        {
+          "name": "Logger",
+          "methods": [
+            "Info",
+            "OK",
+            "Warn",
+            "Step",
+            "Err",
+            "Progress"
+          ],
+          "properties": [],
+          "exported": true,
+          "lineCount": 8
+        },
+        {
+          "name": "StdoutLogger",
+          "methods": [
+            "Info",
+            "OK",
+            "Warn",
+            "Step",
+            "Err",
+            "Progress"
+          ],
+          "properties": [
+            "Verbose"
+          ],
+          "exported": true,
+          "lineCount": 3
+        }
+      ],
+      "imports": [
+        {
+          "source": "context",
+          "specifiers": [
+            "context"
+          ]
+        },
+        {
+          "source": "fmt",
+          "specifiers": [
+            "fmt"
+          ]
+        },
+        {
+          "source": "os",
+          "specifiers": [
+            "os"
+          ]
+        },
+        {
+          "source": "os/exec",
+          "specifiers": [
+            "exec"
+          ]
+        },
+        {
+          "source": "os/signal",
+          "specifiers": [
+            "signal"
+          ]
+        },
+        {
+          "source": "path/filepath",
+          "specifiers": [
+            "filepath"
+          ]
+        },
+        {
+          "source": "strings",
+          "specifiers": [
+            "strings"
+          ]
+        },
+        {
+          "source": "syscall",
+          "specifiers": [
+            "syscall"
+          ]
+        },
+        {
+          "source": "time",
+          "specifiers": [
+            "time"
+          ]
+        },
+        {
+          "source": "github.com/julesklord/bananascaler/internal/config",
+          "specifiers": [
+            "config"
+          ]
+        },
+        {
+          "source": "github.com/julesklord/bananascaler/internal/hardware",
+          "specifiers": [
+            "hardware"
+          ]
+        }
+      ],
+      "exports": [
+        "Logger",
+        "StdoutLogger",
+        "Info",
+        "OK",
+        "Warn",
+        "Step",
+        "Err",
+        "Progress",
+        "Run"
+      ],
+      "totalLines": 318,
+      "hasStructuralAnalysis": true
+    },
+    "internal/tui/messages.go": {
+      "filePath": "internal/tui/messages.go",
+      "contentHash": "1281301ec5ca7f3c15915f3ae2d588a119a6d34db5486fdf4e16a967fb5a5a29",
+      "functions": [],
+      "classes": [
+        {
+          "name": "PipelineEvent",
+          "methods": [],
+          "properties": [
+            "Kind",
+            "Level",
+            "Message",
+            "Stage",
+            "StageName",
+            "Current",
+            "Total"
+          ],
+          "exported": true,
+          "lineCount": 9
+        },
+        {
+          "name": "pipelineEventMsg",
+          "methods": [],
+          "properties": [
+            "e"
+          ],
+          "exported": false,
+          "lineCount": 1
+        },
+        {
+          "name": "pipelineDoneMsg",
+          "methods": [],
+          "properties": [
+            "err"
+          ],
+          "exported": false,
+          "lineCount": 1
+        },
+        {
+          "name": "pipelineStartMsg",
+          "methods": [],
+          "properties": [
+            "cfg"
+          ],
+          "exported": false,
+          "lineCount": 1
+        }
+      ],
+      "imports": [
+        {
+          "source": "github.com/julesklord/bananascaler/internal/config",
+          "specifiers": [
+            "config"
+          ]
+        }
+      ],
+      "exports": [
+        "PipelineEvent"
+      ],
+      "totalLines": 41,
+      "hasStructuralAnalysis": true
+    },
+    "internal/tui/model_test.go": {
+      "filePath": "internal/tui/model_test.go",
+      "contentHash": "786e0ff4491206b152bb788def9a23ef7066e1fed10cd974a775b4e3c45b20d3",
+      "functions": [
+        {
+          "name": "TestIsVideoFile",
+          "params": [
+            "t"
+          ],
+          "exported": true,
+          "lineCount": 24
+        },
+        {
+          "name": "TestShortModel",
+          "params": [
+            "t"
+          ],
+          "exported": true,
+          "lineCount": 19
+        },
+        {
+          "name": "TestModelExplorerKeybinds",
+          "params": [
+            "t"
+          ],
+          "exported": true,
+          "lineCount": 59
+        },
+        {
+          "name": "TestModelExplorerNavigation",
+          "params": [
+            "t"
+          ],
+          "exported": true,
+          "lineCount": 69
+        }
+      ],
+      "classes": [],
+      "imports": [
+        {
+          "source": "os",
+          "specifiers": [
+            "os"
+          ]
+        },
+        {
+          "source": "path/filepath",
+          "specifiers": [
+            "filepath"
+          ]
+        },
+        {
+          "source": "testing",
+          "specifiers": [
+            "testing"
+          ]
+        },
+        {
+          "source": "github.com/charmbracelet/bubbletea",
+          "specifiers": [
+            "tea"
+          ]
+        },
+        {
+          "source": "github.com/julesklord/bananascaler/internal/config",
+          "specifiers": [
+            "config"
+          ]
+        }
+      ],
+      "exports": [
+        "TestIsVideoFile",
+        "TestShortModel",
+        "TestModelExplorerKeybinds",
+        "TestModelExplorerNavigation"
+      ],
+      "totalLines": 186,
+      "hasStructuralAnalysis": true
+    },
+    "internal/tui/model.go": {
+      "filePath": "internal/tui/model.go",
+      "contentHash": "5aeb8216517d49e07bcec74dc66e521977297b44b22dfee5b17c77cb2fd67b33",
+      "functions": [
+        {
+          "name": "NewModel",
+          "params": [
+            "cfg"
+          ],
+          "returnType": "Model",
+          "exported": true,
+          "lineCount": 33
+        },
+        {
+          "name": "Events",
+          "params": [],
+          "returnType": "chan<- PipelineEvent",
+          "exported": true,
+          "lineCount": 1
+        },
+        {
+          "name": "SetDone",
+          "params": [
+            "err"
+          ],
+          "exported": true,
+          "lineCount": 1
+        },
+        {
+          "name": "Init",
+          "params": [],
+          "returnType": "tea.Cmd",
+          "exported": true,
+          "lineCount": 7
+        },
+        {
+          "name": "readDirCmd",
+          "params": [],
+          "returnType": "tea.Cmd",
+          "exported": false,
+          "lineCount": 28
+        },
+        {
+          "name": "isVideoFile",
+          "params": [
+            "name"
+          ],
+          "returnType": "bool",
+          "exported": false,
+          "lineCount": 7
+        },
+        {
+          "name": "waitForEvent",
+          "params": [],
+          "returnType": "tea.Cmd",
+          "exported": false,
+          "lineCount": 13
+        },
+        {
+          "name": "Update",
+          "params": [
+            "msg"
+          ],
+          "returnType": "(tea.Model, tea.Cmd)",
+          "exported": true,
+          "lineCount": 44
+        },
+        {
+          "name": "updateExplorer",
+          "params": [
+            "msg"
+          ],
+          "returnType": "(tea.Model, tea.Cmd)",
+          "exported": false,
+          "lineCount": 83
+        },
+        {
+          "name": "updatePipeline",
+          "params": [
+            "msg"
+          ],
+          "returnType": "(tea.Model, tea.Cmd)",
+          "exported": false,
+          "lineCount": 10
+        },
+        {
+          "name": "handlePipelineEvent",
+          "params": [
+            "e"
+          ],
+          "returnType": "(tea.Model, tea.Cmd)",
+          "exported": false,
+          "lineCount": 27
+        },
+        {
+          "name": "addLog",
+          "params": [
+            "level",
+            "text"
+          ],
+          "exported": false,
+          "lineCount": 6
+        },
+        {
+          "name": "View",
+          "params": [],
+          "returnType": "string",
+          "exported": true,
+          "lineCount": 9
+        },
+        {
+          "name": "explorerVisibleHeight",
+          "params": [],
+          "returnType": "int",
+          "exported": false,
+          "lineCount": 7
+        },
+        {
+          "name": "viewExplorer",
+          "params": [],
+          "returnType": "string",
+          "exported": false,
+          "lineCount": 108
+        },
+        {
+          "name": "viewPipeline",
+          "params": [],
+          "returnType": "string",
+          "exported": false,
+          "lineCount": 79
+        },
+        {
+          "name": "renderStage",
+          "params": [
+            "num",
+            "s",
+            "innerW"
+          ],
+          "returnType": "string",
+          "exported": false,
+          "lineCount": 55
+        },
+        {
+          "name": "renderLogLine",
+          "params": [
+            "e"
+          ],
+          "returnType": "string",
+          "exported": false,
+          "lineCount": 16
+        },
+        {
+          "name": "renderBadge",
+          "params": [
+            "k",
+            "v"
+          ],
+          "returnType": "string",
+          "exported": false,
+          "lineCount": 3
+        },
+        {
+          "name": "shortModel",
+          "params": [
+            "m"
+          ],
+          "returnType": "string",
+          "exported": false,
+          "lineCount": 7
+        },
+        {
+          "name": "min",
+          "params": [
+            "a",
+            "b"
+          ],
+          "returnType": "int",
+          "exported": false,
+          "lineCount": 6
+        },
+        {
+          "name": "max",
+          "params": [
+            "a",
+            "b"
+          ],
+          "returnType": "int",
+          "exported": false,
+          "lineCount": 6
+        }
+      ],
+      "classes": [
+        {
+          "name": "stageState",
+          "methods": [],
+          "properties": [
+            "name",
+            "status",
+            "current",
+            "total"
+          ],
+          "exported": false,
+          "lineCount": 6
+        },
+        {
+          "name": "logEntry",
+          "methods": [],
+          "properties": [
+            "level",
+            "text"
+          ],
+          "exported": false,
+          "lineCount": 4
+        },
+        {
+          "name": "Model",
+          "methods": [
+            "Events",
+            "SetDone",
+            "Init",
+            "readDirCmd",
+            "waitForEvent",
+            "Update",
+            "updateExplorer",
+            "updatePipeline",
+            "handlePipelineEvent",
+            "addLog",
+            "View",
+            "explorerVisibleHeight",
+            "viewExplorer",
+            "viewPipeline",
+            "renderStage",
+            "renderLogLine"
+          ],
+          "properties": [
+            "cfg",
+            "events",
+            "done",
+            "stages",
+            "logs",
+            "width",
+            "height",
+            "quitting",
+            "finished",
+            "pipelineErr",
+            "state",
+            "currentDir",
+            "files",
+            "cursor",
+            "scrollOffset",
+            "explorerErr"
+          ],
+          "exported": true,
+          "lineCount": 20
+        },
+        {
+          "name": "readDirMsg",
+          "methods": [],
+          "properties": [
+            "dir",
+            "files",
+            "err"
+          ],
+          "exported": false,
+          "lineCount": 5
+        }
+      ],
+      "imports": [
+        {
+          "source": "fmt",
+          "specifiers": [
+            "fmt"
+          ]
+        },
+        {
+          "source": "os",
+          "specifiers": [
+            "os"
+          ]
+        },
+        {
+          "source": "path/filepath",
+          "specifiers": [
+            "filepath"
+          ]
+        },
+        {
+          "source": "strings",
+          "specifiers": [
+            "strings"
+          ]
+        },
+        {
+          "source": "github.com/charmbracelet/bubbletea",
+          "specifiers": [
+            "tea"
+          ]
+        },
+        {
+          "source": "github.com/charmbracelet/lipgloss",
+          "specifiers": [
+            "lipgloss"
+          ]
+        },
+        {
+          "source": "github.com/julesklord/bananascaler/internal/config",
+          "specifiers": [
+            "config"
+          ]
+        },
+        {
+          "source": "github.com/julesklord/bananascaler/internal/hardware",
+          "specifiers": [
+            "hardware"
+          ]
+        },
+        {
+          "source": "github.com/julesklord/bananascaler/internal/pipeline",
+          "specifiers": [
+            "pipeline"
+          ]
+        }
+      ],
+      "exports": [
+        "Model",
+        "NewModel",
+        "Events",
+        "SetDone",
+        "Init",
+        "Update",
+        "View"
+      ],
+      "totalLines": 673,
+      "hasStructuralAnalysis": true
+    },
+    "internal/tui/pipeline_adapter_test.go": {
+      "filePath": "internal/tui/pipeline_adapter_test.go",
+      "contentHash": "eda43df990595d271d99e6a40dae295e5aff97d101ace1c6c98cf4bd94585266",
+      "functions": [
+        {
+          "name": "TestParseStep",
+          "params": [
+            "t"
+          ],
+          "exported": true,
+          "lineCount": 50
+        }
+      ],
+      "classes": [],
+      "imports": [
+        {
+          "source": "testing",
+          "specifiers": [
+            "testing"
+          ]
+        }
+      ],
+      "exports": [
+        "TestParseStep"
+      ],
+      "totalLines": 55,
+      "hasStructuralAnalysis": true
+    },
+    "internal/tui/pipeline_adapter.go": {
+      "filePath": "internal/tui/pipeline_adapter.go",
+      "contentHash": "e4a012adc4447cb654f9a8dd0d8f6c85d38fa64d3f49c282bee607f3338d051a",
+      "functions": [
+        {
+          "name": "Info",
+          "params": [
+            "msg"
+          ],
+          "exported": true,
+          "lineCount": 3
+        },
+        {
+          "name": "OK",
+          "params": [
+            "msg"
+          ],
+          "exported": true,
+          "lineCount": 3
+        },
+        {
+          "name": "Warn",
+          "params": [
+            "msg"
+          ],
+          "exported": true,
+          "lineCount": 3
+        },
+        {
+          "name": "Step",
+          "params": [
+            "msg"
+          ],
+          "exported": true,
+          "lineCount": 8
+        },
+        {
+          "name": "Err",
+          "params": [
+            "msg"
+          ],
+          "exported": true,
+          "lineCount": 3
+        },
+        {
+          "name": "Progress",
+          "params": [
+            "stage",
+            "current",
+            "total"
+          ],
+          "exported": true,
+          "lineCount": 15
+        },
+        {
+          "name": "parseStep",
+          "params": [
+            "msg"
+          ],
+          "returnType": "(int, string)",
+          "exported": false,
+          "lineCount": 24
+        },
+        {
+          "name": "RunTUI",
+          "params": [
+            "cfg"
+          ],
+          "returnType": "error",
+          "exported": true,
+          "lineCount": 18
+        }
+      ],
+      "classes": [
+        {
+          "name": "tuiLogger",
+          "methods": [
+            "Info",
+            "OK",
+            "Warn",
+            "Step",
+            "Err",
+            "Progress"
+          ],
+          "properties": [
+            "events"
+          ],
+          "exported": false,
+          "lineCount": 3
+        }
+      ],
+      "imports": [
+        {
+          "source": "github.com/charmbracelet/bubbletea",
+          "specifiers": [
+            "tea"
+          ]
+        },
+        {
+          "source": "github.com/julesklord/bananascaler/internal/config",
+          "specifiers": [
+            "config"
+          ]
+        },
+        {
+          "source": "github.com/julesklord/bananascaler/internal/pipeline",
+          "specifiers": [
+            "pipeline"
+          ]
+        }
+      ],
+      "exports": [
+        "Info",
+        "OK",
+        "Warn",
+        "Step",
+        "Err",
+        "Progress",
+        "RunTUI"
+      ],
+      "totalLines": 99,
+      "hasStructuralAnalysis": true
+    },
+    "internal/tui/styles.go": {
+      "filePath": "internal/tui/styles.go",
+      "contentHash": "83b76533d255c32c32649c72172d09ddf0874bccce36f7cb7ccd1093d5cad6bb",
+      "functions": [
+        {
+          "name": "renderBar",
+          "params": [
+            "current",
+            "total",
+            "width",
+            "done"
+          ],
+          "returnType": "string",
+          "exported": false,
+          "lineCount": 30
+        },
+        {
+          "name": "renderPct",
+          "params": [
+            "current",
+            "total"
+          ],
+          "returnType": "string",
+          "exported": false,
+          "lineCount": 8
+        },
+        {
+          "name": "repeat",
+          "params": [
+            "s",
+            "n"
+          ],
+          "returnType": "string",
+          "exported": false,
+          "lineCount": 10
+        },
+        {
+          "name": "hRule",
+          "params": [
+            "w"
+          ],
+          "returnType": "string",
+          "exported": false,
+          "lineCount": 6
+        },
+        {
+          "name": "renderFooterBinds",
+          "params": [
+            "binds"
+          ],
+          "returnType": "string",
+          "exported": false,
+          "lineCount": 10
+        },
+        {
+          "name": "truncatePath",
+          "params": [
+            "p",
+            "maxLen"
+          ],
+          "returnType": "string",
+          "exported": false,
+          "lineCount": 6
+        }
+      ],
+      "classes": [],
+      "imports": [
+        {
+          "source": "fmt",
+          "specifiers": [
+            "fmt"
+          ]
+        },
+        {
+          "source": "strings",
+          "specifiers": [
+            "strings"
+          ]
+        },
+        {
+          "source": "github.com/charmbracelet/lipgloss",
+          "specifiers": [
+            "lipgloss"
+          ]
+        }
+      ],
+      "exports": [],
+      "totalLines": 216,
+      "hasStructuralAnalysis": true
+    },
+    "main.go": {
+      "filePath": "main.go",
+      "contentHash": "643f37465adee762f85088e0dff3c6d4c9d606a1eb440fcab772c1b35528eb8b",
+      "functions": [
+        {
+          "name": "main",
+          "params": [],
+          "exported": false,
+          "lineCount": 3
+        }
+      ],
+      "classes": [],
+      "imports": [
+        {
+          "source": "github.com/julesklord/bananascaler/cmd",
+          "specifiers": [
+            "cmd"
+          ]
+        }
+      ],
+      "exports": [],
+      "totalLines": 8,
+      "hasStructuralAnalysis": true
+    },
+    "Makefile": {
+      "filePath": "Makefile",
+      "contentHash": "cfdfea38bd35d5fdbd398810948ef19bf2e962aa6cce038a334aec6882837851",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 44,
+      "hasStructuralAnalysis": true
+    },
+    "README.md": {
+      "filePath": "README.md",
+      "contentHash": "295c4fa165967da068bed5aeb4f230bfd20162a04d63469d1f5e95acd1daac90",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 433,
+      "hasStructuralAnalysis": true
+    },
+    "VERSION": {
+      "filePath": "VERSION",
+      "contentHash": "40b8eb4000a913a7791090535f291d3d369874162a89ef3c9e3d4e887a1b9e79",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 2,
+      "hasStructuralAnalysis": false
+    }
+  }
+}

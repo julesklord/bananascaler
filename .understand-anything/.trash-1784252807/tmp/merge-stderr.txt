@@ -1,0 +1,25 @@
+Found 7 batch files (7 logical batches, 0 multi-part):
+  batch-1.json: 19 nodes, 46 edges
+  batch-2.json: 50 nodes, 141 edges
+  batch-3.json: 12 nodes, 36 edges
+  batch-4.json: 1 nodes, 3 edges
+  batch-5.json: 6 nodes, 10 edges
+  batch-6.json: 5 nodes, 10 edges
+  batch-7.json: 5 nodes, 4 edges
+
+Input: 98 nodes, 250 edges
+
+Tested-by linker:
+     0 × tested_by edges produced (path-convention supplement, production → test)
+     4 × production nodes tagged "tested"
+
+Could not fix (2 issues — needs agent review):
+  - Edge function:internal/tui/pipeline_adapter.go:RunTUI → function:internal/tui/model.go:SetDone (calls): dropped, missing target 'function:internal/tui/model.go:SetDone'
+  - Edge function:internal/tui/pipeline_adapter.go:RunTUI → function:internal/tui/model.go:Events (calls): dropped, missing target 'function:internal/tui/model.go:Events'
+
+Output: 98 nodes, 248 edges
+
+Imports edge recovery:
+  Recovered 0 `imports` edges from importMap (32 entries scanned)
+
+Written to /mnt/DEV/Proyectos/repos/video-upscaler-gpu/.understand-anything/intermediate/assembled-graph.json (91 KB)

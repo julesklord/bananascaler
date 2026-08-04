@@ -1,0 +1,58 @@
+[
+  {
+    "order": 1,
+    "title": "What is bananascaler?",
+    "description": "Start with the README to understand the product: a GPU-accelerated neural video upscaler that drives Real-ESRGAN and FFmpeg, with a live Bubbletea dashboard.",
+    "nodeIds": [
+      "document:README.md"
+    ]
+  },
+  {
+    "order": 2,
+    "title": "Binary entry point",
+    "description": "main.go is a thin entry that delegates to the Cobra root command. All CLI flags, subcommands, and TUI launch flow start here.",
+    "nodeIds": [
+      "file:main.go",
+      "file:cmd/root.go"
+    ]
+  },
+  {
+    "order": 3,
+    "title": "Hardware-aware profiles",
+    "description": "Before upscaling, the tool detects NVIDIA GPUs and selects a hardware tier and preset so VRAM limits and quality tradeoffs stay safe.",
+    "nodeIds": [
+      "file:internal/hardware/detect.go",
+      "file:internal/hardware/profile.go",
+      "file:internal/config/config.go"
+    ]
+  },
+  {
+    "order": 4,
+    "title": "Core processing pipeline",
+    "description": "The pipeline package orchestrates frame extraction, Real-ESRGAN per-frame upscaling, re-encoding, and audio mux \u2014 the heart of every job.",
+    "nodeIds": [
+      "file:internal/pipeline/pipeline.go"
+    ]
+  },
+  {
+    "order": 5,
+    "title": "Interactive TUI dashboard",
+    "description": "When run in a terminal, Bubbletea renders progress, stages, and logs. The model and pipeline adapter bridge UI events to the pipeline.",
+    "nodeIds": [
+      "file:internal/tui/model.go",
+      "file:internal/tui/pipeline_adapter.go",
+      "file:internal/tui/styles.go",
+      "file:cmd/tui.go"
+    ]
+  },
+  {
+    "order": 6,
+    "title": "Build, test, and CI",
+    "description": "Makefile and go.mod define local builds; GitHub Actions builds and tests every push to main so regressions are caught early.",
+    "nodeIds": [
+      "file:Makefile",
+      "config:go.mod",
+      "pipeline:.github/workflows/go.yml"
+    ]
+  }
+]

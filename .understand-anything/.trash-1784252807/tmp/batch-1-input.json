@@ -1,0 +1,258 @@
+{
+  "batchIndex": 1,
+  "totalBatches": 7,
+  "files": [
+    {
+      "path": "cmd/root.go",
+      "language": "go",
+      "sizeLines": 167,
+      "fileCategory": "code"
+    },
+    {
+      "path": "cmd/tui.go",
+      "language": "go",
+      "sizeLines": 23,
+      "fileCategory": "code"
+    },
+    {
+      "path": "internal/tui/messages.go",
+      "language": "go",
+      "sizeLines": 40,
+      "fileCategory": "code"
+    },
+    {
+      "path": "internal/tui/model_test.go",
+      "language": "go",
+      "sizeLines": 185,
+      "fileCategory": "code"
+    },
+    {
+      "path": "internal/tui/pipeline_adapter_test.go",
+      "language": "go",
+      "sizeLines": 54,
+      "fileCategory": "code"
+    },
+    {
+      "path": "internal/tui/styles.go",
+      "language": "go",
+      "sizeLines": 215,
+      "fileCategory": "code"
+    },
+    {
+      "path": "main.go",
+      "language": "go",
+      "sizeLines": 7,
+      "fileCategory": "code"
+    }
+  ],
+  "batchImportData": {
+    "cmd/root.go": [
+      "internal/config/config_test.go",
+      "internal/config/config.go",
+      "internal/hardware/detect.go",
+      "internal/hardware/profile.go",
+      "internal/pipeline/pipeline_test.go",
+      "internal/pipeline/pipeline.go",
+      "internal/tui/messages.go",
+      "internal/tui/model_test.go",
+      "internal/tui/model.go",
+      "internal/tui/pipeline_adapter_test.go",
+      "internal/tui/pipeline_adapter.go",
+      "internal/tui/styles.go"
+    ],
+    "cmd/tui.go": [
+      "internal/tui/messages.go",
+      "internal/tui/model_test.go",
+      "internal/tui/model.go",
+      "internal/tui/pipeline_adapter_test.go",
+      "internal/tui/pipeline_adapter.go",
+      "internal/tui/styles.go"
+    ],
+    "internal/tui/messages.go": [
+      "internal/config/config_test.go",
+      "internal/config/config.go"
+    ],
+    "internal/tui/model_test.go": [
+      "internal/config/config_test.go",
+      "internal/config/config.go"
+    ],
+    "internal/tui/pipeline_adapter_test.go": [],
+    "internal/tui/styles.go": [],
+    "main.go": [
+      "cmd/root.go",
+      "cmd/tui.go"
+    ]
+  },
+  "neighborMap": {
+    "cmd/root.go": [
+      {
+        "path": "internal/config/config_test.go",
+        "batchIndex": 3,
+        "symbols": [
+          "TestConfigValidate"
+        ]
+      },
+      {
+        "path": "internal/config/config.go",
+        "batchIndex": 2,
+        "symbols": [
+          "Config",
+          "ResolveProfile",
+          "Validate",
+          "ProfileSummary"
+        ]
+      },
+      {
+        "path": "internal/hardware/detect.go",
+        "batchIndex": 2,
+        "symbols": [
+          "CheckDeps",
+          "HasNVIDIA",
+          "Framerate",
+          "HasAudio"
+        ]
+      },
+      {
+        "path": "internal/hardware/profile.go",
+        "batchIndex": 2,
+        "symbols": [
+          "AllPresets",
+          "ParsePreset",
+          "GPUInfo",
+          "UpscaleProfile",
+          "String",
+          "DetectGPU",
+          "DetectGPUCount",
+          "GetProfile",
+          "GetDefaultProfile",
+          "AutoProfile",
+          "AutoProfileWithPreset",
+          "ProfileSummary",
+          "ProfileDisplay",
+          "CheckTileSafety"
+        ]
+      },
+      {
+        "path": "internal/pipeline/pipeline_test.go",
+        "batchIndex": 3,
+        "symbols": [
+          "Info",
+          "OK",
+          "Warn",
+          "Step",
+          "Err",
+          "Progress",
+          "TestPipelineIntegration",
+          "TestCountFiles"
+        ]
+      },
+      {
+        "path": "internal/pipeline/pipeline.go",
+        "batchIndex": 2,
+        "symbols": [
+          "Logger",
+          "StdoutLogger",
+          "Info",
+          "OK",
+          "Warn",
+          "Step",
+          "Err",
+          "Progress",
+          "Run"
+        ]
+      },
+      {
+        "path": "internal/tui/model.go",
+        "batchIndex": 2,
+        "symbols": [
+          "Model",
+          "NewModel",
+          "Events",
+          "SetDone",
+          "Init",
+          "Update",
+          "View"
+        ]
+      },
+      {
+        "path": "internal/tui/pipeline_adapter.go",
+        "batchIndex": 3,
+        "symbols": [
+          "Info",
+          "OK",
+          "Warn",
+          "Step",
+          "Err",
+          "Progress",
+          "RunTUI"
+        ]
+      }
+    ],
+    "cmd/tui.go": [
+      {
+        "path": "internal/tui/model.go",
+        "batchIndex": 2,
+        "symbols": [
+          "Model",
+          "NewModel",
+          "Events",
+          "SetDone",
+          "Init",
+          "Update",
+          "View"
+        ]
+      },
+      {
+        "path": "internal/tui/pipeline_adapter.go",
+        "batchIndex": 3,
+        "symbols": [
+          "Info",
+          "OK",
+          "Warn",
+          "Step",
+          "Err",
+          "Progress",
+          "RunTUI"
+        ]
+      }
+    ],
+    "internal/tui/messages.go": [
+      {
+        "path": "internal/config/config_test.go",
+        "batchIndex": 3,
+        "symbols": [
+          "TestConfigValidate"
+        ]
+      },
+      {
+        "path": "internal/config/config.go",
+        "batchIndex": 2,
+        "symbols": [
+          "Config",
+          "ResolveProfile",
+          "Validate",
+          "ProfileSummary"
+        ]
+      }
+    ],
+    "internal/tui/model_test.go": [
+      {
+        "path": "internal/config/config_test.go",
+        "batchIndex": 3,
+        "symbols": [
+          "TestConfigValidate"
+        ]
+      },
+      {
+        "path": "internal/config/config.go",
+        "batchIndex": 2,
+        "symbols": [
+          "Config",
+          "ResolveProfile",
+          "Validate",
+          "ProfileSummary"
+        ]
+      }
+    ]
+  }
+}

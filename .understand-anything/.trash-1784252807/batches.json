@@ -1,0 +1,866 @@
+{
+  "schemaVersion": 1,
+  "algorithm": "louvain",
+  "totalFiles": 32,
+  "totalBatches": 7,
+  "exportsByPath": {
+    ".understand-anything/.understandignore": [],
+    "cmd/root.go": [
+      "Execute"
+    ],
+    "cmd/tui.go": [],
+    "docs/demo.tape": [],
+    "internal/config/config_test.go": [
+      "TestConfigValidate"
+    ],
+    "internal/config/config.go": [
+      "Config",
+      "ResolveProfile",
+      "Validate",
+      "ProfileSummary"
+    ],
+    "internal/hardware/detect.go": [
+      "CheckDeps",
+      "HasNVIDIA",
+      "Framerate",
+      "HasAudio"
+    ],
+    "internal/hardware/profile.go": [
+      "AllPresets",
+      "ParsePreset",
+      "GPUInfo",
+      "UpscaleProfile",
+      "String",
+      "DetectGPU",
+      "DetectGPUCount",
+      "GetProfile",
+      "GetDefaultProfile",
+      "AutoProfile",
+      "AutoProfileWithPreset",
+      "ProfileSummary",
+      "ProfileDisplay",
+      "CheckTileSafety"
+    ],
+    "internal/pipeline/pipeline_test.go": [
+      "Info",
+      "OK",
+      "Warn",
+      "Step",
+      "Err",
+      "Progress",
+      "TestPipelineIntegration",
+      "TestCountFiles"
+    ],
+    "internal/pipeline/pipeline.go": [
+      "Logger",
+      "StdoutLogger",
+      "Info",
+      "OK",
+      "Warn",
+      "Step",
+      "Err",
+      "Progress",
+      "Run"
+    ],
+    "internal/tui/messages.go": [
+      "PipelineEvent"
+    ],
+    "internal/tui/model_test.go": [
+      "TestIsVideoFile",
+      "TestShortModel",
+      "TestModelExplorerKeybinds",
+      "TestModelExplorerNavigation"
+    ],
+    "internal/tui/model.go": [
+      "Model",
+      "NewModel",
+      "Events",
+      "SetDone",
+      "Init",
+      "Update",
+      "View"
+    ],
+    "internal/tui/pipeline_adapter_test.go": [
+      "TestParseStep"
+    ],
+    "internal/tui/pipeline_adapter.go": [
+      "Info",
+      "OK",
+      "Warn",
+      "Step",
+      "Err",
+      "Progress",
+      "RunTUI"
+    ],
+    "internal/tui/styles.go": [],
+    "main.go": [],
+    "VERSION": []
+  },
+  "batches": [
+    {
+      "batchIndex": 1,
+      "files": [
+        {
+          "path": "cmd/root.go",
+          "language": "go",
+          "sizeLines": 167,
+          "fileCategory": "code"
+        },
+        {
+          "path": "cmd/tui.go",
+          "language": "go",
+          "sizeLines": 23,
+          "fileCategory": "code"
+        },
+        {
+          "path": "internal/tui/messages.go",
+          "language": "go",
+          "sizeLines": 40,
+          "fileCategory": "code"
+        },
+        {
+          "path": "internal/tui/model_test.go",
+          "language": "go",
+          "sizeLines": 185,
+          "fileCategory": "code"
+        },
+        {
+          "path": "internal/tui/pipeline_adapter_test.go",
+          "language": "go",
+          "sizeLines": 54,
+          "fileCategory": "code"
+        },
+        {
+          "path": "internal/tui/styles.go",
+          "language": "go",
+          "sizeLines": 215,
+          "fileCategory": "code"
+        },
+        {
+          "path": "main.go",
+          "language": "go",
+          "sizeLines": 7,
+          "fileCategory": "code"
+        }
+      ],
+      "batchImportData": {
+        "cmd/root.go": [
+          "internal/config/config_test.go",
+          "internal/config/config.go",
+          "internal/hardware/detect.go",
+          "internal/hardware/profile.go",
+          "internal/pipeline/pipeline_test.go",
+          "internal/pipeline/pipeline.go",
+          "internal/tui/messages.go",
+          "internal/tui/model_test.go",
+          "internal/tui/model.go",
+          "internal/tui/pipeline_adapter_test.go",
+          "internal/tui/pipeline_adapter.go",
+          "internal/tui/styles.go"
+        ],
+        "cmd/tui.go": [
+          "internal/tui/messages.go",
+          "internal/tui/model_test.go",
+          "internal/tui/model.go",
+          "internal/tui/pipeline_adapter_test.go",
+          "internal/tui/pipeline_adapter.go",
+          "internal/tui/styles.go"
+        ],
+        "internal/tui/messages.go": [
+          "internal/config/config_test.go",
+          "internal/config/config.go"
+        ],
+        "internal/tui/model_test.go": [
+          "internal/config/config_test.go",
+          "internal/config/config.go"
+        ],
+        "internal/tui/pipeline_adapter_test.go": [],
+        "internal/tui/styles.go": [],
+        "main.go": [
+          "cmd/root.go",
+          "cmd/tui.go"
+        ]
+      },
+      "neighborMap": {
+        "cmd/root.go": [
+          {
+            "path": "internal/config/config_test.go",
+            "batchIndex": 3,
+            "symbols": [
+              "TestConfigValidate"
+            ]
+          },
+          {
+            "path": "internal/config/config.go",
+            "batchIndex": 2,
+            "symbols": [
+              "Config",
+              "ResolveProfile",
+              "Validate",
+              "ProfileSummary"
+            ]
+          },
+          {
+            "path": "internal/hardware/detect.go",
+            "batchIndex": 2,
+            "symbols": [
+              "CheckDeps",
+              "HasNVIDIA",
+              "Framerate",
+              "HasAudio"
+            ]
+          },
+          {
+            "path": "internal/hardware/profile.go",
+            "batchIndex": 2,
+            "symbols": [
+              "AllPresets",
+              "ParsePreset",
+              "GPUInfo",
+              "UpscaleProfile",
+              "String",
+              "DetectGPU",
+              "DetectGPUCount",
+              "GetProfile",
+              "GetDefaultProfile",
+              "AutoProfile",
+              "AutoProfileWithPreset",
+              "ProfileSummary",
+              "ProfileDisplay",
+              "CheckTileSafety"
+            ]
+          },
+          {
+            "path": "internal/pipeline/pipeline_test.go",
+            "batchIndex": 3,
+            "symbols": [
+              "Info",
+              "OK",
+              "Warn",
+              "Step",
+              "Err",
+              "Progress",
+              "TestPipelineIntegration",
+              "TestCountFiles"
+            ]
+          },
+          {
+            "path": "internal/pipeline/pipeline.go",
+            "batchIndex": 2,
+            "symbols": [
+              "Logger",
+              "StdoutLogger",
+              "Info",
+              "OK",
+              "Warn",
+              "Step",
+              "Err",
+              "Progress",
+              "Run"
+            ]
+          },
+          {
+            "path": "internal/tui/model.go",
+            "batchIndex": 2,
+            "symbols": [
+              "Model",
+              "NewModel",
+              "Events",
+              "SetDone",
+              "Init",
+              "Update",
+              "View"
+            ]
+          },
+          {
+            "path": "internal/tui/pipeline_adapter.go",
+            "batchIndex": 3,
+            "symbols": [
+              "Info",
+              "OK",
+              "Warn",
+              "Step",
+              "Err",
+              "Progress",
+              "RunTUI"
+            ]
+          }
+        ],
+        "cmd/tui.go": [
+          {
+            "path": "internal/tui/model.go",
+            "batchIndex": 2,
+            "symbols": [
+              "Model",
+              "NewModel",
+              "Events",
+              "SetDone",
+              "Init",
+              "Update",
+              "View"
+            ]
+          },
+          {
+            "path": "internal/tui/pipeline_adapter.go",
+            "batchIndex": 3,
+            "symbols": [
+              "Info",
+              "OK",
+              "Warn",
+              "Step",
+              "Err",
+              "Progress",
+              "RunTUI"
+            ]
+          }
+        ],
+        "internal/tui/messages.go": [
+          {
+            "path": "internal/config/config_test.go",
+            "batchIndex": 3,
+            "symbols": [
+              "TestConfigValidate"
+            ]
+          },
+          {
+            "path": "internal/config/config.go",
+            "batchIndex": 2,
+            "symbols": [
+              "Config",
+              "ResolveProfile",
+              "Validate",
+              "ProfileSummary"
+            ]
+          }
+        ],
+        "internal/tui/model_test.go": [
+          {
+            "path": "internal/config/config_test.go",
+            "batchIndex": 3,
+            "symbols": [
+              "TestConfigValidate"
+            ]
+          },
+          {
+            "path": "internal/config/config.go",
+            "batchIndex": 2,
+            "symbols": [
+              "Config",
+              "ResolveProfile",
+              "Validate",
+              "ProfileSummary"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "batchIndex": 2,
+      "files": [
+        {
+          "path": "internal/config/config.go",
+          "language": "go",
+          "sizeLines": 117,
+          "fileCategory": "code"
+        },
+        {
+          "path": "internal/hardware/detect.go",
+          "language": "go",
+          "sizeLines": 62,
+          "fileCategory": "code"
+        },
+        {
+          "path": "internal/hardware/profile.go",
+          "language": "go",
+          "sizeLines": 483,
+          "fileCategory": "code"
+        },
+        {
+          "path": "internal/pipeline/pipeline.go",
+          "language": "go",
+          "sizeLines": 317,
+          "fileCategory": "code"
+        },
+        {
+          "path": "internal/tui/model.go",
+          "language": "go",
+          "sizeLines": 672,
+          "fileCategory": "code"
+        }
+      ],
+      "batchImportData": {
+        "internal/config/config.go": [
+          "internal/hardware/detect.go",
+          "internal/hardware/profile.go"
+        ],
+        "internal/hardware/detect.go": [],
+        "internal/hardware/profile.go": [],
+        "internal/pipeline/pipeline.go": [
+          "internal/config/config_test.go",
+          "internal/config/config.go",
+          "internal/hardware/detect.go",
+          "internal/hardware/profile.go"
+        ],
+        "internal/tui/model.go": [
+          "internal/config/config_test.go",
+          "internal/config/config.go",
+          "internal/hardware/detect.go",
+          "internal/hardware/profile.go",
+          "internal/pipeline/pipeline_test.go",
+          "internal/pipeline/pipeline.go"
+        ]
+      },
+      "neighborMap": {
+        "internal/config/config.go": [
+          {
+            "path": "cmd/root.go",
+            "batchIndex": 1,
+            "symbols": [
+              "Execute"
+            ]
+          },
+          {
+            "path": "internal/pipeline/pipeline_test.go",
+            "batchIndex": 3,
+            "symbols": [
+              "Info",
+              "OK",
+              "Warn",
+              "Step",
+              "Err",
+              "Progress",
+              "TestPipelineIntegration",
+              "TestCountFiles"
+            ]
+          },
+          {
+            "path": "internal/tui/messages.go",
+            "batchIndex": 1,
+            "symbols": [
+              "PipelineEvent"
+            ]
+          },
+          {
+            "path": "internal/tui/model_test.go",
+            "batchIndex": 1,
+            "symbols": [
+              "TestIsVideoFile",
+              "TestShortModel",
+              "TestModelExplorerKeybinds",
+              "TestModelExplorerNavigation"
+            ]
+          },
+          {
+            "path": "internal/tui/pipeline_adapter.go",
+            "batchIndex": 3,
+            "symbols": [
+              "Info",
+              "OK",
+              "Warn",
+              "Step",
+              "Err",
+              "Progress",
+              "RunTUI"
+            ]
+          }
+        ],
+        "internal/hardware/detect.go": [
+          {
+            "path": "cmd/root.go",
+            "batchIndex": 1,
+            "symbols": [
+              "Execute"
+            ]
+          }
+        ],
+        "internal/hardware/profile.go": [
+          {
+            "path": "cmd/root.go",
+            "batchIndex": 1,
+            "symbols": [
+              "Execute"
+            ]
+          }
+        ],
+        "internal/pipeline/pipeline.go": [
+          {
+            "path": "internal/config/config_test.go",
+            "batchIndex": 3,
+            "symbols": [
+              "TestConfigValidate"
+            ]
+          },
+          {
+            "path": "cmd/root.go",
+            "batchIndex": 1,
+            "symbols": [
+              "Execute"
+            ]
+          },
+          {
+            "path": "internal/tui/pipeline_adapter.go",
+            "batchIndex": 3,
+            "symbols": [
+              "Info",
+              "OK",
+              "Warn",
+              "Step",
+              "Err",
+              "Progress",
+              "RunTUI"
+            ]
+          }
+        ],
+        "internal/tui/model.go": [
+          {
+            "path": "internal/config/config_test.go",
+            "batchIndex": 3,
+            "symbols": [
+              "TestConfigValidate"
+            ]
+          },
+          {
+            "path": "internal/pipeline/pipeline_test.go",
+            "batchIndex": 3,
+            "symbols": [
+              "Info",
+              "OK",
+              "Warn",
+              "Step",
+              "Err",
+              "Progress",
+              "TestPipelineIntegration",
+              "TestCountFiles"
+            ]
+          },
+          {
+            "path": "cmd/root.go",
+            "batchIndex": 1,
+            "symbols": [
+              "Execute"
+            ]
+          },
+          {
+            "path": "cmd/tui.go",
+            "batchIndex": 1,
+            "symbols": []
+          }
+        ]
+      }
+    },
+    {
+      "batchIndex": 3,
+      "files": [
+        {
+          "path": "internal/config/config_test.go",
+          "language": "go",
+          "sizeLines": 93,
+          "fileCategory": "code"
+        },
+        {
+          "path": "internal/pipeline/pipeline_test.go",
+          "language": "go",
+          "sizeLines": 198,
+          "fileCategory": "code"
+        },
+        {
+          "path": "internal/tui/pipeline_adapter.go",
+          "language": "go",
+          "sizeLines": 98,
+          "fileCategory": "code"
+        }
+      ],
+      "batchImportData": {
+        "internal/config/config_test.go": [],
+        "internal/pipeline/pipeline_test.go": [
+          "internal/config/config_test.go",
+          "internal/config/config.go"
+        ],
+        "internal/tui/pipeline_adapter.go": [
+          "internal/config/config_test.go",
+          "internal/config/config.go",
+          "internal/pipeline/pipeline_test.go",
+          "internal/pipeline/pipeline.go"
+        ]
+      },
+      "neighborMap": {
+        "internal/config/config_test.go": [
+          {
+            "path": "cmd/root.go",
+            "batchIndex": 1,
+            "symbols": [
+              "Execute"
+            ]
+          },
+          {
+            "path": "internal/pipeline/pipeline.go",
+            "batchIndex": 2,
+            "symbols": [
+              "Logger",
+              "StdoutLogger",
+              "Info",
+              "OK",
+              "Warn",
+              "Step",
+              "Err",
+              "Progress",
+              "Run"
+            ]
+          },
+          {
+            "path": "internal/tui/messages.go",
+            "batchIndex": 1,
+            "symbols": [
+              "PipelineEvent"
+            ]
+          },
+          {
+            "path": "internal/tui/model_test.go",
+            "batchIndex": 1,
+            "symbols": [
+              "TestIsVideoFile",
+              "TestShortModel",
+              "TestModelExplorerKeybinds",
+              "TestModelExplorerNavigation"
+            ]
+          },
+          {
+            "path": "internal/tui/model.go",
+            "batchIndex": 2,
+            "symbols": [
+              "Model",
+              "NewModel",
+              "Events",
+              "SetDone",
+              "Init",
+              "Update",
+              "View"
+            ]
+          }
+        ],
+        "internal/pipeline/pipeline_test.go": [
+          {
+            "path": "internal/config/config.go",
+            "batchIndex": 2,
+            "symbols": [
+              "Config",
+              "ResolveProfile",
+              "Validate",
+              "ProfileSummary"
+            ]
+          },
+          {
+            "path": "cmd/root.go",
+            "batchIndex": 1,
+            "symbols": [
+              "Execute"
+            ]
+          },
+          {
+            "path": "internal/tui/model.go",
+            "batchIndex": 2,
+            "symbols": [
+              "Model",
+              "NewModel",
+              "Events",
+              "SetDone",
+              "Init",
+              "Update",
+              "View"
+            ]
+          }
+        ],
+        "internal/tui/pipeline_adapter.go": [
+          {
+            "path": "internal/config/config.go",
+            "batchIndex": 2,
+            "symbols": [
+              "Config",
+              "ResolveProfile",
+              "Validate",
+              "ProfileSummary"
+            ]
+          },
+          {
+            "path": "internal/pipeline/pipeline.go",
+            "batchIndex": 2,
+            "symbols": [
+              "Logger",
+              "StdoutLogger",
+              "Info",
+              "OK",
+              "Warn",
+              "Step",
+              "Err",
+              "Progress",
+              "Run"
+            ]
+          },
+          {
+            "path": "cmd/root.go",
+            "batchIndex": 1,
+            "symbols": [
+              "Execute"
+            ]
+          },
+          {
+            "path": "cmd/tui.go",
+            "batchIndex": 1,
+            "symbols": []
+          }
+        ]
+      }
+    },
+    {
+      "batchIndex": 4,
+      "files": [
+        {
+          "path": ".github/workflows/go.yml",
+          "language": "yaml",
+          "sizeLines": 28,
+          "fileCategory": "infra"
+        }
+      ],
+      "batchImportData": {
+        ".github/workflows/go.yml": []
+      },
+      "neighborMap": {}
+    },
+    {
+      "batchIndex": 5,
+      "files": [
+        {
+          "path": "AGENTS.md",
+          "language": "markdown",
+          "sizeLines": 142,
+          "fileCategory": "docs"
+        },
+        {
+          "path": "CHANGELOG.md",
+          "language": "markdown",
+          "sizeLines": 96,
+          "fileCategory": "docs"
+        },
+        {
+          "path": "Makefile",
+          "language": "makefile",
+          "sizeLines": 43,
+          "fileCategory": "infra"
+        },
+        {
+          "path": "README.md",
+          "language": "markdown",
+          "sizeLines": 432,
+          "fileCategory": "docs"
+        },
+        {
+          "path": "go.mod",
+          "language": "mod",
+          "sizeLines": 35,
+          "fileCategory": "config"
+        },
+        {
+          "path": "go.sum",
+          "language": "sum",
+          "sizeLines": 60,
+          "fileCategory": "config"
+        }
+      ],
+      "batchImportData": {
+        "AGENTS.md": [],
+        "CHANGELOG.md": [],
+        "Makefile": [],
+        "README.md": [],
+        "go.mod": [],
+        "go.sum": []
+      },
+      "neighborMap": {}
+    },
+    {
+      "batchIndex": 6,
+      "files": [
+        {
+          "path": "docs/AGENT.md",
+          "language": "markdown",
+          "sizeLines": 37,
+          "fileCategory": "docs"
+        },
+        {
+          "path": "docs/GEMINI.md",
+          "language": "markdown",
+          "sizeLines": 22,
+          "fileCategory": "docs"
+        },
+        {
+          "path": "docs/IDENTITY.md",
+          "language": "markdown",
+          "sizeLines": 20,
+          "fileCategory": "docs"
+        },
+        {
+          "path": "docs/MEMORY.md",
+          "language": "markdown",
+          "sizeLines": 32,
+          "fileCategory": "docs"
+        },
+        {
+          "path": "docs/SOUL.md",
+          "language": "markdown",
+          "sizeLines": 14,
+          "fileCategory": "docs"
+        }
+      ],
+      "batchImportData": {
+        "docs/AGENT.md": [],
+        "docs/GEMINI.md": [],
+        "docs/IDENTITY.md": [],
+        "docs/MEMORY.md": [],
+        "docs/SOUL.md": []
+      },
+      "neighborMap": {}
+    },
+    {
+      "batchIndex": 7,
+      "files": [
+        {
+          "path": ".understand-anything/.understandignore",
+          "language": "unknown",
+          "sizeLines": 45,
+          "fileCategory": "code"
+        },
+        {
+          "path": ".understand-anything/config.json",
+          "language": "json",
+          "sizeLines": 1,
+          "fileCategory": "config"
+        },
+        {
+          "path": ".understand-anything/intermediate/scan-raw.json",
+          "language": "json",
+          "sizeLines": 213,
+          "fileCategory": "config"
+        },
+        {
+          "path": "docs/demo.tape",
+          "language": "tape",
+          "sizeLines": 20,
+          "fileCategory": "code"
+        },
+        {
+          "path": "VERSION",
+          "language": "unknown",
+          "sizeLines": 1,
+          "fileCategory": "code"
+        }
+      ],
+      "batchImportData": {
+        ".understand-anything/.understandignore": [],
+        ".understand-anything/config.json": [],
+        ".understand-anything/intermediate/scan-raw.json": [],
+        "docs/demo.tape": [],
+        "VERSION": []
+      },
+      "neighborMap": {}
+    }
+  ]
+}

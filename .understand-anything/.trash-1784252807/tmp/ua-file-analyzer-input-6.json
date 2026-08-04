@@ -1,0 +1,42 @@
+{
+  "projectRoot": "/mnt/DEV/Proyectos/repos/video-upscaler-gpu",
+  "batchFiles": [
+    {
+      "path": "docs/AGENT.md",
+      "language": "markdown",
+      "sizeLines": 37,
+      "fileCategory": "docs"
+    },
+    {
+      "path": "docs/GEMINI.md",
+      "language": "markdown",
+      "sizeLines": 22,
+      "fileCategory": "docs"
+    },
+    {
+      "path": "docs/IDENTITY.md",
+      "language": "markdown",
+      "sizeLines": 20,
+      "fileCategory": "docs"
+    },
+    {
+      "path": "docs/MEMORY.md",
+      "language": "markdown",
+      "sizeLines": 32,
+      "fileCategory": "docs"
+    },
+    {
+      "path": "docs/SOUL.md",
+      "language": "markdown",
+      "sizeLines": 14,
+      "fileCategory": "docs"
+    }
+  ],
+  "batchImportData": {
+    "docs/AGENT.md": [],
+    "docs/GEMINI.md": [],
+    "docs/IDENTITY.md": [],
+    "docs/MEMORY.md": [],
+    "docs/SOUL.md": []
+  }
+}

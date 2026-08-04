@@ -1,0 +1,3439 @@
+{
+  "version": "1.0.0",
+  "project": {
+    "name": "bananascaler",
+    "languages": [
+      "go",
+      "json",
+      "makefile",
+      "markdown",
+      "mod",
+      "sum",
+      "tape",
+      "unknown",
+      "yaml"
+    ],
+    "frameworks": [
+      "Bubbletea",
+      "Cobra",
+      "GitHub Actions",
+      "Lipgloss"
+    ],
+    "description": "GPU-accelerated neural video upscaler CLI with an interactive Bubbletea TUI. Orchestrates Real-ESRGAN for per-frame super-resolution and FFmpeg for hardware-accelerated encoding and audio muxing.",
+    "analyzedAt": "2026-07-17T01:46:25Z",
+    "gitCommitHash": "da5519e55823e87d45fc911f77914bd4ad896de8"
+  },
+  "nodes": [
+    {
+      "id": "file:cmd/root.go",
+      "type": "file",
+      "name": "root.go",
+      "filePath": "cmd/root.go",
+      "summary": "Cobra root command for bananascaler: defines global flags, runs profile resolution/validation, routes to TUI or plain pipeline mode, and hosts the detect hardware subcommand.",
+      "tags": [
+        "cli",
+        "cobra",
+        "entry-point",
+        "command-root"
+      ],
+      "complexity": "moderate",
+      "languageNotes": "Uses golang.org/x/term.IsTerminal to choose TUI vs stdout logger when --no-tui is unset."
+    },
+    {
+      "id": "file:cmd/tui.go",
+      "type": "file",
+      "name": "tui.go",
+      "filePath": "cmd/tui.go",
+      "summary": "Registers the tui subcommand that launches the interactive file-manager TUI with empty Input so users pick videos from the working directory.",
+      "tags": [
+        "cli",
+        "cobra",
+        "tui",
+        "subcommand"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:internal/tui/messages.go",
+      "type": "file",
+      "name": "messages.go",
+      "filePath": "internal/tui/messages.go",
+      "summary": "Defines pipeline event kinds, log level constants, and PipelineEvent plus Bubbletea message wrappers bridging the pipeline goroutine to the TUI model.",
+      "tags": [
+        "tui",
+        "events",
+        "type-definition",
+        "bubbletea"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:internal/tui/model_test.go",
+      "type": "file",
+      "name": "model_test.go",
+      "filePath": "internal/tui/model_test.go",
+      "summary": "Unit tests for video file detection, model name shortening, and explorer keybinds/navigation (scale/GPU/model cycling and j/k cursor movement).",
+      "tags": [
+        "test",
+        "tui",
+        "bubbletea",
+        "explorer"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:internal/tui/pipeline_adapter_test.go",
+      "type": "file",
+      "name": "pipeline_adapter_test.go",
+      "filePath": "internal/tui/pipeline_adapter_test.go",
+      "summary": "Table-driven tests for parseStep, covering bracketed stage messages, missing brackets, empty brackets, and multi-digit stage numbers.",
+      "tags": [
+        "test",
+        "pipeline",
+        "parsing",
+        "tui"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:internal/tui/styles.go",
+      "type": "file",
+      "name": "styles.go",
+      "filePath": "internal/tui/styles.go",
+      "summary": "Lipgloss color palette, layout constants, and shared TUI styles for panels, stages, progress bars, logs, footer keybinds, and the file explorer.",
+      "tags": [
+        "tui",
+        "styles",
+        "lipgloss",
+        "ui"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:main.go",
+      "type": "file",
+      "name": "main.go",
+      "filePath": "main.go",
+      "summary": "Program entry point that delegates to cmd.Execute to run the bananascaler Cobra CLI.",
+      "tags": [
+        "entry-point",
+        "cli",
+        "bootstrap"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:main.go:main",
+      "type": "function",
+      "name": "main",
+      "filePath": "main.go",
+      "lineRange": [
+        5,
+        7
+      ],
+      "summary": "Binary entry point that calls cmd.Execute to start the Cobra CLI.",
+      "tags": [
+        "entry-point",
+        "bootstrap",
+        "cli"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:cmd/root.go:Execute",
+      "type": "function",
+      "name": "Execute",
+      "filePath": "cmd/root.go",
+      "lineRange": [
+        71,
+        76
+      ],
+      "summary": "Public CLI entry invoked by main: executes the root Cobra command and exits non-zero with a styled error on failure.",
+      "tags": [
+        "cli",
+        "entry-point",
+        "error-handling"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:cmd/root.go:init",
+      "type": "function",
+      "name": "init",
+      "filePath": "cmd/root.go",
+      "lineRange": [
+        78,
+        100
+      ],
+      "summary": "Registers persistent flags for output, scale, GPU, model, verbosity, TUI toggle, and profile/auto-detect, then attaches the detect subcommand.",
+      "tags": [
+        "cli",
+        "flags",
+        "initialization",
+        "cobra"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "class:internal/tui/messages.go:PipelineEvent",
+      "type": "class",
+      "name": "PipelineEvent",
+      "filePath": "internal/tui/messages.go",
+      "lineRange": [
+        26,
+        34
+      ],
+      "summary": "Event payload from the pipeline goroutine to the TUI carrying kind, log level, message text, and stage progress fields.",
+      "tags": [
+        "events",
+        "data-model",
+        "tui",
+        "pipeline"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:internal/tui/model_test.go:TestIsVideoFile",
+      "type": "function",
+      "name": "TestIsVideoFile",
+      "filePath": "internal/tui/model_test.go",
+      "lineRange": [
+        12,
+        35
+      ],
+      "summary": "Table test verifying isVideoFile accepts common video extensions (case-insensitive) and rejects non-video names.",
+      "tags": [
+        "test",
+        "video",
+        "file-filter"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:internal/tui/model_test.go:TestShortModel",
+      "type": "function",
+      "name": "TestShortModel",
+      "filePath": "internal/tui/model_test.go",
+      "lineRange": [
+        37,
+        55
+      ],
+      "summary": "Table test for shortModel display names stripping realesr/realesrgan prefixes from model identifiers.",
+      "tags": [
+        "test",
+        "model",
+        "formatting"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:internal/tui/model_test.go:TestModelExplorerKeybinds",
+      "type": "function",
+      "name": "TestModelExplorerKeybinds",
+      "filePath": "internal/tui/model_test.go",
+      "lineRange": [
+        57,
+        115
+      ],
+      "summary": "Exercises Model.Update keybinds in file-select state: cycles scale (s), GPU (g), and model (m) through expected values.",
+      "tags": [
+        "test",
+        "keybinds",
+        "bubbletea",
+        "explorer"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:internal/tui/model_test.go:TestModelExplorerNavigation",
+      "type": "function",
+      "name": "TestModelExplorerNavigation",
+      "filePath": "internal/tui/model_test.go",
+      "lineRange": [
+        117,
+        185
+      ],
+      "summary": "Integration-style test that loads a temp dir of videos into the explorer and asserts j/k cursor movement with bounds clamping.",
+      "tags": [
+        "test",
+        "navigation",
+        "explorer",
+        "bubbletea"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:internal/tui/pipeline_adapter_test.go:TestParseStep",
+      "type": "function",
+      "name": "TestParseStep",
+      "filePath": "internal/tui/pipeline_adapter_test.go",
+      "lineRange": [
+        5,
+        54
+      ],
+      "summary": "Validates parseStep extracts stage index and name from [n/m] messages and handles malformed or empty bracket cases.",
+      "tags": [
+        "test",
+        "parsing",
+        "pipeline"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:internal/tui/styles.go:renderBar",
+      "type": "function",
+      "name": "renderBar",
+      "filePath": "internal/tui/styles.go",
+      "lineRange": [
+        135,
+        164
+      ],
+      "summary": "Renders a segmented progress bar with green fill when done and blue body plus amber lead edge while active.",
+      "tags": [
+        "ui",
+        "progress-bar",
+        "rendering"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:internal/tui/styles.go:repeat",
+      "type": "function",
+      "name": "repeat",
+      "filePath": "internal/tui/styles.go",
+      "lineRange": [
+        178,
+        187
+      ],
+      "summary": "Repeats a string n times via strings.Builder, returning empty string for non-positive n.",
+      "tags": [
+        "utility",
+        "string",
+        "helper"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:internal/tui/styles.go:renderFooterBinds",
+      "type": "function",
+      "name": "renderFooterBinds",
+      "filePath": "internal/tui/styles.go",
+      "lineRange": [
+        198,
+        207
+      ],
+      "summary": "Builds the footer keybind hint row by styling key/description pairs and joining them with muted separators.",
+      "tags": [
+        "ui",
+        "footer",
+        "keybinds",
+        "rendering"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:internal/config/config.go",
+      "type": "file",
+      "name": "config.go",
+      "filePath": "internal/config/config.go",
+      "summary": "Runtime configuration for a bananascaler run: CLI-derived settings, hardware profile resolution, validation, and default output/model application.",
+      "tags": [
+        "config",
+        "profile",
+        "validation",
+        "cli",
+        "tested"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "class:internal/config/config.go:Config",
+      "type": "class",
+      "name": "Config",
+      "summary": "Holds input/output paths, scale, GPU index, model, verbosity, TUI flags, and optional UpscaleProfile with auto-detect/preset controls.",
+      "tags": [
+        "config",
+        "struct",
+        "settings"
+      ],
+      "complexity": "simple",
+      "lineRange": [
+        16,
+        29
+      ]
+    },
+    {
+      "id": "function:internal/config/config.go:ResolveProfile",
+      "type": "function",
+      "name": "ResolveProfile",
+      "summary": "Applies profile selection: auto-detect with optional preset, user preset alone, or legacy defaults without a profile.",
+      "tags": [
+        "profile",
+        "auto-detect",
+        "preset"
+      ],
+      "complexity": "moderate",
+      "lineRange": [
+        33,
+        65
+      ]
+    },
+    {
+      "id": "function:internal/config/config.go:applyProfileDefaults",
+      "type": "function",
+      "name": "applyProfileDefaults",
+      "summary": "Copies model and max-scale caps from the active profile into Config when the user has not overridden them via CLI.",
+      "tags": [
+        "profile",
+        "defaults"
+      ],
+      "complexity": "simple",
+      "lineRange": [
+        69,
+        84
+      ]
+    },
+    {
+      "id": "function:internal/config/config.go:Validate",
+      "type": "function",
+      "name": "Validate",
+      "summary": "Checks scale range and input existence, fills default output path and model, and enforces profile MaxScale.",
+      "tags": [
+        "validation",
+        "defaults",
+        "io"
+      ],
+      "complexity": "moderate",
+      "lineRange": [
+        87,
+        109
+      ]
+    },
+    {
+      "id": "function:internal/config/config.go:ProfileSummary",
+      "type": "function",
+      "name": "ProfileSummary",
+      "summary": "Returns a one-line string describing the active profile or legacy model/scale settings for logs.",
+      "tags": [
+        "profile",
+        "logging",
+        "display"
+      ],
+      "complexity": "simple",
+      "lineRange": [
+        112,
+        117
+      ]
+    },
+    {
+      "id": "file:internal/hardware/detect.go",
+      "type": "file",
+      "name": "detect.go",
+      "filePath": "internal/hardware/detect.go",
+      "summary": "Dependency checks and media probes: PATH tools (ffmpeg/ffprobe/realesrgan), NVIDIA presence, framerate, and audio-stream detection via ffprobe.",
+      "tags": [
+        "hardware",
+        "ffprobe",
+        "dependencies",
+        "detection"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:internal/hardware/detect.go:CheckDeps",
+      "type": "function",
+      "name": "CheckDeps",
+      "summary": "Verifies ffmpeg, ffprobe, and realesrgan-ncnn-vulkan are available on PATH before a run.",
+      "tags": [
+        "dependencies",
+        "path",
+        "preflight"
+      ],
+      "complexity": "simple",
+      "lineRange": [
+        14,
+        21
+      ]
+    },
+    {
+      "id": "function:internal/hardware/detect.go:HasNVIDIA",
+      "type": "function",
+      "name": "HasNVIDIA",
+      "summary": "Returns true if nvidia-smi runs successfully within a short timeout.",
+      "tags": [
+        "nvidia",
+        "gpu",
+        "detection"
+      ],
+      "complexity": "simple",
+      "lineRange": [
+        24,
+        28
+      ]
+    },
+    {
+      "id": "function:internal/hardware/detect.go:Framerate",
+      "type": "function",
+      "name": "Framerate",
+      "summary": "Uses ffprobe to read the first video stream's r_frame_rate for re-encode framerate preservation.",
+      "tags": [
+        "ffprobe",
+        "video",
+        "metadata"
+      ],
+      "complexity": "simple",
+      "lineRange": [
+        31,
+        47
+      ]
+    },
+    {
+      "id": "function:internal/hardware/detect.go:HasAudio",
+      "type": "function",
+      "name": "HasAudio",
+      "summary": "Uses ffprobe to detect whether the input has any audio streams for remux decisions.",
+      "tags": [
+        "ffprobe",
+        "audio",
+        "metadata"
+      ],
+      "complexity": "simple",
+      "lineRange": [
+        50,
+        62
+      ]
+    },
+    {
+      "id": "file:internal/hardware/profile.go",
+      "type": "file",
+      "name": "profile.go",
+      "filePath": "internal/hardware/profile.go",
+      "summary": "GPU detection via nvidia-smi, VRAM-based hardware tiers, preset profile database (tile/model/encode params), auto-profiling, and tile OOM safety checks.",
+      "tags": [
+        "hardware",
+        "profile",
+        "gpu",
+        "vram",
+        "presets"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "class:internal/hardware/profile.go:GPUInfo",
+      "type": "class",
+      "name": "GPUInfo",
+      "summary": "Detected GPU snapshot: name, VRAM MB, NVIDIA availability, and CPU core count.",
+      "tags": [
+        "gpu",
+        "struct",
+        "hardware"
+      ],
+      "complexity": "simple",
+      "lineRange": [
+        54,
+        59
+      ]
+    },
+    {
+      "id": "class:internal/hardware/profile.go:UpscaleProfile",
+      "type": "class",
+      "name": "UpscaleProfile",
+      "summary": "Tunable upscale parameters: tier/preset, Real-ESRGAN tile and model, JPEG quality, NVENC/x265 encode settings, and max scale.",
+      "tags": [
+        "profile",
+        "struct",
+        "upscale",
+        "encoding"
+      ],
+      "complexity": "moderate",
+      "lineRange": [
+        62,
+        83
+      ]
+    },
+    {
+      "id": "function:internal/hardware/profile.go:AllPresets",
+      "type": "function",
+      "name": "AllPresets",
+      "summary": "Returns the three preset levels: fast, balanced, and quality.",
+      "tags": [
+        "preset",
+        "api"
+      ],
+      "complexity": "simple",
+      "lineRange": [
+        25,
+        27
+      ]
+    },
+    {
+      "id": "function:internal/hardware/profile.go:ParsePreset",
+      "type": "function",
+      "name": "ParsePreset",
+      "summary": "Parses user preset strings (including short aliases) into PresetLevel or returns an error.",
+      "tags": [
+        "preset",
+        "parsing",
+        "cli"
+      ],
+      "complexity": "simple",
+      "lineRange": [
+        30,
+        41
+      ]
+    },
+    {
+      "id": "function:internal/hardware/profile.go:String",
+      "type": "function",
+      "name": "String",
+      "summary": "Formats UpscaleProfile as a short human-readable tier/preset/tile/model summary.",
+      "tags": [
+        "profile",
+        "display"
+      ],
+      "complexity": "simple",
+      "lineRange": [
+        86,
+        89
+      ]
+    },
+    {
+      "id": "function:internal/hardware/profile.go:DetectGPU",
+      "type": "function",
+      "name": "DetectGPU",
+      "summary": "Queries nvidia-smi for GPU name and total VRAM; returns zero-value GPUInfo when no NVIDIA GPU is found.",
+      "tags": [
+        "gpu",
+        "nvidia-smi",
+        "detection"
+      ],
+      "complexity": "moderate",
+      "lineRange": [
+        101,
+        137
+      ]
+    },
+    {
+      "id": "function:internal/hardware/profile.go:DetectGPUCount",
+      "type": "function",
+      "name": "DetectGPUCount",
+      "summary": "Counts NVIDIA GPUs by parsing nvidia-smi GPU index lines.",
+      "tags": [
+        "gpu",
+        "nvidia-smi",
+        "multi-gpu"
+      ],
+      "complexity": "simple",
+      "lineRange": [
+        140,
+        158
+      ]
+    },
+    {
+      "id": "function:internal/hardware/profile.go:classifyTier",
+      "type": "function",
+      "name": "classifyTier",
+      "summary": "Maps VRAM thresholds to low-end, mid-range, high-end, or unknown hardware tiers.",
+      "tags": [
+        "tier",
+        "vram",
+        "classification"
+      ],
+      "complexity": "simple",
+      "lineRange": [
+        162,
+        174
+      ]
+    },
+    {
+      "id": "function:internal/hardware/profile.go:profileDB",
+      "type": "function",
+      "name": "profileDB",
+      "summary": "Builds the full tier\u00d7preset matrix of UpscaleProfile values tuned for VRAM budgets and quality tradeoffs.",
+      "tags": [
+        "profile",
+        "database",
+        "presets",
+        "tuning"
+      ],
+      "complexity": "complex",
+      "lineRange": [
+        189,
+        348
+      ]
+    },
+    {
+      "id": "function:internal/hardware/profile.go:GetProfile",
+      "type": "function",
+      "name": "GetProfile",
+      "summary": "Looks up a profile by hardware tier and preset, falling back to unknown/balanced.",
+      "tags": [
+        "profile",
+        "lookup"
+      ],
+      "complexity": "simple",
+      "lineRange": [
+        351,
+        360
+      ]
+    },
+    {
+      "id": "function:internal/hardware/profile.go:GetDefaultProfile",
+      "type": "function",
+      "name": "GetDefaultProfile",
+      "summary": "Returns the balanced profile for a given hardware tier.",
+      "tags": [
+        "profile",
+        "defaults"
+      ],
+      "complexity": "simple",
+      "lineRange": [
+        363,
+        365
+      ]
+    },
+    {
+      "id": "function:internal/hardware/profile.go:AutoProfile",
+      "type": "function",
+      "name": "AutoProfile",
+      "summary": "Detects GPU, classifies tier, and returns the recommended balanced UpscaleProfile with GPUInfo.",
+      "tags": [
+        "auto-detect",
+        "profile",
+        "gpu"
+      ],
+      "complexity": "simple",
+      "lineRange": [
+        369,
+        374
+      ]
+    },
+    {
+      "id": "function:internal/hardware/profile.go:AutoProfileWithPreset",
+      "type": "function",
+      "name": "AutoProfileWithPreset",
+      "summary": "Detects GPU tier and returns a profile for the caller's preferred fast/balanced/quality preset.",
+      "tags": [
+        "auto-detect",
+        "profile",
+        "preset"
+      ],
+      "complexity": "simple",
+      "lineRange": [
+        378,
+        383
+      ]
+    },
+    {
+      "id": "function:internal/hardware/profile.go:ProfileSummary",
+      "type": "function",
+      "name": "ProfileSummary",
+      "summary": "One-line hardware plus tier/preset summary for CLI/TUI status lines.",
+      "tags": [
+        "display",
+        "profile",
+        "logging"
+      ],
+      "complexity": "moderate",
+      "lineRange": [
+        386,
+        404
+      ]
+    },
+    {
+      "id": "function:internal/hardware/profile.go:ProfileDisplay",
+      "type": "function",
+      "name": "ProfileDisplay",
+      "summary": "Multi-line verbose dump of tile, model, JPEG quality, NVENC/x265 encode settings, and max scale.",
+      "tags": [
+        "display",
+        "verbose",
+        "profile"
+      ],
+      "complexity": "moderate",
+      "lineRange": [
+        407,
+        421
+      ]
+    },
+    {
+      "id": "function:internal/hardware/profile.go:maxSafeTile",
+      "type": "function",
+      "name": "maxSafeTile",
+      "summary": "Heuristic maximum safe Real-ESRGAN tile size from VRAM and model weight class.",
+      "tags": [
+        "vram",
+        "tile",
+        "safety"
+      ],
+      "complexity": "moderate",
+      "lineRange": [
+        427,
+        468
+      ]
+    },
+    {
+      "id": "function:internal/hardware/profile.go:CheckTileSafety",
+      "type": "function",
+      "name": "CheckTileSafety",
+      "summary": "Returns a warning string when requested tile size may OOM on the detected GPU; empty if safe.",
+      "tags": [
+        "safety",
+        "tile",
+        "oom",
+        "warning"
+      ],
+      "complexity": "simple",
+      "lineRange": [
+        472,
+        483
+      ]
+    },
+    {
+      "id": "file:internal/pipeline/pipeline.go",
+      "type": "file",
+      "name": "pipeline.go",
+      "filePath": "internal/pipeline/pipeline.go",
+      "summary": "Core upscale pipeline: validate config, probe media, extract frames with ffmpeg, Real-ESRGAN upscale with progress, re-encode/mux (NVENC or libx265), with signal cleanup.",
+      "tags": [
+        "pipeline",
+        "ffmpeg",
+        "realesrgan",
+        "upscale",
+        "core",
+        "tested"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "class:internal/pipeline/pipeline.go:Logger",
+      "type": "class",
+      "name": "Logger",
+      "summary": "Interface abstracting pipeline log/progress output so CLI stdout or TUI can drive the same Run path.",
+      "tags": [
+        "logging",
+        "interface",
+        "abstraction"
+      ],
+      "complexity": "simple",
+      "lineRange": [
+        21,
+        28
+      ]
+    },
+    {
+      "id": "class:internal/pipeline/pipeline.go:StdoutLogger",
+      "type": "class",
+      "name": "StdoutLogger",
+      "summary": "ANSI-colored Logger implementation that prints pipeline events and progress bars to the terminal.",
+      "tags": [
+        "logging",
+        "cli",
+        "stdout"
+      ],
+      "complexity": "simple",
+      "lineRange": [
+        31,
+        33
+      ]
+    },
+    {
+      "id": "function:internal/pipeline/pipeline.go:Progress",
+      "type": "function",
+      "name": "Progress",
+      "summary": "StdoutLogger progress renderer that prints stage current/total percentage and advances the line when complete.",
+      "tags": [
+        "progress",
+        "logging",
+        "ui"
+      ],
+      "complexity": "simple",
+      "lineRange": [
+        50,
+        58
+      ]
+    },
+    {
+      "id": "function:internal/pipeline/pipeline.go:pipelineParams",
+      "type": "function",
+      "name": "pipelineParams",
+      "summary": "Resolves effective tile size, JPEG quality, and encode presets from profile or legacy defaults.",
+      "tags": [
+        "profile",
+        "parameters",
+        "encoding"
+      ],
+      "complexity": "simple",
+      "lineRange": [
+        62,
+        79
+      ]
+    },
+    {
+      "id": "function:internal/pipeline/pipeline.go:Run",
+      "type": "function",
+      "name": "Run",
+      "summary": "Orchestrates the full three-stage pipeline: frame extraction, neural upscale, re-encode+mux with temp dirs, cancel on SIGINT/SIGTERM, and atomic rename.",
+      "tags": [
+        "pipeline",
+        "orchestration",
+        "ffmpeg",
+        "realesrgan"
+      ],
+      "complexity": "complex",
+      "lineRange": [
+        82,
+        243
+      ]
+    },
+    {
+      "id": "function:internal/pipeline/pipeline.go:upscale",
+      "type": "function",
+      "name": "upscale",
+      "summary": "Runs realesrgan-ncnn-vulkan on extracted frames and polls output PNGs every 200ms to report stage-2 progress.",
+      "tags": [
+        "realesrgan",
+        "progress",
+        "upscale"
+      ],
+      "complexity": "complex",
+      "lineRange": [
+        247,
+        294
+      ]
+    },
+    {
+      "id": "function:internal/pipeline/pipeline.go:runCmd",
+      "type": "function",
+      "name": "runCmd",
+      "summary": "Runs an external command under context with stderr always wired and optional verbose stdout.",
+      "tags": [
+        "exec",
+        "ffmpeg",
+        "helper"
+      ],
+      "complexity": "simple",
+      "lineRange": [
+        296,
+        303
+      ]
+    },
+    {
+      "id": "function:internal/pipeline/pipeline.go:countFiles",
+      "type": "function",
+      "name": "countFiles",
+      "summary": "Counts non-directory entries with a given extension in a directory for frame progress totals.",
+      "tags": [
+        "io",
+        "progress",
+        "helper"
+      ],
+      "complexity": "simple",
+      "lineRange": [
+        305,
+        317
+      ]
+    },
+    {
+      "id": "file:internal/tui/model.go",
+      "type": "file",
+      "name": "model.go",
+      "filePath": "internal/tui/model.go",
+      "summary": "Bubbletea TUI model: file explorer for video selection, live pipeline stage progress/logs, preset/model/GPU keybinds, and View rendering with lipgloss.",
+      "tags": [
+        "tui",
+        "bubbletea",
+        "explorer",
+        "ui",
+        "tested"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "class:internal/tui/model.go:Model",
+      "type": "class",
+      "name": "Model",
+      "summary": "Main Bubbletea model holding config, event/done channels, three pipeline stages, log buffer, window size, and file-explorer navigation state.",
+      "tags": [
+        "bubbletea",
+        "model",
+        "state",
+        "tui"
+      ],
+      "complexity": "complex",
+      "lineRange": [
+        57,
+        76
+      ]
+    },
+    {
+      "id": "function:internal/tui/model.go:NewModel",
+      "type": "function",
+      "name": "NewModel",
+      "summary": "Constructs the TUI model, auto-selects a hardware profile when missing, and starts in explorer or pipeline state based on Input.",
+      "tags": [
+        "constructor",
+        "profile",
+        "tui"
+      ],
+      "complexity": "moderate",
+      "lineRange": [
+        79,
+        111
+      ]
+    },
+    {
+      "id": "function:internal/tui/model.go:Init",
+      "type": "function",
+      "name": "Init",
+      "summary": "Bubbletea Init: enter alt screen, start event wait loop, and load directory listing when selecting a file.",
+      "tags": [
+        "bubbletea",
+        "init",
+        "lifecycle"
+      ],
+      "complexity": "simple",
+      "lineRange": [
+        116,
+        122
+      ]
+    },
+    {
+      "id": "function:internal/tui/model.go:readDirCmd",
+      "type": "function",
+      "name": "readDirCmd",
+      "summary": "Async command that reads the current directory, skips dotfiles, and returns dirs then files for the explorer.",
+      "tags": [
+        "explorer",
+        "filesystem",
+        "async"
+      ],
+      "complexity": "moderate",
+      "lineRange": [
+        132,
+        159
+      ]
+    },
+    {
+      "id": "function:internal/tui/model.go:Update",
+      "type": "function",
+      "name": "Update",
+      "summary": "Central Bubbletea Update routing window resize, directory results, keys, pipeline events, and completion/quit.",
+      "tags": [
+        "bubbletea",
+        "update",
+        "events"
+      ],
+      "complexity": "moderate",
+      "lineRange": [
+        185,
+        228
+      ]
+    },
+    {
+      "id": "function:internal/tui/model.go:updateExplorer",
+      "type": "function",
+      "name": "updateExplorer",
+      "summary": "Handles explorer keybinds: navigate, cycle scale/GPU/model/preset, enter dirs, and launch pipeline.Run on video selection.",
+      "tags": [
+        "explorer",
+        "keybinds",
+        "pipeline"
+      ],
+      "complexity": "complex",
+      "lineRange": [
+        230,
+        312
+      ]
+    },
+    {
+      "id": "function:internal/tui/model.go:handlePipelineEvent",
+      "type": "function",
+      "name": "handlePipelineEvent",
+      "summary": "Applies log and stage start/progress/done pipeline events to model state and re-arms the event wait command.",
+      "tags": [
+        "pipeline",
+        "events",
+        "progress"
+      ],
+      "complexity": "moderate",
+      "lineRange": [
+        325,
+        351
+      ]
+    },
+    {
+      "id": "function:internal/tui/model.go:View",
+      "type": "function",
+      "name": "View",
+      "summary": "Bubbletea View entry: interrupted banner, file explorer layout, or live pipeline progress UI.",
+      "tags": [
+        "bubbletea",
+        "view",
+        "render"
+      ],
+      "complexity": "simple",
+      "lineRange": [
+        362,
+        370
+      ]
+    },
+    {
+      "id": "function:internal/tui/model.go:viewExplorer",
+      "type": "function",
+      "name": "viewExplorer",
+      "summary": "Renders the file selector: header, path, scrollable listing with video highlighting, option badges, and help keys.",
+      "tags": [
+        "explorer",
+        "render",
+        "lipgloss"
+      ],
+      "complexity": "complex",
+      "lineRange": [
+        382,
+        489
+      ]
+    },
+    {
+      "id": "function:internal/tui/model.go:viewPipeline",
+      "type": "function",
+      "name": "viewPipeline",
+      "summary": "Renders pipeline UI: title, stage cards with progress, scrolling log pane, and status footer.",
+      "tags": [
+        "pipeline",
+        "render",
+        "progress"
+      ],
+      "complexity": "complex",
+      "lineRange": [
+        493,
+        571
+      ]
+    },
+    {
+      "id": "function:internal/tui/model.go:renderStage",
+      "type": "function",
+      "name": "renderStage",
+      "summary": "Renders one of the three pipeline stages with status icon, name, and progress bar or counters.",
+      "tags": [
+        "render",
+        "stage",
+        "progress"
+      ],
+      "complexity": "moderate",
+      "lineRange": [
+        573,
+        627
+      ]
+    },
+    {
+      "id": "file:internal/config/config_test.go",
+      "type": "file",
+      "name": "config_test.go",
+      "filePath": "internal/config/config_test.go",
+      "summary": "Table-driven unit tests for Config.Validate covering scale bounds, missing input, default output/model, and custom path/model preservation.",
+      "tags": [
+        "test",
+        "config",
+        "validation",
+        "table-driven"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:internal/config/config_test.go:TestConfigValidate",
+      "type": "function",
+      "name": "TestConfigValidate",
+      "filePath": "internal/config/config_test.go",
+      "lineRange": [
+        9,
+        93
+      ],
+      "summary": "Creates a temp input file and runs Validate cases: valid defaults, invalid scale, missing input, and custom output/model retention.",
+      "tags": [
+        "test",
+        "validation",
+        "config",
+        "defaults"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:internal/pipeline/pipeline_test.go",
+      "type": "file",
+      "name": "pipeline_test.go",
+      "filePath": "internal/pipeline/pipeline_test.go",
+      "summary": "Integration tests for the upscale pipeline using mocked ffmpeg/ffprobe/realesrgan/nvidia-smi on PATH, plus countFiles unit coverage.",
+      "tags": [
+        "test",
+        "pipeline",
+        "integration",
+        "mocks"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "class:internal/pipeline/pipeline_test.go:mockLogger",
+      "type": "class",
+      "name": "mockLogger",
+      "filePath": "internal/pipeline/pipeline_test.go",
+      "lineRange": [
+        12,
+        17
+      ],
+      "summary": "Test double implementing pipeline.Logger that records info messages, stages, and completion for assertions.",
+      "tags": [
+        "test",
+        "mock",
+        "logging",
+        "logger"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:internal/pipeline/pipeline_test.go:TestPipelineIntegration",
+      "type": "function",
+      "name": "TestPipelineIntegration",
+      "filePath": "internal/pipeline/pipeline_test.go",
+      "lineRange": [
+        31,
+        175
+      ],
+      "summary": "End-to-end Run test with shell mocks for external tools; asserts output file creation and progress for stages 1\u20133.",
+      "tags": [
+        "test",
+        "integration",
+        "pipeline",
+        "mocks"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:internal/pipeline/pipeline_test.go:TestCountFiles",
+      "type": "function",
+      "name": "TestCountFiles",
+      "filePath": "internal/pipeline/pipeline_test.go",
+      "lineRange": [
+        177,
+        198
+      ],
+      "summary": "Verifies countFiles counts only regular files matching an extension and ignores directories with matching names.",
+      "tags": [
+        "test",
+        "filesystem",
+        "countFiles"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:internal/tui/pipeline_adapter.go",
+      "type": "file",
+      "name": "pipeline_adapter.go",
+      "filePath": "internal/tui/pipeline_adapter.go",
+      "summary": "Bridges pipeline.Logger to Bubbletea: tuiLogger emits PipelineEvents, parseStep detects stage starts, RunTUI launches the program and optional background Run.",
+      "tags": [
+        "tui",
+        "adapter",
+        "pipeline",
+        "bubbletea",
+        "logging",
+        "tested"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "class:internal/tui/pipeline_adapter.go:tuiLogger",
+      "type": "class",
+      "name": "tuiLogger",
+      "filePath": "internal/tui/pipeline_adapter.go",
+      "lineRange": [
+        10,
+        12
+      ],
+      "summary": "pipeline.Logger implementation that sends log, stage-start, progress, and stage-done events on a channel to the TUI model.",
+      "tags": [
+        "logger",
+        "adapter",
+        "events",
+        "tui"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:internal/tui/pipeline_adapter.go:Step",
+      "type": "function",
+      "name": "Step",
+      "filePath": "internal/tui/pipeline_adapter.go",
+      "lineRange": [
+        26,
+        33
+      ],
+      "summary": "Parses step messages for stage starts via parseStep, emits EventStageStart when applicable, then logs the step message.",
+      "tags": [
+        "logging",
+        "stages",
+        "events"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:internal/tui/pipeline_adapter.go:Progress",
+      "type": "function",
+      "name": "Progress",
+      "filePath": "internal/tui/pipeline_adapter.go",
+      "lineRange": [
+        39,
+        53
+      ],
+      "summary": "Maps stage/current/total progress into EventStageProgress or EventStageDone, ignoring the zero/zero initial call.",
+      "tags": [
+        "progress",
+        "events",
+        "stages"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:internal/tui/pipeline_adapter.go:parseStep",
+      "type": "function",
+      "name": "parseStep",
+      "filePath": "internal/tui/pipeline_adapter.go",
+      "lineRange": [
+        55,
+        78
+      ],
+      "summary": "Parses \"[n/m] Stage name...\" messages into stage index and remaining name text; returns zeros on malformed input.",
+      "tags": [
+        "parsing",
+        "stages",
+        "helper"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:internal/tui/pipeline_adapter.go:RunTUI",
+      "type": "function",
+      "name": "RunTUI",
+      "filePath": "internal/tui/pipeline_adapter.go",
+      "lineRange": [
+        81,
+        98
+      ],
+      "summary": "Creates the TUI model, optionally starts pipeline.Run in a goroutine when Input is set, and runs Bubbletea with alt screen.",
+      "tags": [
+        "tui",
+        "entry-point",
+        "pipeline",
+        "bubbletea"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "pipeline:.github/workflows/go.yml",
+      "type": "pipeline",
+      "name": "go.yml",
+      "filePath": ".github/workflows/go.yml",
+      "summary": "GitHub Actions CI workflow that checks out the repo, sets up Go from go.mod, builds all packages, and runs the full test suite on push and pull requests to main.",
+      "tags": [
+        "ci-cd",
+        "github-actions",
+        "build",
+        "test",
+        "deployment"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "document:AGENTS.md",
+      "type": "document",
+      "name": "AGENTS.md",
+      "filePath": "AGENTS.md",
+      "summary": "Root agent/skills registry for AI tooling: lists available skills (docx, pdf, frontend-design, etc.) and how to invoke them via openskills; scoped project instructions for agents working in this repo.",
+      "tags": [
+        "documentation",
+        "agent-guide",
+        "skills",
+        "conventions"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "document:CHANGELOG.md",
+      "type": "document",
+      "name": "CHANGELOG.md",
+      "filePath": "CHANGELOG.md",
+      "summary": "Keep-a-Changelog release history for bananascaler (0.1.0\u20130.4.0): hardware profiles, TUI file explorer, Bubbletea dashboard, Go rewrite, and VRAM/tile safety fixes.",
+      "tags": [
+        "documentation",
+        "changelog",
+        "release-notes",
+        "semver"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:Makefile",
+      "type": "file",
+      "name": "Makefile",
+      "filePath": "Makefile",
+      "summary": "Root build system for bananascaler: build (go vet + stripped binary to bin/bananascaler), install to PREFIX, tidy, test, vet, clean, and help targets.",
+      "tags": [
+        "build-system",
+        "infrastructure",
+        "make",
+        "go"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "document:README.md",
+      "type": "document",
+      "name": "README.md",
+      "filePath": "README.md",
+      "summary": "Primary project docs for bananascaler: GPU neural video upscaler overview, requirements, install, profiles/VRAM safety, architecture (Cobra/TUI/pipeline), usage, TUI dashboard, and roadmap.",
+      "tags": [
+        "documentation",
+        "readme",
+        "architecture",
+        "usage"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "config:go.mod",
+      "type": "config",
+      "name": "go.mod",
+      "filePath": "go.mod",
+      "summary": "Go module github.com/julesklord/bananascaler (go 1.24.2) declaring direct deps: bubbletea, lipgloss, cobra, and golang.org/x/term.",
+      "tags": [
+        "configuration",
+        "go-modules",
+        "dependencies"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "config:go.sum",
+      "type": "config",
+      "name": "go.sum",
+      "filePath": "go.sum",
+      "summary": "Checksum lockfile for go.mod module graph (direct and indirect Charmbracelet/Cobra/x packages).",
+      "tags": [
+        "configuration",
+        "go-modules",
+        "lockfile",
+        "checksums"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "document:docs/AGENT.md",
+      "type": "document",
+      "name": "AGENT.md",
+      "filePath": "docs/AGENT.md",
+      "summary": "Agent instructions for working on bananascaler: coding conventions, architecture pointers, and how agents should change the codebase.",
+      "tags": [
+        "documentation",
+        "agent-guide",
+        "conventions"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "document:docs/GEMINI.md",
+      "type": "document",
+      "name": "GEMINI.md",
+      "filePath": "docs/GEMINI.md",
+      "summary": "Gemini-oriented agent notes with project context and collaboration tips for this repository.",
+      "tags": [
+        "documentation",
+        "agent-guide",
+        "gemini"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "document:docs/IDENTITY.md",
+      "type": "document",
+      "name": "IDENTITY.md",
+      "filePath": "docs/IDENTITY.md",
+      "summary": "Project identity and product positioning notes for bananascaler.",
+      "tags": [
+        "documentation",
+        "identity",
+        "branding"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "document:docs/MEMORY.md",
+      "type": "document",
+      "name": "MEMORY.md",
+      "filePath": "docs/MEMORY.md",
+      "summary": "Persistent project memory notes capturing decisions, milestones, and context for future sessions.",
+      "tags": [
+        "documentation",
+        "memory",
+        "project-history"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "document:docs/SOUL.md",
+      "type": "document",
+      "name": "SOUL.md",
+      "filePath": "docs/SOUL.md",
+      "summary": "Short product soul/mission statement describing bananascaler's purpose and tone.",
+      "tags": [
+        "documentation",
+        "mission",
+        "branding"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:.understand-anything/.understandignore",
+      "type": "file",
+      "name": ".understandignore",
+      "filePath": ".understand-anything/.understandignore",
+      "summary": "Ignore patterns for the understand-anything knowledge-graph analyzer; suggested exclusions from gitignore and project layout.",
+      "tags": [
+        "configuration",
+        "ignore-rules",
+        "tooling"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "config:.understand-anything/config.json",
+      "type": "config",
+      "name": "config.json",
+      "filePath": ".understand-anything/config.json",
+      "summary": "Understand-anything project config storing output language and auto-update preferences for graph analysis.",
+      "tags": [
+        "configuration",
+        "tooling",
+        "knowledge-graph"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "config:.understand-anything/intermediate/scan-raw.json",
+      "type": "config",
+      "name": "scan-raw.json",
+      "filePath": ".understand-anything/intermediate/scan-raw.json",
+      "summary": "Intermediate scan artifact from the understand-anything pipeline listing discovered files, languages, and categories.",
+      "tags": [
+        "configuration",
+        "intermediate",
+        "tooling"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:docs/demo.tape",
+      "type": "file",
+      "name": "demo.tape",
+      "filePath": "docs/demo.tape",
+      "summary": "VHS/tape script that records a terminal demo of bananascaler for generating docs/demo.gif.",
+      "tags": [
+        "documentation",
+        "demo",
+        "script"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:VERSION",
+      "type": "file",
+      "name": "VERSION",
+      "filePath": "VERSION",
+      "summary": "Single-line version string used by the Makefile and release process for the bananascaler binary.",
+      "tags": [
+        "versioning",
+        "release",
+        "build-system"
+      ],
+      "complexity": "simple"
+    }
+  ],
+  "edges": [
+    {
+      "source": "file:cmd/root.go",
+      "target": "function:cmd/root.go:Execute",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:cmd/root.go",
+      "target": "function:cmd/root.go:init",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:internal/tui/messages.go",
+      "target": "class:internal/tui/messages.go:PipelineEvent",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:internal/tui/model_test.go",
+      "target": "function:internal/tui/model_test.go:TestIsVideoFile",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:internal/tui/model_test.go",
+      "target": "function:internal/tui/model_test.go:TestShortModel",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:internal/tui/model_test.go",
+      "target": "function:internal/tui/model_test.go:TestModelExplorerKeybinds",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:internal/tui/model_test.go",
+      "target": "function:internal/tui/model_test.go:TestModelExplorerNavigation",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:internal/tui/pipeline_adapter_test.go",
+      "target": "function:internal/tui/pipeline_adapter_test.go:TestParseStep",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:internal/tui/styles.go",
+      "target": "function:internal/tui/styles.go:renderBar",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:internal/tui/styles.go",
+      "target": "function:internal/tui/styles.go:repeat",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:internal/tui/styles.go",
+      "target": "function:internal/tui/styles.go:renderFooterBinds",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:cmd/root.go",
+      "target": "function:cmd/root.go:Execute",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:internal/tui/messages.go",
+      "target": "class:internal/tui/messages.go:PipelineEvent",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:cmd/root.go",
+      "target": "file:internal/config/config_test.go",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:cmd/root.go",
+      "target": "file:internal/config/config.go",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:cmd/root.go",
+      "target": "file:internal/hardware/detect.go",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:cmd/root.go",
+      "target": "file:internal/hardware/profile.go",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:cmd/root.go",
+      "target": "file:internal/pipeline/pipeline_test.go",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:cmd/root.go",
+      "target": "file:internal/pipeline/pipeline.go",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:cmd/root.go",
+      "target": "file:internal/tui/messages.go",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:cmd/root.go",
+      "target": "file:internal/tui/model_test.go",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:cmd/root.go",
+      "target": "file:internal/tui/model.go",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:cmd/root.go",
+      "target": "file:internal/tui/pipeline_adapter_test.go",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:cmd/root.go",
+      "target": "file:internal/tui/pipeline_adapter.go",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:cmd/root.go",
+      "target": "file:internal/tui/styles.go",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:cmd/tui.go",
+      "target": "file:internal/tui/messages.go",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:cmd/tui.go",
+      "target": "file:internal/tui/model_test.go",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:cmd/tui.go",
+      "target": "file:internal/tui/model.go",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:cmd/tui.go",
+      "target": "file:internal/tui/pipeline_adapter_test.go",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:cmd/tui.go",
+      "target": "file:internal/tui/pipeline_adapter.go",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:cmd/tui.go",
+      "target": "file:internal/tui/styles.go",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:internal/tui/messages.go",
+      "target": "file:internal/config/config_test.go",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:internal/tui/messages.go",
+      "target": "file:internal/config/config.go",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:internal/tui/model_test.go",
+      "target": "file:internal/config/config_test.go",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:internal/tui/model_test.go",
+      "target": "file:internal/config/config.go",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:main.go",
+      "target": "file:cmd/root.go",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:main.go",
+      "target": "file:cmd/tui.go",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:internal/tui/model.go",
+      "target": "file:internal/tui/model_test.go",
+      "type": "tested_by",
+      "direction": "forward",
+      "weight": 0.5
+    },
+    {
+      "source": "file:internal/tui/pipeline_adapter.go",
+      "target": "file:internal/tui/pipeline_adapter_test.go",
+      "type": "tested_by",
+      "direction": "forward",
+      "weight": 0.5
+    },
+    {
+      "source": "function:internal/tui/model_test.go:TestModelExplorerKeybinds",
+      "target": "function:internal/tui/model.go:NewModel",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:internal/tui/model_test.go:TestModelExplorerNavigation",
+      "target": "function:internal/tui/model.go:NewModel",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:internal/tui/model_test.go:TestModelExplorerKeybinds",
+      "target": "function:internal/tui/model.go:Update",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:internal/tui/model_test.go:TestModelExplorerNavigation",
+      "target": "function:internal/tui/model.go:Update",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:internal/tui/pipeline_adapter_test.go:TestParseStep",
+      "target": "function:internal/tui/pipeline_adapter.go:parseStep",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:main.go",
+      "target": "function:main.go:main",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "function:main.go:main",
+      "target": "function:cmd/root.go:Execute",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:internal/config/config.go",
+      "target": "class:internal/config/config.go:Config",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:internal/config/config.go",
+      "target": "function:internal/config/config.go:ResolveProfile",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:internal/config/config.go",
+      "target": "function:internal/config/config.go:applyProfileDefaults",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:internal/config/config.go",
+      "target": "function:internal/config/config.go:Validate",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:internal/config/config.go",
+      "target": "function:internal/config/config.go:ProfileSummary",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:internal/config/config.go",
+      "target": "class:internal/config/config.go:Config",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:internal/config/config.go",
+      "target": "function:internal/config/config.go:ResolveProfile",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:internal/config/config.go",
+      "target": "function:internal/config/config.go:Validate",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:internal/config/config.go",
+      "target": "function:internal/config/config.go:ProfileSummary",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "class:internal/config/config.go:Config",
+      "target": "function:internal/config/config.go:ResolveProfile",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "class:internal/config/config.go:Config",
+      "target": "function:internal/config/config.go:Validate",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "function:internal/config/config.go:ResolveProfile",
+      "target": "function:internal/config/config.go:applyProfileDefaults",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:internal/config/config.go:ResolveProfile",
+      "target": "function:internal/hardware/profile.go:ParsePreset",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:internal/config/config.go:ResolveProfile",
+      "target": "function:internal/hardware/profile.go:AutoProfileWithPreset",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:internal/config/config.go:ProfileSummary",
+      "target": "function:internal/hardware/profile.go:String",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:internal/config/config.go",
+      "target": "file:internal/hardware/detect.go",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:internal/config/config.go",
+      "target": "file:internal/hardware/profile.go",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:internal/config/config.go",
+      "target": "class:internal/hardware/profile.go:UpscaleProfile",
+      "type": "depends_on",
+      "direction": "forward",
+      "weight": 0.6
+    },
+    {
+      "source": "file:internal/hardware/detect.go",
+      "target": "function:internal/hardware/detect.go:CheckDeps",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:internal/hardware/detect.go",
+      "target": "function:internal/hardware/detect.go:HasNVIDIA",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:internal/hardware/detect.go",
+      "target": "function:internal/hardware/detect.go:Framerate",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:internal/hardware/detect.go",
+      "target": "function:internal/hardware/detect.go:HasAudio",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:internal/hardware/detect.go",
+      "target": "function:internal/hardware/detect.go:CheckDeps",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:internal/hardware/detect.go",
+      "target": "function:internal/hardware/detect.go:HasNVIDIA",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:internal/hardware/detect.go",
+      "target": "function:internal/hardware/detect.go:Framerate",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:internal/hardware/detect.go",
+      "target": "function:internal/hardware/detect.go:HasAudio",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:internal/hardware/profile.go",
+      "target": "class:internal/hardware/profile.go:GPUInfo",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:internal/hardware/profile.go",
+      "target": "class:internal/hardware/profile.go:UpscaleProfile",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:internal/hardware/profile.go",
+      "target": "function:internal/hardware/profile.go:AllPresets",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:internal/hardware/profile.go",
+      "target": "function:internal/hardware/profile.go:ParsePreset",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:internal/hardware/profile.go",
+      "target": "function:internal/hardware/profile.go:String",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:internal/hardware/profile.go",
+      "target": "function:internal/hardware/profile.go:DetectGPU",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:internal/hardware/profile.go",
+      "target": "function:internal/hardware/profile.go:DetectGPUCount",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:internal/hardware/profile.go",
+      "target": "function:internal/hardware/profile.go:classifyTier",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:internal/hardware/profile.go",
+      "target": "function:internal/hardware/profile.go:profileDB",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:internal/hardware/profile.go",
+      "target": "function:internal/hardware/profile.go:GetProfile",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:internal/hardware/profile.go",
+      "target": "function:internal/hardware/profile.go:GetDefaultProfile",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:internal/hardware/profile.go",
+      "target": "function:internal/hardware/profile.go:AutoProfile",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:internal/hardware/profile.go",
+      "target": "function:internal/hardware/profile.go:AutoProfileWithPreset",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:internal/hardware/profile.go",
+      "target": "function:internal/hardware/profile.go:ProfileSummary",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:internal/hardware/profile.go",
+      "target": "function:internal/hardware/profile.go:ProfileDisplay",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:internal/hardware/profile.go",
+      "target": "function:internal/hardware/profile.go:maxSafeTile",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:internal/hardware/profile.go",
+      "target": "function:internal/hardware/profile.go:CheckTileSafety",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:internal/hardware/profile.go",
+      "target": "class:internal/hardware/profile.go:GPUInfo",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:internal/hardware/profile.go",
+      "target": "class:internal/hardware/profile.go:UpscaleProfile",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:internal/hardware/profile.go",
+      "target": "function:internal/hardware/profile.go:AllPresets",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:internal/hardware/profile.go",
+      "target": "function:internal/hardware/profile.go:ParsePreset",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:internal/hardware/profile.go",
+      "target": "function:internal/hardware/profile.go:DetectGPU",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:internal/hardware/profile.go",
+      "target": "function:internal/hardware/profile.go:DetectGPUCount",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:internal/hardware/profile.go",
+      "target": "function:internal/hardware/profile.go:GetProfile",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:internal/hardware/profile.go",
+      "target": "function:internal/hardware/profile.go:GetDefaultProfile",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:internal/hardware/profile.go",
+      "target": "function:internal/hardware/profile.go:AutoProfile",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:internal/hardware/profile.go",
+      "target": "function:internal/hardware/profile.go:AutoProfileWithPreset",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:internal/hardware/profile.go",
+      "target": "function:internal/hardware/profile.go:ProfileSummary",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:internal/hardware/profile.go",
+      "target": "function:internal/hardware/profile.go:ProfileDisplay",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:internal/hardware/profile.go",
+      "target": "function:internal/hardware/profile.go:CheckTileSafety",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "class:internal/hardware/profile.go:UpscaleProfile",
+      "target": "function:internal/hardware/profile.go:String",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "function:internal/hardware/profile.go:GetProfile",
+      "target": "function:internal/hardware/profile.go:profileDB",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:internal/hardware/profile.go:GetDefaultProfile",
+      "target": "function:internal/hardware/profile.go:GetProfile",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:internal/hardware/profile.go:AutoProfile",
+      "target": "function:internal/hardware/profile.go:DetectGPU",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:internal/hardware/profile.go:AutoProfile",
+      "target": "function:internal/hardware/profile.go:classifyTier",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:internal/hardware/profile.go:AutoProfile",
+      "target": "function:internal/hardware/profile.go:GetProfile",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:internal/hardware/profile.go:AutoProfileWithPreset",
+      "target": "function:internal/hardware/profile.go:DetectGPU",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:internal/hardware/profile.go:AutoProfileWithPreset",
+      "target": "function:internal/hardware/profile.go:classifyTier",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:internal/hardware/profile.go:AutoProfileWithPreset",
+      "target": "function:internal/hardware/profile.go:GetProfile",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:internal/hardware/profile.go:ProfileDisplay",
+      "target": "function:internal/hardware/profile.go:ProfileSummary",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:internal/hardware/profile.go:CheckTileSafety",
+      "target": "function:internal/hardware/profile.go:maxSafeTile",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:internal/pipeline/pipeline.go",
+      "target": "class:internal/pipeline/pipeline.go:Logger",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:internal/pipeline/pipeline.go",
+      "target": "class:internal/pipeline/pipeline.go:StdoutLogger",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:internal/pipeline/pipeline.go",
+      "target": "function:internal/pipeline/pipeline.go:Progress",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:internal/pipeline/pipeline.go",
+      "target": "function:internal/pipeline/pipeline.go:pipelineParams",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:internal/pipeline/pipeline.go",
+      "target": "function:internal/pipeline/pipeline.go:Run",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:internal/pipeline/pipeline.go",
+      "target": "function:internal/pipeline/pipeline.go:upscale",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:internal/pipeline/pipeline.go",
+      "target": "function:internal/pipeline/pipeline.go:runCmd",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:internal/pipeline/pipeline.go",
+      "target": "function:internal/pipeline/pipeline.go:countFiles",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:internal/pipeline/pipeline.go",
+      "target": "class:internal/pipeline/pipeline.go:Logger",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:internal/pipeline/pipeline.go",
+      "target": "class:internal/pipeline/pipeline.go:StdoutLogger",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:internal/pipeline/pipeline.go",
+      "target": "function:internal/pipeline/pipeline.go:Run",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "class:internal/pipeline/pipeline.go:StdoutLogger",
+      "target": "function:internal/pipeline/pipeline.go:Progress",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "class:internal/pipeline/pipeline.go:StdoutLogger",
+      "target": "class:internal/pipeline/pipeline.go:Logger",
+      "type": "implements",
+      "direction": "forward",
+      "weight": 0.9
+    },
+    {
+      "source": "function:internal/pipeline/pipeline.go:Run",
+      "target": "function:internal/config/config.go:Validate",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:internal/pipeline/pipeline.go:Run",
+      "target": "function:internal/hardware/detect.go:CheckDeps",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:internal/pipeline/pipeline.go:Run",
+      "target": "function:internal/pipeline/pipeline.go:pipelineParams",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:internal/pipeline/pipeline.go:Run",
+      "target": "function:internal/hardware/profile.go:DetectGPU",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:internal/pipeline/pipeline.go:Run",
+      "target": "function:internal/hardware/profile.go:ProfileSummary",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:internal/pipeline/pipeline.go:Run",
+      "target": "function:internal/hardware/profile.go:ProfileDisplay",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:internal/pipeline/pipeline.go:Run",
+      "target": "function:internal/hardware/profile.go:CheckTileSafety",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:internal/pipeline/pipeline.go:Run",
+      "target": "function:internal/hardware/detect.go:HasAudio",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:internal/pipeline/pipeline.go:Run",
+      "target": "function:internal/hardware/detect.go:Framerate",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:internal/pipeline/pipeline.go:Run",
+      "target": "function:internal/pipeline/pipeline.go:upscale",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:internal/pipeline/pipeline.go:Run",
+      "target": "function:internal/pipeline/pipeline.go:runCmd",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:internal/pipeline/pipeline.go:Run",
+      "target": "function:internal/pipeline/pipeline.go:countFiles",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:internal/pipeline/pipeline.go:upscale",
+      "target": "function:internal/pipeline/pipeline.go:countFiles",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:internal/pipeline/pipeline.go",
+      "target": "file:internal/config/config_test.go",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:internal/pipeline/pipeline.go",
+      "target": "file:internal/config/config.go",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:internal/pipeline/pipeline.go",
+      "target": "file:internal/hardware/detect.go",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:internal/pipeline/pipeline.go",
+      "target": "file:internal/hardware/profile.go",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:internal/pipeline/pipeline.go",
+      "target": "file:internal/config/config.go",
+      "type": "depends_on",
+      "direction": "forward",
+      "weight": 0.6
+    },
+    {
+      "source": "file:internal/pipeline/pipeline.go",
+      "target": "file:internal/hardware/profile.go",
+      "type": "depends_on",
+      "direction": "forward",
+      "weight": 0.6
+    },
+    {
+      "source": "file:internal/tui/model.go",
+      "target": "class:internal/tui/model.go:Model",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:internal/tui/model.go",
+      "target": "function:internal/tui/model.go:NewModel",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:internal/tui/model.go",
+      "target": "function:internal/tui/model.go:Init",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:internal/tui/model.go",
+      "target": "function:internal/tui/model.go:readDirCmd",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:internal/tui/model.go",
+      "target": "function:internal/tui/model.go:Update",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:internal/tui/model.go",
+      "target": "function:internal/tui/model.go:updateExplorer",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:internal/tui/model.go",
+      "target": "function:internal/tui/model.go:handlePipelineEvent",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:internal/tui/model.go",
+      "target": "function:internal/tui/model.go:View",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:internal/tui/model.go",
+      "target": "function:internal/tui/model.go:viewExplorer",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:internal/tui/model.go",
+      "target": "function:internal/tui/model.go:viewPipeline",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:internal/tui/model.go",
+      "target": "function:internal/tui/model.go:renderStage",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:internal/tui/model.go",
+      "target": "class:internal/tui/model.go:Model",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:internal/tui/model.go",
+      "target": "function:internal/tui/model.go:NewModel",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:internal/tui/model.go",
+      "target": "function:internal/tui/model.go:Init",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:internal/tui/model.go",
+      "target": "function:internal/tui/model.go:Update",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:internal/tui/model.go",
+      "target": "function:internal/tui/model.go:View",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "class:internal/tui/model.go:Model",
+      "target": "function:internal/tui/model.go:Init",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "class:internal/tui/model.go:Model",
+      "target": "function:internal/tui/model.go:Update",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "class:internal/tui/model.go:Model",
+      "target": "function:internal/tui/model.go:View",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "class:internal/tui/model.go:Model",
+      "target": "function:internal/tui/model.go:updateExplorer",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "class:internal/tui/model.go:Model",
+      "target": "function:internal/tui/model.go:handlePipelineEvent",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "function:internal/tui/model.go:NewModel",
+      "target": "function:internal/hardware/profile.go:ParsePreset",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:internal/tui/model.go:NewModel",
+      "target": "function:internal/hardware/profile.go:AutoProfileWithPreset",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:internal/tui/model.go:Init",
+      "target": "function:internal/tui/model.go:readDirCmd",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:internal/tui/model.go:Update",
+      "target": "function:internal/tui/model.go:updateExplorer",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:internal/tui/model.go:Update",
+      "target": "function:internal/tui/model.go:handlePipelineEvent",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:internal/tui/model.go:updateExplorer",
+      "target": "function:internal/hardware/profile.go:AllPresets",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:internal/tui/model.go:updateExplorer",
+      "target": "function:internal/hardware/profile.go:AutoProfileWithPreset",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:internal/tui/model.go:updateExplorer",
+      "target": "function:internal/pipeline/pipeline.go:Run",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:internal/tui/model.go:updateExplorer",
+      "target": "function:internal/tui/model.go:readDirCmd",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:internal/tui/model.go:View",
+      "target": "function:internal/tui/model.go:viewExplorer",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:internal/tui/model.go:View",
+      "target": "function:internal/tui/model.go:viewPipeline",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:internal/tui/model.go:viewPipeline",
+      "target": "function:internal/tui/model.go:renderStage",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:internal/tui/model.go",
+      "target": "file:internal/config/config_test.go",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:internal/tui/model.go",
+      "target": "file:internal/config/config.go",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:internal/tui/model.go",
+      "target": "file:internal/hardware/detect.go",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:internal/tui/model.go",
+      "target": "file:internal/hardware/profile.go",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:internal/tui/model.go",
+      "target": "file:internal/pipeline/pipeline_test.go",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:internal/tui/model.go",
+      "target": "file:internal/pipeline/pipeline.go",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:internal/tui/model.go",
+      "target": "file:internal/config/config.go",
+      "type": "depends_on",
+      "direction": "forward",
+      "weight": 0.6
+    },
+    {
+      "source": "file:internal/tui/model.go",
+      "target": "file:internal/pipeline/pipeline.go",
+      "type": "depends_on",
+      "direction": "forward",
+      "weight": 0.6
+    },
+    {
+      "source": "file:internal/tui/model.go",
+      "target": "file:internal/hardware/profile.go",
+      "type": "depends_on",
+      "direction": "forward",
+      "weight": 0.6
+    },
+    {
+      "source": "file:internal/config/config_test.go",
+      "target": "function:internal/config/config_test.go:TestConfigValidate",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:internal/pipeline/pipeline_test.go",
+      "target": "class:internal/pipeline/pipeline_test.go:mockLogger",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:internal/pipeline/pipeline_test.go",
+      "target": "function:internal/pipeline/pipeline_test.go:TestPipelineIntegration",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:internal/pipeline/pipeline_test.go",
+      "target": "function:internal/pipeline/pipeline_test.go:TestCountFiles",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:internal/tui/pipeline_adapter.go",
+      "target": "class:internal/tui/pipeline_adapter.go:tuiLogger",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:internal/tui/pipeline_adapter.go",
+      "target": "function:internal/tui/pipeline_adapter.go:Step",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:internal/tui/pipeline_adapter.go",
+      "target": "function:internal/tui/pipeline_adapter.go:Progress",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:internal/tui/pipeline_adapter.go",
+      "target": "function:internal/tui/pipeline_adapter.go:parseStep",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:internal/tui/pipeline_adapter.go",
+      "target": "function:internal/tui/pipeline_adapter.go:RunTUI",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "class:internal/tui/pipeline_adapter.go:tuiLogger",
+      "target": "function:internal/tui/pipeline_adapter.go:Step",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "class:internal/tui/pipeline_adapter.go:tuiLogger",
+      "target": "function:internal/tui/pipeline_adapter.go:Progress",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:internal/config/config_test.go",
+      "target": "function:internal/config/config_test.go:TestConfigValidate",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:internal/pipeline/pipeline_test.go",
+      "target": "function:internal/pipeline/pipeline_test.go:TestPipelineIntegration",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:internal/pipeline/pipeline_test.go",
+      "target": "function:internal/pipeline/pipeline_test.go:TestCountFiles",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:internal/tui/pipeline_adapter.go",
+      "target": "function:internal/tui/pipeline_adapter.go:RunTUI",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:internal/pipeline/pipeline_test.go",
+      "target": "file:internal/config/config_test.go",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:internal/pipeline/pipeline_test.go",
+      "target": "file:internal/config/config.go",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:internal/tui/pipeline_adapter.go",
+      "target": "file:internal/config/config_test.go",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:internal/tui/pipeline_adapter.go",
+      "target": "file:internal/config/config.go",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:internal/tui/pipeline_adapter.go",
+      "target": "file:internal/pipeline/pipeline_test.go",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:internal/tui/pipeline_adapter.go",
+      "target": "file:internal/pipeline/pipeline.go",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:internal/config/config.go",
+      "target": "file:internal/config/config_test.go",
+      "type": "tested_by",
+      "direction": "forward",
+      "weight": 0.5
+    },
+    {
+      "source": "file:internal/pipeline/pipeline.go",
+      "target": "file:internal/pipeline/pipeline_test.go",
+      "type": "tested_by",
+      "direction": "forward",
+      "weight": 0.5
+    },
+    {
+      "source": "function:internal/config/config_test.go:TestConfigValidate",
+      "target": "function:internal/config/config.go:Validate",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:internal/pipeline/pipeline_test.go:TestPipelineIntegration",
+      "target": "function:internal/pipeline/pipeline.go:Run",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:internal/pipeline/pipeline_test.go:TestCountFiles",
+      "target": "function:internal/pipeline/pipeline.go:countFiles",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:internal/tui/pipeline_adapter.go:Step",
+      "target": "function:internal/tui/pipeline_adapter.go:parseStep",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:internal/tui/pipeline_adapter.go:RunTUI",
+      "target": "function:internal/tui/model.go:NewModel",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:internal/tui/pipeline_adapter.go:RunTUI",
+      "target": "function:internal/pipeline/pipeline.go:Run",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "class:internal/pipeline/pipeline_test.go:mockLogger",
+      "target": "class:internal/pipeline/pipeline.go:Logger",
+      "type": "implements",
+      "direction": "forward",
+      "weight": 0.9
+    },
+    {
+      "source": "class:internal/tui/pipeline_adapter.go:tuiLogger",
+      "target": "class:internal/pipeline/pipeline.go:Logger",
+      "type": "implements",
+      "direction": "forward",
+      "weight": 0.9
+    },
+    {
+      "source": "file:internal/pipeline/pipeline_test.go",
+      "target": "file:internal/config/config.go",
+      "type": "depends_on",
+      "direction": "forward",
+      "weight": 0.6
+    },
+    {
+      "source": "file:internal/tui/pipeline_adapter.go",
+      "target": "file:internal/config/config.go",
+      "type": "depends_on",
+      "direction": "forward",
+      "weight": 0.6
+    },
+    {
+      "source": "file:internal/tui/pipeline_adapter.go",
+      "target": "file:internal/pipeline/pipeline.go",
+      "type": "depends_on",
+      "direction": "forward",
+      "weight": 0.6
+    },
+    {
+      "source": "pipeline:.github/workflows/go.yml",
+      "target": "config:go.mod",
+      "type": "depends_on",
+      "direction": "forward",
+      "weight": 0.6
+    },
+    {
+      "source": "pipeline:.github/workflows/go.yml",
+      "target": "file:main.go",
+      "type": "triggers",
+      "direction": "forward",
+      "weight": 0.6
+    },
+    {
+      "source": "pipeline:.github/workflows/go.yml",
+      "target": "file:Makefile",
+      "type": "related",
+      "direction": "forward",
+      "weight": 0.5
+    },
+    {
+      "source": "document:README.md",
+      "target": "file:main.go",
+      "type": "documents",
+      "direction": "forward",
+      "weight": 0.9
+    },
+    {
+      "source": "document:README.md",
+      "target": "document:CHANGELOG.md",
+      "type": "related",
+      "direction": "forward",
+      "weight": 0.6
+    },
+    {
+      "source": "document:CHANGELOG.md",
+      "target": "file:main.go",
+      "type": "documents",
+      "direction": "forward",
+      "weight": 0.5
+    },
+    {
+      "source": "document:AGENTS.md",
+      "target": "document:README.md",
+      "type": "related",
+      "direction": "forward",
+      "weight": 0.4
+    },
+    {
+      "source": "document:AGENTS.md",
+      "target": "file:main.go",
+      "type": "documents",
+      "direction": "forward",
+      "weight": 0.3
+    },
+    {
+      "source": "config:go.mod",
+      "target": "file:main.go",
+      "type": "configures",
+      "direction": "forward",
+      "weight": 0.9
+    },
+    {
+      "source": "config:go.sum",
+      "target": "config:go.mod",
+      "type": "depends_on",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:Makefile",
+      "target": "file:main.go",
+      "type": "depends_on",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:Makefile",
+      "target": "config:go.mod",
+      "type": "depends_on",
+      "direction": "forward",
+      "weight": 0.6
+    },
+    {
+      "source": "document:README.md",
+      "target": "file:Makefile",
+      "type": "documents",
+      "direction": "forward",
+      "weight": 0.5
+    },
+    {
+      "source": "document:docs/AGENT.md",
+      "target": "document:README.md",
+      "type": "related",
+      "direction": "forward",
+      "weight": 0.5
+    },
+    {
+      "source": "document:docs/AGENT.md",
+      "target": "file:main.go",
+      "type": "documents",
+      "direction": "forward",
+      "weight": 0.5
+    },
+    {
+      "source": "document:docs/GEMINI.md",
+      "target": "document:README.md",
+      "type": "related",
+      "direction": "forward",
+      "weight": 0.5
+    },
+    {
+      "source": "document:docs/GEMINI.md",
+      "target": "file:main.go",
+      "type": "documents",
+      "direction": "forward",
+      "weight": 0.5
+    },
+    {
+      "source": "document:docs/IDENTITY.md",
+      "target": "document:README.md",
+      "type": "related",
+      "direction": "forward",
+      "weight": 0.5
+    },
+    {
+      "source": "document:docs/IDENTITY.md",
+      "target": "file:main.go",
+      "type": "documents",
+      "direction": "forward",
+      "weight": 0.5
+    },
+    {
+      "source": "document:docs/MEMORY.md",
+      "target": "document:README.md",
+      "type": "related",
+      "direction": "forward",
+      "weight": 0.5
+    },
+    {
+      "source": "document:docs/MEMORY.md",
+      "target": "file:main.go",
+      "type": "documents",
+      "direction": "forward",
+      "weight": 0.5
+    },
+    {
+      "source": "document:docs/SOUL.md",
+      "target": "document:README.md",
+      "type": "related",
+      "direction": "forward",
+      "weight": 0.5
+    },
+    {
+      "source": "document:docs/SOUL.md",
+      "target": "file:main.go",
+      "type": "documents",
+      "direction": "forward",
+      "weight": 0.5
+    },
+    {
+      "source": "file:docs/demo.tape",
+      "target": "document:README.md",
+      "type": "related",
+      "direction": "forward",
+      "weight": 0.5
+    },
+    {
+      "source": "file:VERSION",
+      "target": "file:Makefile",
+      "type": "related",
+      "direction": "forward",
+      "weight": 0.5
+    },
+    {
+      "source": "config:.understand-anything/config.json",
+      "target": "file:.understand-anything/.understandignore",
+      "type": "related",
+      "direction": "forward",
+      "weight": 0.5
+    },
+    {
+      "source": "config:.understand-anything/intermediate/scan-raw.json",
+      "target": "config:.understand-anything/config.json",
+      "type": "related",
+      "direction": "forward",
+      "weight": 0.5
+    }
+  ],
+  "layers": [
+    {
+      "id": "layer:entry-cli",
+      "name": "Entry & CLI",
+      "description": "Binary entry point and Cobra command definitions that parse flags and launch CLI or TUI modes.",
+      "nodeIds": [
+        "file:cmd/root.go",
+        "file:cmd/tui.go",
+        "file:main.go"
+      ]
+    },
+    {
+      "id": "layer:config-hardware",
+      "name": "Config & Hardware",
+      "description": "Runtime configuration, GPU detection, and hardware profile selection for VRAM-safe upscaling presets.",
+      "nodeIds": [
+        "file:internal/config/config.go",
+        "file:internal/config/config_test.go",
+        "file:internal/hardware/detect.go",
+        "file:internal/hardware/profile.go"
+      ]
+    },
+    {
+      "id": "layer:pipeline",
+      "name": "Processing Pipeline",
+      "description": "Frame extraction, Real-ESRGAN upscaling orchestration, FFmpeg re-encode, and audio mux stages.",
+      "nodeIds": [
+        "file:internal/pipeline/pipeline.go",
+        "file:internal/pipeline/pipeline_test.go"
+      ]
+    },
+    {
+      "id": "layer:tui",
+      "name": "Interactive TUI",
+      "description": "Bubbletea model, styles, messages, and pipeline adapter for the live dashboard and file-selection UI.",
+      "nodeIds": [
+        "file:internal/tui/messages.go",
+        "file:internal/tui/model.go",
+        "file:internal/tui/model_test.go",
+        "file:internal/tui/pipeline_adapter.go",
+        "file:internal/tui/pipeline_adapter_test.go",
+        "file:internal/tui/styles.go"
+      ]
+    },
+    {
+      "id": "layer:build-ci",
+      "name": "Build & CI",
+      "description": "Makefile targets, Go module manifests, version stamp, and GitHub Actions workflow that builds and tests on main.",
+      "nodeIds": [
+        "config:go.mod",
+        "config:go.sum",
+        "file:Makefile",
+        "file:VERSION",
+        "pipeline:.github/workflows/go.yml"
+      ]
+    },
+    {
+      "id": "layer:documentation",
+      "name": "Documentation",
+      "description": "Project README, changelog, agent guides, identity/memory docs, and demo tape script.",
+      "nodeIds": [
+        "document:AGENTS.md",
+        "document:CHANGELOG.md",
+        "document:README.md",
+        "document:docs/AGENT.md",
+        "document:docs/GEMINI.md",
+        "document:docs/IDENTITY.md",
+        "document:docs/MEMORY.md",
+        "document:docs/SOUL.md",
+        "file:docs/demo.tape"
+      ]
+    },
+    {
+      "id": "layer:tooling",
+      "name": "Analysis Tooling",
+      "description": "Local understand-anything configuration and intermediate scan artifacts for knowledge-graph generation.",
+      "nodeIds": [
+        "config:.understand-anything/config.json",
+        "config:.understand-anything/intermediate/scan-raw.json",
+        "file:.understand-anything/.understandignore"
+      ]
+    }
+  ],
+  "tour": [
+    {
+      "order": 1,
+      "title": "What is bananascaler?",
+      "description": "Start with the README to understand the product: a GPU-accelerated neural video upscaler that drives Real-ESRGAN and FFmpeg, with a live Bubbletea dashboard.",
+      "nodeIds": [
+        "document:README.md"
+      ]
+    },
+    {
+      "order": 2,
+      "title": "Binary entry point",
+      "description": "main.go is a thin entry that delegates to the Cobra root command. All CLI flags, subcommands, and TUI launch flow start here.",
+      "nodeIds": [
+        "file:main.go",
+        "file:cmd/root.go"
+      ]
+    },
+    {
+      "order": 3,
+      "title": "Hardware-aware profiles",
+      "description": "Before upscaling, the tool detects NVIDIA GPUs and selects a hardware tier and preset so VRAM limits and quality tradeoffs stay safe.",
+      "nodeIds": [
+        "file:internal/hardware/detect.go",
+        "file:internal/hardware/profile.go",
+        "file:internal/config/config.go"
+      ]
+    },
+    {
+      "order": 4,
+      "title": "Core processing pipeline",
+      "description": "The pipeline package orchestrates frame extraction, Real-ESRGAN per-frame upscaling, re-encoding, and audio mux \u2014 the heart of every job.",
+      "nodeIds": [
+        "file:internal/pipeline/pipeline.go"
+      ]
+    },
+    {
+      "order": 5,
+      "title": "Interactive TUI dashboard",
+      "description": "When run in a terminal, Bubbletea renders progress, stages, and logs. The model and pipeline adapter bridge UI events to the pipeline.",
+      "nodeIds": [
+        "file:internal/tui/model.go",
+        "file:internal/tui/pipeline_adapter.go",
+        "file:internal/tui/styles.go",
+        "file:cmd/tui.go"
+      ]
+    },
+    {
+      "order": 6,
+      "title": "Build, test, and CI",
+      "description": "Makefile and go.mod define local builds; GitHub Actions builds and tests every push to main so regressions are caught early.",
+      "nodeIds": [
+        "file:Makefile",
+        "config:go.mod",
+        "pipeline:.github/workflows/go.yml"
+      ]
+    }
+  ]
+}

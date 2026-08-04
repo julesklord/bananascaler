@@ -1,0 +1,14 @@
+{
+  "projectRoot": "/mnt/DEV/Proyectos/repos/video-upscaler-gpu",
+  "batchFiles": [
+    {
+      "path": ".github/workflows/go.yml",
+      "language": "yaml",
+      "sizeLines": 28,
+      "fileCategory": "infra"
+    }
+  ],
+  "batchImportData": {
+    ".github/workflows/go.yml": []
+  }
+}

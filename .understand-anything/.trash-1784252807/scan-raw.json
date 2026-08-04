@@ -1,0 +1,214 @@
+{
+  "scriptCompleted": true,
+  "files": [
+    {
+      "path": ".github/workflows/go.yml",
+      "language": "yaml",
+      "sizeLines": 28,
+      "fileCategory": "infra"
+    },
+    {
+      "path": ".understand-anything/.understandignore",
+      "language": "unknown",
+      "sizeLines": 45,
+      "fileCategory": "code"
+    },
+    {
+      "path": ".understand-anything/config.json",
+      "language": "json",
+      "sizeLines": 1,
+      "fileCategory": "config"
+    },
+    {
+      "path": "AGENTS.md",
+      "language": "markdown",
+      "sizeLines": 142,
+      "fileCategory": "docs"
+    },
+    {
+      "path": "CHANGELOG.md",
+      "language": "markdown",
+      "sizeLines": 96,
+      "fileCategory": "docs"
+    },
+    {
+      "path": "cmd/root.go",
+      "language": "go",
+      "sizeLines": 167,
+      "fileCategory": "code"
+    },
+    {
+      "path": "cmd/tui.go",
+      "language": "go",
+      "sizeLines": 23,
+      "fileCategory": "code"
+    },
+    {
+      "path": "docs/AGENT.md",
+      "language": "markdown",
+      "sizeLines": 37,
+      "fileCategory": "docs"
+    },
+    {
+      "path": "docs/demo.tape",
+      "language": "tape",
+      "sizeLines": 20,
+      "fileCategory": "code"
+    },
+    {
+      "path": "docs/GEMINI.md",
+      "language": "markdown",
+      "sizeLines": 22,
+      "fileCategory": "docs"
+    },
+    {
+      "path": "docs/IDENTITY.md",
+      "language": "markdown",
+      "sizeLines": 20,
+      "fileCategory": "docs"
+    },
+    {
+      "path": "docs/MEMORY.md",
+      "language": "markdown",
+      "sizeLines": 32,
+      "fileCategory": "docs"
+    },
+    {
+      "path": "docs/SOUL.md",
+      "language": "markdown",
+      "sizeLines": 14,
+      "fileCategory": "docs"
+    },
+    {
+      "path": "go.mod",
+      "language": "mod",
+      "sizeLines": 35,
+      "fileCategory": "config"
+    },
+    {
+      "path": "go.sum",
+      "language": "sum",
+      "sizeLines": 60,
+      "fileCategory": "config"
+    },
+    {
+      "path": "internal/config/config_test.go",
+      "language": "go",
+      "sizeLines": 93,
+      "fileCategory": "code"
+    },
+    {
+      "path": "internal/config/config.go",
+      "language": "go",
+      "sizeLines": 117,
+      "fileCategory": "code"
+    },
+    {
+      "path": "internal/hardware/detect.go",
+      "language": "go",
+      "sizeLines": 62,
+      "fileCategory": "code"
+    },
+    {
+      "path": "internal/hardware/profile.go",
+      "language": "go",
+      "sizeLines": 483,
+      "fileCategory": "code"
+    },
+    {
+      "path": "internal/pipeline/pipeline_test.go",
+      "language": "go",
+      "sizeLines": 198,
+      "fileCategory": "code"
+    },
+    {
+      "path": "internal/pipeline/pipeline.go",
+      "language": "go",
+      "sizeLines": 317,
+      "fileCategory": "code"
+    },
+    {
+      "path": "internal/tui/messages.go",
+      "language": "go",
+      "sizeLines": 40,
+      "fileCategory": "code"
+    },
+    {
+      "path": "internal/tui/model_test.go",
+      "language": "go",
+      "sizeLines": 185,
+      "fileCategory": "code"
+    },
+    {
+      "path": "internal/tui/model.go",
+      "language": "go",
+      "sizeLines": 672,
+      "fileCategory": "code"
+    },
+    {
+      "path": "internal/tui/pipeline_adapter_test.go",
+      "language": "go",
+      "sizeLines": 54,
+      "fileCategory": "code"
+    },
+    {
+      "path": "internal/tui/pipeline_adapter.go",
+      "language": "go",
+      "sizeLines": 98,
+      "fileCategory": "code"
+    },
+    {
+      "path": "internal/tui/styles.go",
+      "language": "go",
+      "sizeLines": 215,
+      "fileCategory": "code"
+    },
+    {
+      "path": "main.go",
+      "language": "go",
+      "sizeLines": 7,
+      "fileCategory": "code"
+    },
+    {
+      "path": "Makefile",
+      "language": "makefile",
+      "sizeLines": 43,
+      "fileCategory": "infra"
+    },
+    {
+      "path": "README.md",
+      "language": "markdown",
+      "sizeLines": 432,
+      "fileCategory": "docs"
+    },
+    {
+      "path": "VERSION",
+      "language": "unknown",
+      "sizeLines": 1,
+      "fileCategory": "code"
+    }
+  ],
+  "totalFiles": 31,
+  "filteredByIgnore": 0,
+  "estimatedComplexity": "moderate",
+  "stats": {
+    "filesScanned": 31,
+    "byCategory": {
+      "infra": 2,
+      "code": 18,
+      "config": 3,
+      "docs": 8
+    },
+    "byLanguage": {
+      "yaml": 1,
+      "unknown": 2,
+      "json": 1,
+      "markdown": 8,
+      "go": 15,
+      "tape": 1,
+      "mod": 1,
+      "sum": 1,
+      "makefile": 1
+    }
+  }
+}

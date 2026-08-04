@@ -1,0 +1,375 @@
+{
+  "nodes": [
+    {
+      "id": "file:internal/config/config_test.go",
+      "type": "file",
+      "name": "config_test.go",
+      "filePath": "internal/config/config_test.go",
+      "summary": "Table-driven unit tests for Config.Validate covering scale bounds, missing input, default output/model, and custom path/model preservation.",
+      "tags": ["test", "config", "validation", "table-driven"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:internal/config/config_test.go:TestConfigValidate",
+      "type": "function",
+      "name": "TestConfigValidate",
+      "filePath": "internal/config/config_test.go",
+      "lineRange": [9, 93],
+      "summary": "Creates a temp input file and runs Validate cases: valid defaults, invalid scale, missing input, and custom output/model retention.",
+      "tags": ["test", "validation", "config", "defaults"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:internal/pipeline/pipeline_test.go",
+      "type": "file",
+      "name": "pipeline_test.go",
+      "filePath": "internal/pipeline/pipeline_test.go",
+      "summary": "Integration tests for the upscale pipeline using mocked ffmpeg/ffprobe/realesrgan/nvidia-smi on PATH, plus countFiles unit coverage.",
+      "tags": ["test", "pipeline", "integration", "mocks"],
+      "complexity": "complex"
+    },
+    {
+      "id": "class:internal/pipeline/pipeline_test.go:mockLogger",
+      "type": "class",
+      "name": "mockLogger",
+      "filePath": "internal/pipeline/pipeline_test.go",
+      "lineRange": [12, 17],
+      "summary": "Test double implementing pipeline.Logger that records info messages, stages, and completion for assertions.",
+      "tags": ["test", "mock", "logging", "logger"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:internal/pipeline/pipeline_test.go:TestPipelineIntegration",
+      "type": "function",
+      "name": "TestPipelineIntegration",
+      "filePath": "internal/pipeline/pipeline_test.go",
+      "lineRange": [31, 175],
+      "summary": "End-to-end Run test with shell mocks for external tools; asserts output file creation and progress for stages 1–3.",
+      "tags": ["test", "integration", "pipeline", "mocks"],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:internal/pipeline/pipeline_test.go:TestCountFiles",
+      "type": "function",
+      "name": "TestCountFiles",
+      "filePath": "internal/pipeline/pipeline_test.go",
+      "lineRange": [177, 198],
+      "summary": "Verifies countFiles counts only regular files matching an extension and ignores directories with matching names.",
+      "tags": ["test", "filesystem", "countFiles"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:internal/tui/pipeline_adapter.go",
+      "type": "file",
+      "name": "pipeline_adapter.go",
+      "filePath": "internal/tui/pipeline_adapter.go",
+      "summary": "Bridges pipeline.Logger to Bubbletea: tuiLogger emits PipelineEvents, parseStep detects stage starts, RunTUI launches the program and optional background Run.",
+      "tags": ["tui", "adapter", "pipeline", "bubbletea", "logging"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "class:internal/tui/pipeline_adapter.go:tuiLogger",
+      "type": "class",
+      "name": "tuiLogger",
+      "filePath": "internal/tui/pipeline_adapter.go",
+      "lineRange": [10, 12],
+      "summary": "pipeline.Logger implementation that sends log, stage-start, progress, and stage-done events on a channel to the TUI model.",
+      "tags": ["logger", "adapter", "events", "tui"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:internal/tui/pipeline_adapter.go:Step",
+      "type": "function",
+      "name": "Step",
+      "filePath": "internal/tui/pipeline_adapter.go",
+      "lineRange": [26, 33],
+      "summary": "Parses step messages for stage starts via parseStep, emits EventStageStart when applicable, then logs the step message.",
+      "tags": ["logging", "stages", "events"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:internal/tui/pipeline_adapter.go:Progress",
+      "type": "function",
+      "name": "Progress",
+      "filePath": "internal/tui/pipeline_adapter.go",
+      "lineRange": [39, 53],
+      "summary": "Maps stage/current/total progress into EventStageProgress or EventStageDone, ignoring the zero/zero initial call.",
+      "tags": ["progress", "events", "stages"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:internal/tui/pipeline_adapter.go:parseStep",
+      "type": "function",
+      "name": "parseStep",
+      "filePath": "internal/tui/pipeline_adapter.go",
+      "lineRange": [55, 78],
+      "summary": "Parses \"[n/m] Stage name...\" messages into stage index and remaining name text; returns zeros on malformed input.",
+      "tags": ["parsing", "stages", "helper"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:internal/tui/pipeline_adapter.go:RunTUI",
+      "type": "function",
+      "name": "RunTUI",
+      "filePath": "internal/tui/pipeline_adapter.go",
+      "lineRange": [81, 98],
+      "summary": "Creates the TUI model, optionally starts pipeline.Run in a goroutine when Input is set, and runs Bubbletea with alt screen.",
+      "tags": ["tui", "entry-point", "pipeline", "bubbletea"],
+      "complexity": "moderate"
+    }
+  ],
+  "edges": [
+    {
+      "source": "file:internal/config/config_test.go",
+      "target": "function:internal/config/config_test.go:TestConfigValidate",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:internal/pipeline/pipeline_test.go",
+      "target": "class:internal/pipeline/pipeline_test.go:mockLogger",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:internal/pipeline/pipeline_test.go",
+      "target": "function:internal/pipeline/pipeline_test.go:TestPipelineIntegration",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:internal/pipeline/pipeline_test.go",
+      "target": "function:internal/pipeline/pipeline_test.go:TestCountFiles",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:internal/tui/pipeline_adapter.go",
+      "target": "class:internal/tui/pipeline_adapter.go:tuiLogger",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:internal/tui/pipeline_adapter.go",
+      "target": "function:internal/tui/pipeline_adapter.go:Step",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:internal/tui/pipeline_adapter.go",
+      "target": "function:internal/tui/pipeline_adapter.go:Progress",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:internal/tui/pipeline_adapter.go",
+      "target": "function:internal/tui/pipeline_adapter.go:parseStep",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:internal/tui/pipeline_adapter.go",
+      "target": "function:internal/tui/pipeline_adapter.go:RunTUI",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "class:internal/tui/pipeline_adapter.go:tuiLogger",
+      "target": "function:internal/tui/pipeline_adapter.go:Step",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "class:internal/tui/pipeline_adapter.go:tuiLogger",
+      "target": "function:internal/tui/pipeline_adapter.go:Progress",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:internal/config/config_test.go",
+      "target": "function:internal/config/config_test.go:TestConfigValidate",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:internal/pipeline/pipeline_test.go",
+      "target": "function:internal/pipeline/pipeline_test.go:TestPipelineIntegration",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:internal/pipeline/pipeline_test.go",
+      "target": "function:internal/pipeline/pipeline_test.go:TestCountFiles",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:internal/tui/pipeline_adapter.go",
+      "target": "function:internal/tui/pipeline_adapter.go:RunTUI",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:internal/pipeline/pipeline_test.go",
+      "target": "file:internal/config/config_test.go",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:internal/pipeline/pipeline_test.go",
+      "target": "file:internal/config/config.go",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:internal/tui/pipeline_adapter.go",
+      "target": "file:internal/config/config_test.go",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:internal/tui/pipeline_adapter.go",
+      "target": "file:internal/config/config.go",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:internal/tui/pipeline_adapter.go",
+      "target": "file:internal/pipeline/pipeline_test.go",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:internal/tui/pipeline_adapter.go",
+      "target": "file:internal/pipeline/pipeline.go",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:internal/config/config.go",
+      "target": "file:internal/config/config_test.go",
+      "type": "tested_by",
+      "direction": "forward",
+      "weight": 0.5
+    },
+    {
+      "source": "file:internal/pipeline/pipeline.go",
+      "target": "file:internal/pipeline/pipeline_test.go",
+      "type": "tested_by",
+      "direction": "forward",
+      "weight": 0.5
+    },
+    {
+      "source": "function:internal/config/config_test.go:TestConfigValidate",
+      "target": "function:internal/config/config.go:Validate",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:internal/pipeline/pipeline_test.go:TestPipelineIntegration",
+      "target": "function:internal/pipeline/pipeline.go:Run",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:internal/pipeline/pipeline_test.go:TestCountFiles",
+      "target": "function:internal/pipeline/pipeline.go:countFiles",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:internal/tui/pipeline_adapter.go:Step",
+      "target": "function:internal/tui/pipeline_adapter.go:parseStep",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:internal/tui/pipeline_adapter.go:RunTUI",
+      "target": "function:internal/tui/model.go:NewModel",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:internal/tui/pipeline_adapter.go:RunTUI",
+      "target": "function:internal/pipeline/pipeline.go:Run",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:internal/tui/pipeline_adapter.go:RunTUI",
+      "target": "function:internal/tui/model.go:SetDone",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:internal/tui/pipeline_adapter.go:RunTUI",
+      "target": "function:internal/tui/model.go:Events",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "class:internal/pipeline/pipeline_test.go:mockLogger",
+      "target": "class:internal/pipeline/pipeline.go:Logger",
+      "type": "implements",
+      "direction": "forward",
+      "weight": 0.9
+    },
+    {
+      "source": "class:internal/tui/pipeline_adapter.go:tuiLogger",
+      "target": "class:internal/pipeline/pipeline.go:Logger",
+      "type": "implements",
+      "direction": "forward",
+      "weight": 0.9
+    },
+    {
+      "source": "file:internal/pipeline/pipeline_test.go",
+      "target": "file:internal/config/config.go",
+      "type": "depends_on",
+      "direction": "forward",
+      "weight": 0.6
+    },
+    {
+      "source": "file:internal/tui/pipeline_adapter.go",
+      "target": "file:internal/config/config.go",
+      "type": "depends_on",
+      "direction": "forward",
+      "weight": 0.6
+    },
+    {
+      "source": "file:internal/tui/pipeline_adapter.go",
+      "target": "file:internal/pipeline/pipeline.go",
+      "type": "depends_on",
+      "direction": "forward",
+      "weight": 0.6
+    }
+  ]
+}

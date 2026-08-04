@@ -1,0 +1,42 @@
+{
+  "nodes": [
+    {
+      "id": "pipeline:.github/workflows/go.yml",
+      "type": "pipeline",
+      "name": "go.yml",
+      "filePath": ".github/workflows/go.yml",
+      "summary": "GitHub Actions CI workflow that checks out the repo, sets up Go from go.mod, builds all packages, and runs the full test suite on push and pull requests to main.",
+      "tags": [
+        "ci-cd",
+        "github-actions",
+        "build",
+        "test",
+        "deployment"
+      ],
+      "complexity": "simple"
+    }
+  ],
+  "edges": [
+    {
+      "source": "pipeline:.github/workflows/go.yml",
+      "target": "config:go.mod",
+      "type": "depends_on",
+      "direction": "forward",
+      "weight": 0.6
+    },
+    {
+      "source": "pipeline:.github/workflows/go.yml",
+      "target": "file:main.go",
+      "type": "triggers",
+      "direction": "forward",
+      "weight": 0.6
+    },
+    {
+      "source": "pipeline:.github/workflows/go.yml",
+      "target": "file:Makefile",
+      "type": "related",
+      "direction": "forward",
+      "weight": 0.5
+    }
+  ]
+}

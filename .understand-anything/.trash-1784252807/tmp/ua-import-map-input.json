@@ -1,0 +1,165 @@
+{
+  "projectRoot": "/mnt/DEV/Proyectos/repos/video-upscaler-gpu",
+  "files": [
+    {
+      "path": ".github/workflows/go.yml",
+      "language": "yaml",
+      "fileCategory": "infra"
+    },
+    {
+      "path": ".understand-anything/.understandignore",
+      "language": "unknown",
+      "fileCategory": "code"
+    },
+    {
+      "path": ".understand-anything/config.json",
+      "language": "json",
+      "fileCategory": "config"
+    },
+    {
+      "path": ".understand-anything/intermediate/scan-raw.json",
+      "language": "json",
+      "fileCategory": "config"
+    },
+    {
+      "path": "AGENTS.md",
+      "language": "markdown",
+      "fileCategory": "docs"
+    },
+    {
+      "path": "CHANGELOG.md",
+      "language": "markdown",
+      "fileCategory": "docs"
+    },
+    {
+      "path": "cmd/root.go",
+      "language": "go",
+      "fileCategory": "code"
+    },
+    {
+      "path": "cmd/tui.go",
+      "language": "go",
+      "fileCategory": "code"
+    },
+    {
+      "path": "docs/AGENT.md",
+      "language": "markdown",
+      "fileCategory": "docs"
+    },
+    {
+      "path": "docs/demo.tape",
+      "language": "tape",
+      "fileCategory": "code"
+    },
+    {
+      "path": "docs/GEMINI.md",
+      "language": "markdown",
+      "fileCategory": "docs"
+    },
+    {
+      "path": "docs/IDENTITY.md",
+      "language": "markdown",
+      "fileCategory": "docs"
+    },
+    {
+      "path": "docs/MEMORY.md",
+      "language": "markdown",
+      "fileCategory": "docs"
+    },
+    {
+      "path": "docs/SOUL.md",
+      "language": "markdown",
+      "fileCategory": "docs"
+    },
+    {
+      "path": "go.mod",
+      "language": "mod",
+      "fileCategory": "config"
+    },
+    {
+      "path": "go.sum",
+      "language": "sum",
+      "fileCategory": "config"
+    },
+    {
+      "path": "internal/config/config_test.go",
+      "language": "go",
+      "fileCategory": "code"
+    },
+    {
+      "path": "internal/config/config.go",
+      "language": "go",
+      "fileCategory": "code"
+    },
+    {
+      "path": "internal/hardware/detect.go",
+      "language": "go",
+      "fileCategory": "code"
+    },
+    {
+      "path": "internal/hardware/profile.go",
+      "language": "go",
+      "fileCategory": "code"
+    },
+    {
+      "path": "internal/pipeline/pipeline_test.go",
+      "language": "go",
+      "fileCategory": "code"
+    },
+    {
+      "path": "internal/pipeline/pipeline.go",
+      "language": "go",
+      "fileCategory": "code"
+    },
+    {
+      "path": "internal/tui/messages.go",
+      "language": "go",
+      "fileCategory": "code"
+    },
+    {
+      "path": "internal/tui/model_test.go",
+      "language": "go",
+      "fileCategory": "code"
+    },
+    {
+      "path": "internal/tui/model.go",
+      "language": "go",
+      "fileCategory": "code"
+    },
+    {
+      "path": "internal/tui/pipeline_adapter_test.go",
+      "language": "go",
+      "fileCategory": "code"
+    },
+    {
+      "path": "internal/tui/pipeline_adapter.go",
+      "language": "go",
+      "fileCategory": "code"
+    },
+    {
+      "path": "internal/tui/styles.go",
+      "language": "go",
+      "fileCategory": "code"
+    },
+    {
+      "path": "main.go",
+      "language": "go",
+      "fileCategory": "code"
+    },
+    {
+      "path": "Makefile",
+      "language": "makefile",
+      "fileCategory": "infra"
+    },
+    {
+      "path": "README.md",
+      "language": "markdown",
+      "fileCategory": "docs"
+    },
+    {
+      "path": "VERSION",
+      "language": "unknown",
+      "fileCategory": "code"
+    }
+  ]
+}

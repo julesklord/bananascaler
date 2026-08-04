@@ -1,0 +1,177 @@
+{
+  "scriptCompleted": true,
+  "filesAnalyzed": 5,
+  "filesSkipped": [],
+  "results": [
+    {
+      "path": "docs/AGENT.md",
+      "language": "markdown",
+      "fileCategory": "docs",
+      "totalLines": 37,
+      "nonEmptyLines": 26,
+      "sections": [
+        {
+          "heading": "Agent SOP (Standard Operating Procedure) — bananascaler",
+          "level": 1,
+          "line": 1
+        },
+        {
+          "heading": "General Instructions",
+          "level": 2,
+          "line": 5
+        },
+        {
+          "heading": "Agent Initialization",
+          "level": 2,
+          "line": 11
+        },
+        {
+          "heading": "Key Paths",
+          "level": 2,
+          "line": 29
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0,
+        "sectionCount": 4
+      }
+    },
+    {
+      "path": "docs/GEMINI.md",
+      "language": "markdown",
+      "fileCategory": "docs",
+      "totalLines": 22,
+      "nonEmptyLines": 15,
+      "sections": [
+        {
+          "heading": "Gemini CLI Rules",
+          "level": 1,
+          "line": 1
+        },
+        {
+          "heading": "Working Context",
+          "level": 2,
+          "line": 5
+        },
+        {
+          "heading": "Workflow",
+          "level": 2,
+          "line": 13
+        },
+        {
+          "heading": "Restrictions",
+          "level": 2,
+          "line": 17
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0,
+        "sectionCount": 4
+      }
+    },
+    {
+      "path": "docs/IDENTITY.md",
+      "language": "markdown",
+      "fileCategory": "docs",
+      "totalLines": 20,
+      "nonEmptyLines": 15,
+      "sections": [
+        {
+          "heading": "Identity: bananascaler",
+          "level": 1,
+          "line": 1
+        },
+        {
+          "heading": "Purpose",
+          "level": 2,
+          "line": 10
+        },
+        {
+          "heading": "Stack",
+          "level": 2,
+          "line": 14
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0,
+        "sectionCount": 3
+      }
+    },
+    {
+      "path": "docs/MEMORY.md",
+      "language": "markdown",
+      "fileCategory": "docs",
+      "totalLines": 32,
+      "nonEmptyLines": 25,
+      "sections": [
+        {
+          "heading": "Memory: bananascaler",
+          "level": 1,
+          "line": 1
+        },
+        {
+          "heading": "Known Constraints",
+          "level": 2,
+          "line": 5
+        },
+        {
+          "heading": "Past Decisions",
+          "level": 2,
+          "line": 14
+        },
+        {
+          "heading": "Architecture Notes",
+          "level": 2,
+          "line": 25
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0,
+        "sectionCount": 4
+      }
+    },
+    {
+      "path": "docs/SOUL.md",
+      "language": "markdown",
+      "fileCategory": "docs",
+      "totalLines": 14,
+      "nonEmptyLines": 9,
+      "sections": [
+        {
+          "heading": "Soul: bananascaler",
+          "level": 1,
+          "line": 1
+        },
+        {
+          "heading": "Principles",
+          "level": 2,
+          "line": 5
+        },
+        {
+          "heading": "Tone",
+          "level": 2,
+          "line": 12
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0,
+        "sectionCount": 3
+      }
+    }
+  ]
+}

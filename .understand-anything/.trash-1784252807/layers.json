@@ -1,0 +1,83 @@
+[
+  {
+    "id": "layer:entry-cli",
+    "name": "Entry & CLI",
+    "description": "Binary entry point and Cobra command definitions that parse flags and launch CLI or TUI modes.",
+    "nodeIds": [
+      "file:cmd/root.go",
+      "file:cmd/tui.go",
+      "file:main.go"
+    ]
+  },
+  {
+    "id": "layer:config-hardware",
+    "name": "Config & Hardware",
+    "description": "Runtime configuration, GPU detection, and hardware profile selection for VRAM-safe upscaling presets.",
+    "nodeIds": [
+      "file:internal/config/config.go",
+      "file:internal/config/config_test.go",
+      "file:internal/hardware/detect.go",
+      "file:internal/hardware/profile.go"
+    ]
+  },
+  {
+    "id": "layer:pipeline",
+    "name": "Processing Pipeline",
+    "description": "Frame extraction, Real-ESRGAN upscaling orchestration, FFmpeg re-encode, and audio mux stages.",
+    "nodeIds": [
+      "file:internal/pipeline/pipeline.go",
+      "file:internal/pipeline/pipeline_test.go"
+    ]
+  },
+  {
+    "id": "layer:tui",
+    "name": "Interactive TUI",
+    "description": "Bubbletea model, styles, messages, and pipeline adapter for the live dashboard and file-selection UI.",
+    "nodeIds": [
+      "file:internal/tui/messages.go",
+      "file:internal/tui/model.go",
+      "file:internal/tui/model_test.go",
+      "file:internal/tui/pipeline_adapter.go",
+      "file:internal/tui/pipeline_adapter_test.go",
+      "file:internal/tui/styles.go"
+    ]
+  },
+  {
+    "id": "layer:build-ci",
+    "name": "Build & CI",
+    "description": "Makefile targets, Go module manifests, version stamp, and GitHub Actions workflow that builds and tests on main.",
+    "nodeIds": [
+      "config:go.mod",
+      "config:go.sum",
+      "file:Makefile",
+      "file:VERSION",
+      "pipeline:.github/workflows/go.yml"
+    ]
+  },
+  {
+    "id": "layer:documentation",
+    "name": "Documentation",
+    "description": "Project README, changelog, agent guides, identity/memory docs, and demo tape script.",
+    "nodeIds": [
+      "document:AGENTS.md",
+      "document:CHANGELOG.md",
+      "document:README.md",
+      "document:docs/AGENT.md",
+      "document:docs/GEMINI.md",
+      "document:docs/IDENTITY.md",
+      "document:docs/MEMORY.md",
+      "document:docs/SOUL.md",
+      "file:docs/demo.tape"
+    ]
+  },
+  {
+    "id": "layer:tooling",
+    "name": "Analysis Tooling",
+    "description": "Local understand-anything configuration and intermediate scan artifacts for knowledge-graph generation.",
+    "nodeIds": [
+      "config:.understand-anything/config.json",
+      "config:.understand-anything/intermediate/scan-raw.json",
+      "file:.understand-anything/.understandignore"
+    ]
+  }
+]

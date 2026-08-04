@@ -1,0 +1,94 @@
+{
+  "scriptCompleted": true,
+  "stats": {
+    "filesScanned": 32,
+    "filesWithImports": 10,
+    "totalEdges": 42
+  },
+  "importMap": {
+    ".github/workflows/go.yml": [],
+    ".understand-anything/.understandignore": [],
+    ".understand-anything/config.json": [],
+    ".understand-anything/intermediate/scan-raw.json": [],
+    "AGENTS.md": [],
+    "CHANGELOG.md": [],
+    "cmd/root.go": [
+      "internal/config/config_test.go",
+      "internal/config/config.go",
+      "internal/hardware/detect.go",
+      "internal/hardware/profile.go",
+      "internal/pipeline/pipeline_test.go",
+      "internal/pipeline/pipeline.go",
+      "internal/tui/messages.go",
+      "internal/tui/model_test.go",
+      "internal/tui/model.go",
+      "internal/tui/pipeline_adapter_test.go",
+      "internal/tui/pipeline_adapter.go",
+      "internal/tui/styles.go"
+    ],
+    "cmd/tui.go": [
+      "internal/tui/messages.go",
+      "internal/tui/model_test.go",
+      "internal/tui/model.go",
+      "internal/tui/pipeline_adapter_test.go",
+      "internal/tui/pipeline_adapter.go",
+      "internal/tui/styles.go"
+    ],
+    "docs/AGENT.md": [],
+    "docs/demo.tape": [],
+    "docs/GEMINI.md": [],
+    "docs/IDENTITY.md": [],
+    "docs/MEMORY.md": [],
+    "docs/SOUL.md": [],
+    "go.mod": [],
+    "go.sum": [],
+    "internal/config/config_test.go": [],
+    "internal/config/config.go": [
+      "internal/hardware/detect.go",
+      "internal/hardware/profile.go"
+    ],
+    "internal/hardware/detect.go": [],
+    "internal/hardware/profile.go": [],
+    "internal/pipeline/pipeline_test.go": [
+      "internal/config/config_test.go",
+      "internal/config/config.go"
+    ],
+    "internal/pipeline/pipeline.go": [
+      "internal/config/config_test.go",
+      "internal/config/config.go",
+      "internal/hardware/detect.go",
+      "internal/hardware/profile.go"
+    ],
+    "internal/tui/messages.go": [
+      "internal/config/config_test.go",
+      "internal/config/config.go"
+    ],
+    "internal/tui/model_test.go": [
+      "internal/config/config_test.go",
+      "internal/config/config.go"
+    ],
+    "internal/tui/model.go": [
+      "internal/config/config_test.go",
+      "internal/config/config.go",
+      "internal/hardware/detect.go",
+      "internal/hardware/profile.go",
+      "internal/pipeline/pipeline_test.go",
+      "internal/pipeline/pipeline.go"
+    ],
+    "internal/tui/pipeline_adapter_test.go": [],
+    "internal/tui/pipeline_adapter.go": [
+      "internal/config/config_test.go",
+      "internal/config/config.go",
+      "internal/pipeline/pipeline_test.go",
+      "internal/pipeline/pipeline.go"
+    ],
+    "internal/tui/styles.go": [],
+    "main.go": [
+      "cmd/root.go",
+      "cmd/tui.go"
+    ],
+    "Makefile": [],
+    "README.md": [],
+    "VERSION": []
+  }
+}

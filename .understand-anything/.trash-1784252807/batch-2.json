@@ -1,0 +1,1443 @@
+{
+  "nodes": [
+    {
+      "id": "file:internal/config/config.go",
+      "type": "file",
+      "name": "config.go",
+      "filePath": "internal/config/config.go",
+      "summary": "Runtime configuration for a bananascaler run: CLI-derived settings, hardware profile resolution, validation, and default output/model application.",
+      "tags": ["config", "profile", "validation", "cli"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "class:internal/config/config.go:Config",
+      "type": "class",
+      "name": "Config",
+      "summary": "Holds input/output paths, scale, GPU index, model, verbosity, TUI flags, and optional UpscaleProfile with auto-detect/preset controls.",
+      "tags": ["config", "struct", "settings"],
+      "complexity": "simple",
+      "lineRange": [16, 29]
+    },
+    {
+      "id": "function:internal/config/config.go:ResolveProfile",
+      "type": "function",
+      "name": "ResolveProfile",
+      "summary": "Applies profile selection: auto-detect with optional preset, user preset alone, or legacy defaults without a profile.",
+      "tags": ["profile", "auto-detect", "preset"],
+      "complexity": "moderate",
+      "lineRange": [33, 65]
+    },
+    {
+      "id": "function:internal/config/config.go:applyProfileDefaults",
+      "type": "function",
+      "name": "applyProfileDefaults",
+      "summary": "Copies model and max-scale caps from the active profile into Config when the user has not overridden them via CLI.",
+      "tags": ["profile", "defaults"],
+      "complexity": "simple",
+      "lineRange": [69, 84]
+    },
+    {
+      "id": "function:internal/config/config.go:Validate",
+      "type": "function",
+      "name": "Validate",
+      "summary": "Checks scale range and input existence, fills default output path and model, and enforces profile MaxScale.",
+      "tags": ["validation", "defaults", "io"],
+      "complexity": "moderate",
+      "lineRange": [87, 109]
+    },
+    {
+      "id": "function:internal/config/config.go:ProfileSummary",
+      "type": "function",
+      "name": "ProfileSummary",
+      "summary": "Returns a one-line string describing the active profile or legacy model/scale settings for logs.",
+      "tags": ["profile", "logging", "display"],
+      "complexity": "simple",
+      "lineRange": [112, 117]
+    },
+    {
+      "id": "file:internal/hardware/detect.go",
+      "type": "file",
+      "name": "detect.go",
+      "filePath": "internal/hardware/detect.go",
+      "summary": "Dependency checks and media probes: PATH tools (ffmpeg/ffprobe/realesrgan), NVIDIA presence, framerate, and audio-stream detection via ffprobe.",
+      "tags": ["hardware", "ffprobe", "dependencies", "detection"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:internal/hardware/detect.go:CheckDeps",
+      "type": "function",
+      "name": "CheckDeps",
+      "summary": "Verifies ffmpeg, ffprobe, and realesrgan-ncnn-vulkan are available on PATH before a run.",
+      "tags": ["dependencies", "path", "preflight"],
+      "complexity": "simple",
+      "lineRange": [14, 21]
+    },
+    {
+      "id": "function:internal/hardware/detect.go:HasNVIDIA",
+      "type": "function",
+      "name": "HasNVIDIA",
+      "summary": "Returns true if nvidia-smi runs successfully within a short timeout.",
+      "tags": ["nvidia", "gpu", "detection"],
+      "complexity": "simple",
+      "lineRange": [24, 28]
+    },
+    {
+      "id": "function:internal/hardware/detect.go:Framerate",
+      "type": "function",
+      "name": "Framerate",
+      "summary": "Uses ffprobe to read the first video stream's r_frame_rate for re-encode framerate preservation.",
+      "tags": ["ffprobe", "video", "metadata"],
+      "complexity": "simple",
+      "lineRange": [31, 47]
+    },
+    {
+      "id": "function:internal/hardware/detect.go:HasAudio",
+      "type": "function",
+      "name": "HasAudio",
+      "summary": "Uses ffprobe to detect whether the input has any audio streams for remux decisions.",
+      "tags": ["ffprobe", "audio", "metadata"],
+      "complexity": "simple",
+      "lineRange": [50, 62]
+    },
+    {
+      "id": "file:internal/hardware/profile.go",
+      "type": "file",
+      "name": "profile.go",
+      "filePath": "internal/hardware/profile.go",
+      "summary": "GPU detection via nvidia-smi, VRAM-based hardware tiers, preset profile database (tile/model/encode params), auto-profiling, and tile OOM safety checks.",
+      "tags": ["hardware", "profile", "gpu", "vram", "presets"],
+      "complexity": "complex"
+    },
+    {
+      "id": "class:internal/hardware/profile.go:GPUInfo",
+      "type": "class",
+      "name": "GPUInfo",
+      "summary": "Detected GPU snapshot: name, VRAM MB, NVIDIA availability, and CPU core count.",
+      "tags": ["gpu", "struct", "hardware"],
+      "complexity": "simple",
+      "lineRange": [54, 59]
+    },
+    {
+      "id": "class:internal/hardware/profile.go:UpscaleProfile",
+      "type": "class",
+      "name": "UpscaleProfile",
+      "summary": "Tunable upscale parameters: tier/preset, Real-ESRGAN tile and model, JPEG quality, NVENC/x265 encode settings, and max scale.",
+      "tags": ["profile", "struct", "upscale", "encoding"],
+      "complexity": "moderate",
+      "lineRange": [62, 83]
+    },
+    {
+      "id": "function:internal/hardware/profile.go:AllPresets",
+      "type": "function",
+      "name": "AllPresets",
+      "summary": "Returns the three preset levels: fast, balanced, and quality.",
+      "tags": ["preset", "api"],
+      "complexity": "simple",
+      "lineRange": [25, 27]
+    },
+    {
+      "id": "function:internal/hardware/profile.go:ParsePreset",
+      "type": "function",
+      "name": "ParsePreset",
+      "summary": "Parses user preset strings (including short aliases) into PresetLevel or returns an error.",
+      "tags": ["preset", "parsing", "cli"],
+      "complexity": "simple",
+      "lineRange": [30, 41]
+    },
+    {
+      "id": "function:internal/hardware/profile.go:String",
+      "type": "function",
+      "name": "String",
+      "summary": "Formats UpscaleProfile as a short human-readable tier/preset/tile/model summary.",
+      "tags": ["profile", "display"],
+      "complexity": "simple",
+      "lineRange": [86, 89]
+    },
+    {
+      "id": "function:internal/hardware/profile.go:DetectGPU",
+      "type": "function",
+      "name": "DetectGPU",
+      "summary": "Queries nvidia-smi for GPU name and total VRAM; returns zero-value GPUInfo when no NVIDIA GPU is found.",
+      "tags": ["gpu", "nvidia-smi", "detection"],
+      "complexity": "moderate",
+      "lineRange": [101, 137]
+    },
+    {
+      "id": "function:internal/hardware/profile.go:DetectGPUCount",
+      "type": "function",
+      "name": "DetectGPUCount",
+      "summary": "Counts NVIDIA GPUs by parsing nvidia-smi GPU index lines.",
+      "tags": ["gpu", "nvidia-smi", "multi-gpu"],
+      "complexity": "simple",
+      "lineRange": [140, 158]
+    },
+    {
+      "id": "function:internal/hardware/profile.go:classifyTier",
+      "type": "function",
+      "name": "classifyTier",
+      "summary": "Maps VRAM thresholds to low-end, mid-range, high-end, or unknown hardware tiers.",
+      "tags": ["tier", "vram", "classification"],
+      "complexity": "simple",
+      "lineRange": [162, 174]
+    },
+    {
+      "id": "function:internal/hardware/profile.go:profileDB",
+      "type": "function",
+      "name": "profileDB",
+      "summary": "Builds the full tier×preset matrix of UpscaleProfile values tuned for VRAM budgets and quality tradeoffs.",
+      "tags": ["profile", "database", "presets", "tuning"],
+      "complexity": "complex",
+      "lineRange": [189, 348]
+    },
+    {
+      "id": "function:internal/hardware/profile.go:GetProfile",
+      "type": "function",
+      "name": "GetProfile",
+      "summary": "Looks up a profile by hardware tier and preset, falling back to unknown/balanced.",
+      "tags": ["profile", "lookup"],
+      "complexity": "simple",
+      "lineRange": [351, 360]
+    },
+    {
+      "id": "function:internal/hardware/profile.go:GetDefaultProfile",
+      "type": "function",
+      "name": "GetDefaultProfile",
+      "summary": "Returns the balanced profile for a given hardware tier.",
+      "tags": ["profile", "defaults"],
+      "complexity": "simple",
+      "lineRange": [363, 365]
+    },
+    {
+      "id": "function:internal/hardware/profile.go:AutoProfile",
+      "type": "function",
+      "name": "AutoProfile",
+      "summary": "Detects GPU, classifies tier, and returns the recommended balanced UpscaleProfile with GPUInfo.",
+      "tags": ["auto-detect", "profile", "gpu"],
+      "complexity": "simple",
+      "lineRange": [369, 374]
+    },
+    {
+      "id": "function:internal/hardware/profile.go:AutoProfileWithPreset",
+      "type": "function",
+      "name": "AutoProfileWithPreset",
+      "summary": "Detects GPU tier and returns a profile for the caller's preferred fast/balanced/quality preset.",
+      "tags": ["auto-detect", "profile", "preset"],
+      "complexity": "simple",
+      "lineRange": [378, 383]
+    },
+    {
+      "id": "function:internal/hardware/profile.go:ProfileSummary",
+      "type": "function",
+      "name": "ProfileSummary",
+      "summary": "One-line hardware plus tier/preset summary for CLI/TUI status lines.",
+      "tags": ["display", "profile", "logging"],
+      "complexity": "moderate",
+      "lineRange": [386, 404]
+    },
+    {
+      "id": "function:internal/hardware/profile.go:ProfileDisplay",
+      "type": "function",
+      "name": "ProfileDisplay",
+      "summary": "Multi-line verbose dump of tile, model, JPEG quality, NVENC/x265 encode settings, and max scale.",
+      "tags": ["display", "verbose", "profile"],
+      "complexity": "moderate",
+      "lineRange": [407, 421]
+    },
+    {
+      "id": "function:internal/hardware/profile.go:maxSafeTile",
+      "type": "function",
+      "name": "maxSafeTile",
+      "summary": "Heuristic maximum safe Real-ESRGAN tile size from VRAM and model weight class.",
+      "tags": ["vram", "tile", "safety"],
+      "complexity": "moderate",
+      "lineRange": [427, 468]
+    },
+    {
+      "id": "function:internal/hardware/profile.go:CheckTileSafety",
+      "type": "function",
+      "name": "CheckTileSafety",
+      "summary": "Returns a warning string when requested tile size may OOM on the detected GPU; empty if safe.",
+      "tags": ["safety", "tile", "oom", "warning"],
+      "complexity": "simple",
+      "lineRange": [472, 483]
+    },
+    {
+      "id": "file:internal/pipeline/pipeline.go",
+      "type": "file",
+      "name": "pipeline.go",
+      "filePath": "internal/pipeline/pipeline.go",
+      "summary": "Core upscale pipeline: validate config, probe media, extract frames with ffmpeg, Real-ESRGAN upscale with progress, re-encode/mux (NVENC or libx265), with signal cleanup.",
+      "tags": ["pipeline", "ffmpeg", "realesrgan", "upscale", "core"],
+      "complexity": "complex"
+    },
+    {
+      "id": "class:internal/pipeline/pipeline.go:Logger",
+      "type": "class",
+      "name": "Logger",
+      "summary": "Interface abstracting pipeline log/progress output so CLI stdout or TUI can drive the same Run path.",
+      "tags": ["logging", "interface", "abstraction"],
+      "complexity": "simple",
+      "lineRange": [21, 28]
+    },
+    {
+      "id": "class:internal/pipeline/pipeline.go:StdoutLogger",
+      "type": "class",
+      "name": "StdoutLogger",
+      "summary": "ANSI-colored Logger implementation that prints pipeline events and progress bars to the terminal.",
+      "tags": ["logging", "cli", "stdout"],
+      "complexity": "simple",
+      "lineRange": [31, 33]
+    },
+    {
+      "id": "function:internal/pipeline/pipeline.go:Progress",
+      "type": "function",
+      "name": "Progress",
+      "summary": "StdoutLogger progress renderer that prints stage current/total percentage and advances the line when complete.",
+      "tags": ["progress", "logging", "ui"],
+      "complexity": "simple",
+      "lineRange": [50, 58]
+    },
+    {
+      "id": "function:internal/pipeline/pipeline.go:pipelineParams",
+      "type": "function",
+      "name": "pipelineParams",
+      "summary": "Resolves effective tile size, JPEG quality, and encode presets from profile or legacy defaults.",
+      "tags": ["profile", "parameters", "encoding"],
+      "complexity": "simple",
+      "lineRange": [62, 79]
+    },
+    {
+      "id": "function:internal/pipeline/pipeline.go:Run",
+      "type": "function",
+      "name": "Run",
+      "summary": "Orchestrates the full three-stage pipeline: frame extraction, neural upscale, re-encode+mux with temp dirs, cancel on SIGINT/SIGTERM, and atomic rename.",
+      "tags": ["pipeline", "orchestration", "ffmpeg", "realesrgan"],
+      "complexity": "complex",
+      "lineRange": [82, 243]
+    },
+    {
+      "id": "function:internal/pipeline/pipeline.go:upscale",
+      "type": "function",
+      "name": "upscale",
+      "summary": "Runs realesrgan-ncnn-vulkan on extracted frames and polls output PNGs every 200ms to report stage-2 progress.",
+      "tags": ["realesrgan", "progress", "upscale"],
+      "complexity": "complex",
+      "lineRange": [247, 294]
+    },
+    {
+      "id": "function:internal/pipeline/pipeline.go:runCmd",
+      "type": "function",
+      "name": "runCmd",
+      "summary": "Runs an external command under context with stderr always wired and optional verbose stdout.",
+      "tags": ["exec", "ffmpeg", "helper"],
+      "complexity": "simple",
+      "lineRange": [296, 303]
+    },
+    {
+      "id": "function:internal/pipeline/pipeline.go:countFiles",
+      "type": "function",
+      "name": "countFiles",
+      "summary": "Counts non-directory entries with a given extension in a directory for frame progress totals.",
+      "tags": ["io", "progress", "helper"],
+      "complexity": "simple",
+      "lineRange": [305, 317]
+    },
+    {
+      "id": "file:internal/tui/model.go",
+      "type": "file",
+      "name": "model.go",
+      "filePath": "internal/tui/model.go",
+      "summary": "Bubbletea TUI model: file explorer for video selection, live pipeline stage progress/logs, preset/model/GPU keybinds, and View rendering with lipgloss.",
+      "tags": ["tui", "bubbletea", "explorer", "ui"],
+      "complexity": "complex"
+    },
+    {
+      "id": "class:internal/tui/model.go:Model",
+      "type": "class",
+      "name": "Model",
+      "summary": "Main Bubbletea model holding config, event/done channels, three pipeline stages, log buffer, window size, and file-explorer navigation state.",
+      "tags": ["bubbletea", "model", "state", "tui"],
+      "complexity": "complex",
+      "lineRange": [57, 76]
+    },
+    {
+      "id": "function:internal/tui/model.go:NewModel",
+      "type": "function",
+      "name": "NewModel",
+      "summary": "Constructs the TUI model, auto-selects a hardware profile when missing, and starts in explorer or pipeline state based on Input.",
+      "tags": ["constructor", "profile", "tui"],
+      "complexity": "moderate",
+      "lineRange": [79, 111]
+    },
+    {
+      "id": "function:internal/tui/model.go:Init",
+      "type": "function",
+      "name": "Init",
+      "summary": "Bubbletea Init: enter alt screen, start event wait loop, and load directory listing when selecting a file.",
+      "tags": ["bubbletea", "init", "lifecycle"],
+      "complexity": "simple",
+      "lineRange": [116, 122]
+    },
+    {
+      "id": "function:internal/tui/model.go:readDirCmd",
+      "type": "function",
+      "name": "readDirCmd",
+      "summary": "Async command that reads the current directory, skips dotfiles, and returns dirs then files for the explorer.",
+      "tags": ["explorer", "filesystem", "async"],
+      "complexity": "moderate",
+      "lineRange": [132, 159]
+    },
+    {
+      "id": "function:internal/tui/model.go:Update",
+      "type": "function",
+      "name": "Update",
+      "summary": "Central Bubbletea Update routing window resize, directory results, keys, pipeline events, and completion/quit.",
+      "tags": ["bubbletea", "update", "events"],
+      "complexity": "moderate",
+      "lineRange": [185, 228]
+    },
+    {
+      "id": "function:internal/tui/model.go:updateExplorer",
+      "type": "function",
+      "name": "updateExplorer",
+      "summary": "Handles explorer keybinds: navigate, cycle scale/GPU/model/preset, enter dirs, and launch pipeline.Run on video selection.",
+      "tags": ["explorer", "keybinds", "pipeline"],
+      "complexity": "complex",
+      "lineRange": [230, 312]
+    },
+    {
+      "id": "function:internal/tui/model.go:handlePipelineEvent",
+      "type": "function",
+      "name": "handlePipelineEvent",
+      "summary": "Applies log and stage start/progress/done pipeline events to model state and re-arms the event wait command.",
+      "tags": ["pipeline", "events", "progress"],
+      "complexity": "moderate",
+      "lineRange": [325, 351]
+    },
+    {
+      "id": "function:internal/tui/model.go:View",
+      "type": "function",
+      "name": "View",
+      "summary": "Bubbletea View entry: interrupted banner, file explorer layout, or live pipeline progress UI.",
+      "tags": ["bubbletea", "view", "render"],
+      "complexity": "simple",
+      "lineRange": [362, 370]
+    },
+    {
+      "id": "function:internal/tui/model.go:viewExplorer",
+      "type": "function",
+      "name": "viewExplorer",
+      "summary": "Renders the file selector: header, path, scrollable listing with video highlighting, option badges, and help keys.",
+      "tags": ["explorer", "render", "lipgloss"],
+      "complexity": "complex",
+      "lineRange": [382, 489]
+    },
+    {
+      "id": "function:internal/tui/model.go:viewPipeline",
+      "type": "function",
+      "name": "viewPipeline",
+      "summary": "Renders pipeline UI: title, stage cards with progress, scrolling log pane, and status footer.",
+      "tags": ["pipeline", "render", "progress"],
+      "complexity": "complex",
+      "lineRange": [493, 571]
+    },
+    {
+      "id": "function:internal/tui/model.go:renderStage",
+      "type": "function",
+      "name": "renderStage",
+      "summary": "Renders one of the three pipeline stages with status icon, name, and progress bar or counters.",
+      "tags": ["render", "stage", "progress"],
+      "complexity": "moderate",
+      "lineRange": [573, 627]
+    }
+  ],
+  "edges": [
+    {
+      "source": "file:internal/config/config.go",
+      "target": "class:internal/config/config.go:Config",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:internal/config/config.go",
+      "target": "function:internal/config/config.go:ResolveProfile",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:internal/config/config.go",
+      "target": "function:internal/config/config.go:applyProfileDefaults",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:internal/config/config.go",
+      "target": "function:internal/config/config.go:Validate",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:internal/config/config.go",
+      "target": "function:internal/config/config.go:ProfileSummary",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:internal/config/config.go",
+      "target": "class:internal/config/config.go:Config",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:internal/config/config.go",
+      "target": "function:internal/config/config.go:ResolveProfile",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:internal/config/config.go",
+      "target": "function:internal/config/config.go:Validate",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:internal/config/config.go",
+      "target": "function:internal/config/config.go:ProfileSummary",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "class:internal/config/config.go:Config",
+      "target": "function:internal/config/config.go:ResolveProfile",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "class:internal/config/config.go:Config",
+      "target": "function:internal/config/config.go:Validate",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "function:internal/config/config.go:ResolveProfile",
+      "target": "function:internal/config/config.go:applyProfileDefaults",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:internal/config/config.go:ResolveProfile",
+      "target": "function:internal/hardware/profile.go:ParsePreset",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:internal/config/config.go:ResolveProfile",
+      "target": "function:internal/hardware/profile.go:AutoProfileWithPreset",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:internal/config/config.go:ProfileSummary",
+      "target": "function:internal/hardware/profile.go:String",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:internal/config/config.go",
+      "target": "file:internal/hardware/detect.go",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:internal/config/config.go",
+      "target": "file:internal/hardware/profile.go",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:internal/config/config.go",
+      "target": "class:internal/hardware/profile.go:UpscaleProfile",
+      "type": "depends_on",
+      "direction": "forward",
+      "weight": 0.6
+    },
+    {
+      "source": "file:internal/hardware/detect.go",
+      "target": "function:internal/hardware/detect.go:CheckDeps",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:internal/hardware/detect.go",
+      "target": "function:internal/hardware/detect.go:HasNVIDIA",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:internal/hardware/detect.go",
+      "target": "function:internal/hardware/detect.go:Framerate",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:internal/hardware/detect.go",
+      "target": "function:internal/hardware/detect.go:HasAudio",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:internal/hardware/detect.go",
+      "target": "function:internal/hardware/detect.go:CheckDeps",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:internal/hardware/detect.go",
+      "target": "function:internal/hardware/detect.go:HasNVIDIA",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:internal/hardware/detect.go",
+      "target": "function:internal/hardware/detect.go:Framerate",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:internal/hardware/detect.go",
+      "target": "function:internal/hardware/detect.go:HasAudio",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:internal/hardware/profile.go",
+      "target": "class:internal/hardware/profile.go:GPUInfo",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:internal/hardware/profile.go",
+      "target": "class:internal/hardware/profile.go:UpscaleProfile",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:internal/hardware/profile.go",
+      "target": "function:internal/hardware/profile.go:AllPresets",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:internal/hardware/profile.go",
+      "target": "function:internal/hardware/profile.go:ParsePreset",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:internal/hardware/profile.go",
+      "target": "function:internal/hardware/profile.go:String",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:internal/hardware/profile.go",
+      "target": "function:internal/hardware/profile.go:DetectGPU",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:internal/hardware/profile.go",
+      "target": "function:internal/hardware/profile.go:DetectGPUCount",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:internal/hardware/profile.go",
+      "target": "function:internal/hardware/profile.go:classifyTier",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:internal/hardware/profile.go",
+      "target": "function:internal/hardware/profile.go:profileDB",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:internal/hardware/profile.go",
+      "target": "function:internal/hardware/profile.go:GetProfile",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:internal/hardware/profile.go",
+      "target": "function:internal/hardware/profile.go:GetDefaultProfile",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:internal/hardware/profile.go",
+      "target": "function:internal/hardware/profile.go:AutoProfile",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:internal/hardware/profile.go",
+      "target": "function:internal/hardware/profile.go:AutoProfileWithPreset",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:internal/hardware/profile.go",
+      "target": "function:internal/hardware/profile.go:ProfileSummary",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:internal/hardware/profile.go",
+      "target": "function:internal/hardware/profile.go:ProfileDisplay",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:internal/hardware/profile.go",
+      "target": "function:internal/hardware/profile.go:maxSafeTile",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:internal/hardware/profile.go",
+      "target": "function:internal/hardware/profile.go:CheckTileSafety",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:internal/hardware/profile.go",
+      "target": "class:internal/hardware/profile.go:GPUInfo",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:internal/hardware/profile.go",
+      "target": "class:internal/hardware/profile.go:UpscaleProfile",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:internal/hardware/profile.go",
+      "target": "function:internal/hardware/profile.go:AllPresets",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:internal/hardware/profile.go",
+      "target": "function:internal/hardware/profile.go:ParsePreset",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:internal/hardware/profile.go",
+      "target": "function:internal/hardware/profile.go:DetectGPU",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:internal/hardware/profile.go",
+      "target": "function:internal/hardware/profile.go:DetectGPUCount",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:internal/hardware/profile.go",
+      "target": "function:internal/hardware/profile.go:GetProfile",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:internal/hardware/profile.go",
+      "target": "function:internal/hardware/profile.go:GetDefaultProfile",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:internal/hardware/profile.go",
+      "target": "function:internal/hardware/profile.go:AutoProfile",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:internal/hardware/profile.go",
+      "target": "function:internal/hardware/profile.go:AutoProfileWithPreset",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:internal/hardware/profile.go",
+      "target": "function:internal/hardware/profile.go:ProfileSummary",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:internal/hardware/profile.go",
+      "target": "function:internal/hardware/profile.go:ProfileDisplay",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:internal/hardware/profile.go",
+      "target": "function:internal/hardware/profile.go:CheckTileSafety",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "class:internal/hardware/profile.go:UpscaleProfile",
+      "target": "function:internal/hardware/profile.go:String",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "function:internal/hardware/profile.go:GetProfile",
+      "target": "function:internal/hardware/profile.go:profileDB",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:internal/hardware/profile.go:GetDefaultProfile",
+      "target": "function:internal/hardware/profile.go:GetProfile",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:internal/hardware/profile.go:AutoProfile",
+      "target": "function:internal/hardware/profile.go:DetectGPU",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:internal/hardware/profile.go:AutoProfile",
+      "target": "function:internal/hardware/profile.go:classifyTier",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:internal/hardware/profile.go:AutoProfile",
+      "target": "function:internal/hardware/profile.go:GetProfile",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:internal/hardware/profile.go:AutoProfileWithPreset",
+      "target": "function:internal/hardware/profile.go:DetectGPU",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:internal/hardware/profile.go:AutoProfileWithPreset",
+      "target": "function:internal/hardware/profile.go:classifyTier",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:internal/hardware/profile.go:AutoProfileWithPreset",
+      "target": "function:internal/hardware/profile.go:GetProfile",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:internal/hardware/profile.go:ProfileDisplay",
+      "target": "function:internal/hardware/profile.go:ProfileSummary",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:internal/hardware/profile.go:CheckTileSafety",
+      "target": "function:internal/hardware/profile.go:maxSafeTile",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:internal/pipeline/pipeline.go",
+      "target": "class:internal/pipeline/pipeline.go:Logger",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:internal/pipeline/pipeline.go",
+      "target": "class:internal/pipeline/pipeline.go:StdoutLogger",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:internal/pipeline/pipeline.go",
+      "target": "function:internal/pipeline/pipeline.go:Progress",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:internal/pipeline/pipeline.go",
+      "target": "function:internal/pipeline/pipeline.go:pipelineParams",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:internal/pipeline/pipeline.go",
+      "target": "function:internal/pipeline/pipeline.go:Run",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:internal/pipeline/pipeline.go",
+      "target": "function:internal/pipeline/pipeline.go:upscale",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:internal/pipeline/pipeline.go",
+      "target": "function:internal/pipeline/pipeline.go:runCmd",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:internal/pipeline/pipeline.go",
+      "target": "function:internal/pipeline/pipeline.go:countFiles",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:internal/pipeline/pipeline.go",
+      "target": "class:internal/pipeline/pipeline.go:Logger",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:internal/pipeline/pipeline.go",
+      "target": "class:internal/pipeline/pipeline.go:StdoutLogger",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:internal/pipeline/pipeline.go",
+      "target": "function:internal/pipeline/pipeline.go:Run",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "class:internal/pipeline/pipeline.go:StdoutLogger",
+      "target": "function:internal/pipeline/pipeline.go:Progress",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "class:internal/pipeline/pipeline.go:StdoutLogger",
+      "target": "class:internal/pipeline/pipeline.go:Logger",
+      "type": "implements",
+      "direction": "forward",
+      "weight": 0.9
+    },
+    {
+      "source": "function:internal/pipeline/pipeline.go:Run",
+      "target": "function:internal/config/config.go:Validate",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:internal/pipeline/pipeline.go:Run",
+      "target": "function:internal/hardware/detect.go:CheckDeps",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:internal/pipeline/pipeline.go:Run",
+      "target": "function:internal/pipeline/pipeline.go:pipelineParams",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:internal/pipeline/pipeline.go:Run",
+      "target": "function:internal/hardware/profile.go:DetectGPU",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:internal/pipeline/pipeline.go:Run",
+      "target": "function:internal/hardware/profile.go:ProfileSummary",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:internal/pipeline/pipeline.go:Run",
+      "target": "function:internal/hardware/profile.go:ProfileDisplay",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:internal/pipeline/pipeline.go:Run",
+      "target": "function:internal/hardware/profile.go:CheckTileSafety",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:internal/pipeline/pipeline.go:Run",
+      "target": "function:internal/hardware/detect.go:HasAudio",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:internal/pipeline/pipeline.go:Run",
+      "target": "function:internal/hardware/detect.go:Framerate",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:internal/pipeline/pipeline.go:Run",
+      "target": "function:internal/pipeline/pipeline.go:upscale",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:internal/pipeline/pipeline.go:Run",
+      "target": "function:internal/pipeline/pipeline.go:runCmd",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:internal/pipeline/pipeline.go:Run",
+      "target": "function:internal/pipeline/pipeline.go:countFiles",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:internal/pipeline/pipeline.go:upscale",
+      "target": "function:internal/pipeline/pipeline.go:countFiles",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:internal/pipeline/pipeline.go",
+      "target": "file:internal/config/config_test.go",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:internal/pipeline/pipeline.go",
+      "target": "file:internal/config/config.go",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:internal/pipeline/pipeline.go",
+      "target": "file:internal/hardware/detect.go",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:internal/pipeline/pipeline.go",
+      "target": "file:internal/hardware/profile.go",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:internal/pipeline/pipeline.go",
+      "target": "file:internal/config/config.go",
+      "type": "depends_on",
+      "direction": "forward",
+      "weight": 0.6
+    },
+    {
+      "source": "file:internal/pipeline/pipeline.go",
+      "target": "file:internal/hardware/profile.go",
+      "type": "depends_on",
+      "direction": "forward",
+      "weight": 0.6
+    },
+    {
+      "source": "file:internal/tui/model.go",
+      "target": "class:internal/tui/model.go:Model",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:internal/tui/model.go",
+      "target": "function:internal/tui/model.go:NewModel",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:internal/tui/model.go",
+      "target": "function:internal/tui/model.go:Init",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:internal/tui/model.go",
+      "target": "function:internal/tui/model.go:readDirCmd",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:internal/tui/model.go",
+      "target": "function:internal/tui/model.go:Update",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:internal/tui/model.go",
+      "target": "function:internal/tui/model.go:updateExplorer",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:internal/tui/model.go",
+      "target": "function:internal/tui/model.go:handlePipelineEvent",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:internal/tui/model.go",
+      "target": "function:internal/tui/model.go:View",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:internal/tui/model.go",
+      "target": "function:internal/tui/model.go:viewExplorer",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:internal/tui/model.go",
+      "target": "function:internal/tui/model.go:viewPipeline",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:internal/tui/model.go",
+      "target": "function:internal/tui/model.go:renderStage",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:internal/tui/model.go",
+      "target": "class:internal/tui/model.go:Model",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:internal/tui/model.go",
+      "target": "function:internal/tui/model.go:NewModel",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:internal/tui/model.go",
+      "target": "function:internal/tui/model.go:Init",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:internal/tui/model.go",
+      "target": "function:internal/tui/model.go:Update",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:internal/tui/model.go",
+      "target": "function:internal/tui/model.go:View",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "class:internal/tui/model.go:Model",
+      "target": "function:internal/tui/model.go:Init",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "class:internal/tui/model.go:Model",
+      "target": "function:internal/tui/model.go:Update",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "class:internal/tui/model.go:Model",
+      "target": "function:internal/tui/model.go:View",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "class:internal/tui/model.go:Model",
+      "target": "function:internal/tui/model.go:updateExplorer",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "class:internal/tui/model.go:Model",
+      "target": "function:internal/tui/model.go:handlePipelineEvent",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "function:internal/tui/model.go:NewModel",
+      "target": "function:internal/hardware/profile.go:ParsePreset",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:internal/tui/model.go:NewModel",
+      "target": "function:internal/hardware/profile.go:AutoProfileWithPreset",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:internal/tui/model.go:Init",
+      "target": "function:internal/tui/model.go:readDirCmd",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:internal/tui/model.go:Update",
+      "target": "function:internal/tui/model.go:updateExplorer",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:internal/tui/model.go:Update",
+      "target": "function:internal/tui/model.go:handlePipelineEvent",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:internal/tui/model.go:updateExplorer",
+      "target": "function:internal/hardware/profile.go:AllPresets",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:internal/tui/model.go:updateExplorer",
+      "target": "function:internal/hardware/profile.go:AutoProfileWithPreset",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:internal/tui/model.go:updateExplorer",
+      "target": "function:internal/pipeline/pipeline.go:Run",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:internal/tui/model.go:updateExplorer",
+      "target": "function:internal/tui/model.go:readDirCmd",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:internal/tui/model.go:View",
+      "target": "function:internal/tui/model.go:viewExplorer",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:internal/tui/model.go:View",
+      "target": "function:internal/tui/model.go:viewPipeline",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:internal/tui/model.go:viewPipeline",
+      "target": "function:internal/tui/model.go:renderStage",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:internal/tui/model.go",
+      "target": "file:internal/config/config_test.go",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:internal/tui/model.go",
+      "target": "file:internal/config/config.go",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:internal/tui/model.go",
+      "target": "file:internal/hardware/detect.go",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:internal/tui/model.go",
+      "target": "file:internal/hardware/profile.go",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:internal/tui/model.go",
+      "target": "file:internal/pipeline/pipeline_test.go",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:internal/tui/model.go",
+      "target": "file:internal/pipeline/pipeline.go",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:internal/tui/model.go",
+      "target": "file:internal/config/config.go",
+      "type": "depends_on",
+      "direction": "forward",
+      "weight": 0.6
+    },
+    {
+      "source": "file:internal/tui/model.go",
+      "target": "file:internal/pipeline/pipeline.go",
+      "type": "depends_on",
+      "direction": "forward",
+      "weight": 0.6
+    },
+    {
+      "source": "file:internal/tui/model.go",
+      "target": "file:internal/hardware/profile.go",
+      "type": "depends_on",
+      "direction": "forward",
+      "weight": 0.6
+    }
+  ]
+}

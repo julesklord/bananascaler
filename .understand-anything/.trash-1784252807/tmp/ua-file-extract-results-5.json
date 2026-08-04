@@ -1,0 +1,357 @@
+{
+  "scriptCompleted": true,
+  "filesAnalyzed": 6,
+  "filesSkipped": [],
+  "results": [
+    {
+      "path": "AGENTS.md",
+      "language": "markdown",
+      "fileCategory": "docs",
+      "totalLines": 142,
+      "nonEmptyLines": 115,
+      "sections": [
+        {
+          "heading": "AGENTS",
+          "level": 1,
+          "line": 1
+        },
+        {
+          "heading": "Available Skills",
+          "level": 2,
+          "line": 5
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0,
+        "sectionCount": 2
+      }
+    },
+    {
+      "path": "CHANGELOG.md",
+      "language": "markdown",
+      "fileCategory": "docs",
+      "totalLines": 96,
+      "nonEmptyLines": 70,
+      "sections": [
+        {
+          "heading": "Changelog",
+          "level": 1,
+          "line": 1
+        },
+        {
+          "heading": "[Unreleased]",
+          "level": 2,
+          "line": 6
+        },
+        {
+          "heading": "[0.4.0] - 2026-07-16",
+          "level": 2,
+          "line": 8
+        },
+        {
+          "heading": "Added",
+          "level": 3,
+          "line": 10
+        },
+        {
+          "heading": "Changed",
+          "level": 3,
+          "line": 20
+        },
+        {
+          "heading": "Fixed",
+          "level": 3,
+          "line": 27
+        },
+        {
+          "heading": "[0.3.0] - 2026-07-16",
+          "level": 2,
+          "line": 31
+        },
+        {
+          "heading": "Added",
+          "level": 3,
+          "line": 33
+        },
+        {
+          "heading": "Changed",
+          "level": 3,
+          "line": 43
+        },
+        {
+          "heading": "Fixed",
+          "level": 3,
+          "line": 56
+        },
+        {
+          "heading": "[0.2.0] - 2026-07-16",
+          "level": 2,
+          "line": 60
+        },
+        {
+          "heading": "Added",
+          "level": 3,
+          "line": 62
+        },
+        {
+          "heading": "Changed",
+          "level": 3,
+          "line": 72
+        },
+        {
+          "heading": "Fixed",
+          "level": 3,
+          "line": 79
+        },
+        {
+          "heading": "[0.1.0] - 2026-07-16",
+          "level": 2,
+          "line": 86
+        },
+        {
+          "heading": "Added",
+          "level": 3,
+          "line": 88
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0,
+        "sectionCount": 16
+      }
+    },
+    {
+      "path": "Makefile",
+      "language": "makefile",
+      "fileCategory": "infra",
+      "totalLines": 43,
+      "nonEmptyLines": 34,
+      "steps": [
+        {
+          "name": "build",
+          "startLine": 12,
+          "endLine": 17
+        },
+        {
+          "name": "install",
+          "startLine": 19,
+          "endLine": 23
+        },
+        {
+          "name": "tidy",
+          "startLine": 25,
+          "endLine": 27
+        },
+        {
+          "name": "test",
+          "startLine": 29,
+          "endLine": 31
+        },
+        {
+          "name": "vet",
+          "startLine": 33,
+          "endLine": 35
+        },
+        {
+          "name": "clean",
+          "startLine": 37,
+          "endLine": 40
+        },
+        {
+          "name": "help",
+          "startLine": 42,
+          "endLine": 44
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0,
+        "stepCount": 7
+      }
+    },
+    {
+      "path": "README.md",
+      "language": "markdown",
+      "fileCategory": "docs",
+      "totalLines": 432,
+      "nonEmptyLines": 332,
+      "sections": [
+        {
+          "heading": "Overview",
+          "level": 2,
+          "line": 54
+        },
+        {
+          "heading": "Requirements",
+          "level": 2,
+          "line": 64
+        },
+        {
+          "heading": "Build Requirements (from source)",
+          "level": 3,
+          "line": 72
+        },
+        {
+          "heading": "Installation",
+          "level": 2,
+          "line": 82
+        },
+        {
+          "heading": "Pre-built Binary",
+          "level": 3,
+          "line": 84
+        },
+        {
+          "heading": "From Source",
+          "level": 3,
+          "line": 91
+        },
+        {
+          "heading": "System-wide Install",
+          "level": 3,
+          "line": 100
+        },
+        {
+          "heading": "Dependencies (Arch Linux / CachyOS)",
+          "level": 3,
+          "line": 110
+        },
+        {
+          "heading": "Key Features",
+          "level": 2,
+          "line": 127
+        },
+        {
+          "heading": "Profiles",
+          "level": 2,
+          "line": 144
+        },
+        {
+          "heading": "Hardware Tiers",
+          "level": 3,
+          "line": 148
+        },
+        {
+          "heading": "Presets",
+          "level": 3,
+          "line": 157
+        },
+        {
+          "heading": "Profile Table",
+          "level": 3,
+          "line": 165
+        },
+        {
+          "heading": "VRAM Safety",
+          "level": 3,
+          "line": 183
+        },
+        {
+          "heading": "Technical Architecture",
+          "level": 2,
+          "line": 191
+        },
+        {
+          "heading": "Core Components",
+          "level": 3,
+          "line": 224
+        },
+        {
+          "heading": "Processing Pipeline",
+          "level": 2,
+          "line": 236
+        },
+        {
+          "heading": "Key Engineering Decisions",
+          "level": 3,
+          "line": 264
+        },
+        {
+          "heading": "Usage",
+          "level": 2,
+          "line": 276
+        },
+        {
+          "heading": "CLI Mode",
+          "level": 3,
+          "line": 278
+        },
+        {
+          "heading": "TUI File-Selection Mode",
+          "level": 3,
+          "line": 286
+        },
+        {
+          "heading": "Flags",
+          "level": 3,
+          "line": 297
+        },
+        {
+          "heading": "Examples",
+          "level": 3,
+          "line": 312
+        },
+        {
+          "heading": "TUI Dashboard",
+          "level": 2,
+          "line": 359
+        },
+        {
+          "heading": "File Selection (v0.3.0+)",
+          "level": 3,
+          "line": 361
+        },
+        {
+          "heading": "Pipeline Progress",
+          "level": 3,
+          "line": 379
+        },
+        {
+          "heading": "Roadmap & Milestones",
+          "level": 2,
+          "line": 409
+        },
+        {
+          "heading": "Acknowledgments",
+          "level": 2,
+          "line": 421
+        },
+        {
+          "heading": "License",
+          "level": 2,
+          "line": 427
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0,
+        "sectionCount": 29
+      }
+    },
+    {
+      "path": "go.mod",
+      "language": "mod",
+      "fileCategory": "config",
+      "totalLines": 35,
+      "nonEmptyLines": 32,
+      "metrics": {}
+    },
+    {
+      "path": "go.sum",
+      "language": "sum",
+      "fileCategory": "config",
+      "totalLines": 60,
+      "nonEmptyLines": 60,
+      "metrics": {}
+    }
+  ]
+}

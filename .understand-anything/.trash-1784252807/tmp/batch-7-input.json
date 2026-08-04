@@ -1,0 +1,44 @@
+{
+  "batchIndex": 7,
+  "totalBatches": 7,
+  "files": [
+    {
+      "path": ".understand-anything/.understandignore",
+      "language": "unknown",
+      "sizeLines": 45,
+      "fileCategory": "code"
+    },
+    {
+      "path": ".understand-anything/config.json",
+      "language": "json",
+      "sizeLines": 1,
+      "fileCategory": "config"
+    },
+    {
+      "path": ".understand-anything/intermediate/scan-raw.json",
+      "language": "json",
+      "sizeLines": 213,
+      "fileCategory": "config"
+    },
+    {
+      "path": "docs/demo.tape",
+      "language": "tape",
+      "sizeLines": 20,
+      "fileCategory": "code"
+    },
+    {
+      "path": "VERSION",
+      "language": "unknown",
+      "sizeLines": 1,
+      "fileCategory": "code"
+    }
+  ],
+  "batchImportData": {
+    ".understand-anything/.understandignore": [],
+    ".understand-anything/config.json": [],
+    ".understand-anything/intermediate/scan-raw.json": [],
+    "docs/demo.tape": [],
+    "VERSION": []
+  },
+  "neighborMap": {}
+}

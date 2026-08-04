@@ -1,0 +1,57 @@
+{
+  "projectRoot": "/mnt/DEV/Proyectos/repos/video-upscaler-gpu",
+  "batchFiles": [
+    {
+      "path": "internal/config/config.go",
+      "language": "go",
+      "sizeLines": 117,
+      "fileCategory": "code"
+    },
+    {
+      "path": "internal/hardware/detect.go",
+      "language": "go",
+      "sizeLines": 62,
+      "fileCategory": "code"
+    },
+    {
+      "path": "internal/hardware/profile.go",
+      "language": "go",
+      "sizeLines": 483,
+      "fileCategory": "code"
+    },
+    {
+      "path": "internal/pipeline/pipeline.go",
+      "language": "go",
+      "sizeLines": 317,
+      "fileCategory": "code"
+    },
+    {
+      "path": "internal/tui/model.go",
+      "language": "go",
+      "sizeLines": 672,
+      "fileCategory": "code"
+    }
+  ],
+  "batchImportData": {
+    "internal/config/config.go": [
+      "internal/hardware/detect.go",
+      "internal/hardware/profile.go"
+    ],
+    "internal/hardware/detect.go": [],
+    "internal/hardware/profile.go": [],
+    "internal/pipeline/pipeline.go": [
+      "internal/config/config_test.go",
+      "internal/config/config.go",
+      "internal/hardware/detect.go",
+      "internal/hardware/profile.go"
+    ],
+    "internal/tui/model.go": [
+      "internal/config/config_test.go",
+      "internal/config/config.go",
+      "internal/hardware/detect.go",
+      "internal/hardware/profile.go",
+      "internal/pipeline/pipeline_test.go",
+      "internal/pipeline/pipeline.go"
+    ]
+  }
+}

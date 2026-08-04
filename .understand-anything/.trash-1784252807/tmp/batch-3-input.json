@@ -1,0 +1,164 @@
+{
+  "batchIndex": 3,
+  "totalBatches": 7,
+  "files": [
+    {
+      "path": "internal/config/config_test.go",
+      "language": "go",
+      "sizeLines": 93,
+      "fileCategory": "code"
+    },
+    {
+      "path": "internal/pipeline/pipeline_test.go",
+      "language": "go",
+      "sizeLines": 198,
+      "fileCategory": "code"
+    },
+    {
+      "path": "internal/tui/pipeline_adapter.go",
+      "language": "go",
+      "sizeLines": 98,
+      "fileCategory": "code"
+    }
+  ],
+  "batchImportData": {
+    "internal/config/config_test.go": [],
+    "internal/pipeline/pipeline_test.go": [
+      "internal/config/config_test.go",
+      "internal/config/config.go"
+    ],
+    "internal/tui/pipeline_adapter.go": [
+      "internal/config/config_test.go",
+      "internal/config/config.go",
+      "internal/pipeline/pipeline_test.go",
+      "internal/pipeline/pipeline.go"
+    ]
+  },
+  "neighborMap": {
+    "internal/config/config_test.go": [
+      {
+        "path": "cmd/root.go",
+        "batchIndex": 1,
+        "symbols": [
+          "Execute"
+        ]
+      },
+      {
+        "path": "internal/pipeline/pipeline.go",
+        "batchIndex": 2,
+        "symbols": [
+          "Logger",
+          "StdoutLogger",
+          "Info",
+          "OK",
+          "Warn",
+          "Step",
+          "Err",
+          "Progress",
+          "Run"
+        ]
+      },
+      {
+        "path": "internal/tui/messages.go",
+        "batchIndex": 1,
+        "symbols": [
+          "PipelineEvent"
+        ]
+      },
+      {
+        "path": "internal/tui/model_test.go",
+        "batchIndex": 1,
+        "symbols": [
+          "TestIsVideoFile",
+          "TestShortModel",
+          "TestModelExplorerKeybinds",
+          "TestModelExplorerNavigation"
+        ]
+      },
+      {
+        "path": "internal/tui/model.go",
+        "batchIndex": 2,
+        "symbols": [
+          "Model",
+          "NewModel",
+          "Events",
+          "SetDone",
+          "Init",
+          "Update",
+          "View"
+        ]
+      }
+    ],
+    "internal/pipeline/pipeline_test.go": [
+      {
+        "path": "internal/config/config.go",
+        "batchIndex": 2,
+        "symbols": [
+          "Config",
+          "ResolveProfile",
+          "Validate",
+          "ProfileSummary"
+        ]
+      },
+      {
+        "path": "cmd/root.go",
+        "batchIndex": 1,
+        "symbols": [
+          "Execute"
+        ]
+      },
+      {
+        "path": "internal/tui/model.go",
+        "batchIndex": 2,
+        "symbols": [
+          "Model",
+          "NewModel",
+          "Events",
+          "SetDone",
+          "Init",
+          "Update",
+          "View"
+        ]
+      }
+    ],
+    "internal/tui/pipeline_adapter.go": [
+      {
+        "path": "internal/config/config.go",
+        "batchIndex": 2,
+        "symbols": [
+          "Config",
+          "ResolveProfile",
+          "Validate",
+          "ProfileSummary"
+        ]
+      },
+      {
+        "path": "internal/pipeline/pipeline.go",
+        "batchIndex": 2,
+        "symbols": [
+          "Logger",
+          "StdoutLogger",
+          "Info",
+          "OK",
+          "Warn",
+          "Step",
+          "Err",
+          "Progress",
+          "Run"
+        ]
+      },
+      {
+        "path": "cmd/root.go",
+        "batchIndex": 1,
+        "symbols": [
+          "Execute"
+        ]
+      },
+      {
+        "path": "cmd/tui.go",
+        "batchIndex": 1,
+        "symbols": []
+      }
+    ]
+  }
+}

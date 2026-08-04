@@ -1,0 +1,36 @@
+{
+  "projectRoot": "/mnt/DEV/Proyectos/repos/video-upscaler-gpu",
+  "batchFiles": [
+    {
+      "path": "internal/config/config_test.go",
+      "language": "go",
+      "sizeLines": 93,
+      "fileCategory": "code"
+    },
+    {
+      "path": "internal/pipeline/pipeline_test.go",
+      "language": "go",
+      "sizeLines": 198,
+      "fileCategory": "code"
+    },
+    {
+      "path": "internal/tui/pipeline_adapter.go",
+      "language": "go",
+      "sizeLines": 98,
+      "fileCategory": "code"
+    }
+  ],
+  "batchImportData": {
+    "internal/config/config_test.go": [],
+    "internal/pipeline/pipeline_test.go": [
+      "internal/config/config_test.go",
+      "internal/config/config.go"
+    ],
+    "internal/tui/pipeline_adapter.go": [
+      "internal/config/config_test.go",
+      "internal/config/config.go",
+      "internal/pipeline/pipeline_test.go",
+      "internal/pipeline/pipeline.go"
+    ]
+  }
+}

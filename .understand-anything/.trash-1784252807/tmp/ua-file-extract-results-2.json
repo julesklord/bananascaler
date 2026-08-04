@@ -1,0 +1,3099 @@
+{
+  "scriptCompleted": true,
+  "filesAnalyzed": 5,
+  "filesSkipped": [],
+  "results": [
+    {
+      "path": "internal/config/config.go",
+      "language": "go",
+      "fileCategory": "code",
+      "totalLines": 117,
+      "nonEmptyLines": 102,
+      "functions": [
+        {
+          "name": "ResolveProfile",
+          "startLine": 33,
+          "endLine": 65,
+          "params": []
+        },
+        {
+          "name": "applyProfileDefaults",
+          "startLine": 69,
+          "endLine": 84,
+          "params": []
+        },
+        {
+          "name": "Validate",
+          "startLine": 87,
+          "endLine": 109,
+          "params": []
+        },
+        {
+          "name": "ProfileSummary",
+          "startLine": 112,
+          "endLine": 117,
+          "params": []
+        }
+      ],
+      "classes": [
+        {
+          "name": "Config",
+          "startLine": 16,
+          "endLine": 29,
+          "methods": [
+            "ResolveProfile",
+            "applyProfileDefaults",
+            "Validate",
+            "ProfileSummary"
+          ],
+          "properties": [
+            "Input",
+            "Output",
+            "Scale",
+            "GPU",
+            "Model",
+            "Verbose",
+            "NoTUI",
+            "Profile",
+            "AutoDetect",
+            "PresetStr"
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "name": "Config",
+          "line": 16,
+          "isDefault": false
+        },
+        {
+          "name": "ResolveProfile",
+          "line": 33,
+          "isDefault": false
+        },
+        {
+          "name": "Validate",
+          "line": 87,
+          "isDefault": false
+        },
+        {
+          "name": "ProfileSummary",
+          "line": 112,
+          "isDefault": false
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "ResolveProfile",
+          "callee": "hardware.ParsePreset",
+          "lineNumber": 39
+        },
+        {
+          "caller": "ResolveProfile",
+          "callee": "hardware.AutoProfileWithPreset",
+          "lineNumber": 44
+        },
+        {
+          "caller": "ResolveProfile",
+          "callee": "c.applyProfileDefaults",
+          "lineNumber": 46
+        },
+        {
+          "caller": "ResolveProfile",
+          "callee": "hardware.ParsePreset",
+          "lineNumber": 50
+        },
+        {
+          "caller": "ResolveProfile",
+          "callee": "hardware.AutoProfileWithPreset",
+          "lineNumber": 55
+        },
+        {
+          "caller": "ResolveProfile",
+          "callee": "c.applyProfileDefaults",
+          "lineNumber": 57
+        },
+        {
+          "caller": "Validate",
+          "callee": "fmt.Errorf",
+          "lineNumber": 89
+        },
+        {
+          "caller": "Validate",
+          "callee": "os.Stat",
+          "lineNumber": 91
+        },
+        {
+          "caller": "Validate",
+          "callee": "fmt.Errorf",
+          "lineNumber": 92
+        },
+        {
+          "caller": "Validate",
+          "callee": "filepath.Dir",
+          "lineNumber": 95
+        },
+        {
+          "caller": "Validate",
+          "callee": "strings.TrimSuffix",
+          "lineNumber": 96
+        },
+        {
+          "caller": "Validate",
+          "callee": "filepath.Base",
+          "lineNumber": 96
+        },
+        {
+          "caller": "Validate",
+          "callee": "filepath.Ext",
+          "lineNumber": 96
+        },
+        {
+          "caller": "Validate",
+          "callee": "filepath.Join",
+          "lineNumber": 97
+        },
+        {
+          "caller": "Validate",
+          "callee": "fmt.Errorf",
+          "lineNumber": 105
+        },
+        {
+          "caller": "ProfileSummary",
+          "callee": "fmt.Sprintf",
+          "lineNumber": 114
+        },
+        {
+          "caller": "ProfileSummary",
+          "callee": "c.Profile.String",
+          "lineNumber": 116
+        }
+      ],
+      "metrics": {
+        "importCount": 2,
+        "exportCount": 4,
+        "functionCount": 4,
+        "classCount": 1
+      }
+    },
+    {
+      "path": "internal/hardware/detect.go",
+      "language": "go",
+      "fileCategory": "code",
+      "totalLines": 62,
+      "nonEmptyLines": 57,
+      "functions": [
+        {
+          "name": "CheckDeps",
+          "startLine": 14,
+          "endLine": 21,
+          "params": []
+        },
+        {
+          "name": "HasNVIDIA",
+          "startLine": 24,
+          "endLine": 28,
+          "params": []
+        },
+        {
+          "name": "Framerate",
+          "startLine": 31,
+          "endLine": 47,
+          "params": [
+            "input"
+          ]
+        },
+        {
+          "name": "HasAudio",
+          "startLine": 50,
+          "endLine": 62,
+          "params": [
+            "input"
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "name": "CheckDeps",
+          "line": 14,
+          "isDefault": false
+        },
+        {
+          "name": "HasNVIDIA",
+          "line": 24,
+          "isDefault": false
+        },
+        {
+          "name": "Framerate",
+          "line": 31,
+          "isDefault": false
+        },
+        {
+          "name": "HasAudio",
+          "line": 50,
+          "isDefault": false
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "CheckDeps",
+          "callee": "exec.LookPath",
+          "lineNumber": 16
+        },
+        {
+          "caller": "CheckDeps",
+          "callee": "fmt.Errorf",
+          "lineNumber": 17
+        },
+        {
+          "caller": "HasNVIDIA",
+          "callee": "context.WithTimeout",
+          "lineNumber": 25
+        },
+        {
+          "caller": "HasNVIDIA",
+          "callee": "context.Background",
+          "lineNumber": 25
+        },
+        {
+          "caller": "HasNVIDIA",
+          "callee": "cancel",
+          "lineNumber": 26
+        },
+        {
+          "caller": "HasNVIDIA",
+          "callee": "exec.CommandContext(ctx, \"nvidia-smi\").Run",
+          "lineNumber": 27
+        },
+        {
+          "caller": "HasNVIDIA",
+          "callee": "exec.CommandContext",
+          "lineNumber": 27
+        },
+        {
+          "caller": "Framerate",
+          "callee": "exec.Command(\"ffprobe\",\n\t\t\"-v\", \"error\",\n\t\t\"-select_streams\", \"v:0\",\n\t\t\"-show_entries\", \"stream=r_frame_rate\",\n\t\t\"-of\", \"default=noprint_wrappers=1:nokey=1\",\n\t\tinput,\n\t).Output",
+          "lineNumber": 32
+        },
+        {
+          "caller": "Framerate",
+          "callee": "exec.Command",
+          "lineNumber": 32
+        },
+        {
+          "caller": "Framerate",
+          "callee": "fmt.Errorf",
+          "lineNumber": 40
+        },
+        {
+          "caller": "Framerate",
+          "callee": "strings.TrimSpace",
+          "lineNumber": 42
+        },
+        {
+          "caller": "Framerate",
+          "callee": "string",
+          "lineNumber": 42
+        },
+        {
+          "caller": "Framerate",
+          "callee": "fmt.Errorf",
+          "lineNumber": 44
+        },
+        {
+          "caller": "HasAudio",
+          "callee": "exec.Command(\"ffprobe\",\n\t\t\"-v\", \"error\",\n\t\t\"-select_streams\", \"a\",\n\t\t\"-show_entries\", \"stream=index\",\n\t\t\"-of\", \"csv=p=0\",\n\t\tinput,\n\t).Output",
+          "lineNumber": 51
+        },
+        {
+          "caller": "HasAudio",
+          "callee": "exec.Command",
+          "lineNumber": 51
+        },
+        {
+          "caller": "HasAudio",
+          "callee": "fmt.Errorf",
+          "lineNumber": 59
+        },
+        {
+          "caller": "HasAudio",
+          "callee": "strings.TrimSpace",
+          "lineNumber": 61
+        },
+        {
+          "caller": "HasAudio",
+          "callee": "string",
+          "lineNumber": 61
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 4,
+        "functionCount": 4,
+        "classCount": 0
+      }
+    },
+    {
+      "path": "internal/hardware/profile.go",
+      "language": "go",
+      "fileCategory": "code",
+      "totalLines": 483,
+      "nonEmptyLines": 446,
+      "functions": [
+        {
+          "name": "AllPresets",
+          "startLine": 25,
+          "endLine": 27,
+          "params": []
+        },
+        {
+          "name": "ParsePreset",
+          "startLine": 30,
+          "endLine": 41,
+          "params": [
+            "s"
+          ]
+        },
+        {
+          "name": "String",
+          "startLine": 86,
+          "endLine": 89,
+          "params": []
+        },
+        {
+          "name": "shortModelName",
+          "startLine": 91,
+          "endLine": 95,
+          "params": [
+            "m"
+          ]
+        },
+        {
+          "name": "DetectGPU",
+          "startLine": 101,
+          "endLine": 137,
+          "params": []
+        },
+        {
+          "name": "DetectGPUCount",
+          "startLine": 140,
+          "endLine": 158,
+          "params": []
+        },
+        {
+          "name": "classifyTier",
+          "startLine": 162,
+          "endLine": 174,
+          "params": [
+            "info"
+          ]
+        },
+        {
+          "name": "profileDB",
+          "startLine": 189,
+          "endLine": 348,
+          "params": []
+        },
+        {
+          "name": "GetProfile",
+          "startLine": 351,
+          "endLine": 360,
+          "params": [
+            "tier",
+            "preset"
+          ]
+        },
+        {
+          "name": "GetDefaultProfile",
+          "startLine": 363,
+          "endLine": 365,
+          "params": [
+            "tier"
+          ]
+        },
+        {
+          "name": "AutoProfile",
+          "startLine": 369,
+          "endLine": 374,
+          "params": []
+        },
+        {
+          "name": "AutoProfileWithPreset",
+          "startLine": 378,
+          "endLine": 383,
+          "params": [
+            "preset"
+          ]
+        },
+        {
+          "name": "ProfileSummary",
+          "startLine": 386,
+          "endLine": 404,
+          "params": [
+            "info",
+            "p"
+          ]
+        },
+        {
+          "name": "ProfileDisplay",
+          "startLine": 407,
+          "endLine": 421,
+          "params": [
+            "info",
+            "p"
+          ]
+        },
+        {
+          "name": "maxSafeTile",
+          "startLine": 427,
+          "endLine": 468,
+          "params": [
+            "vramMB",
+            "model"
+          ]
+        },
+        {
+          "name": "CheckTileSafety",
+          "startLine": 472,
+          "endLine": 483,
+          "params": [
+            "info",
+            "tile",
+            "model"
+          ]
+        }
+      ],
+      "classes": [
+        {
+          "name": "GPUInfo",
+          "startLine": 54,
+          "endLine": 59,
+          "methods": [],
+          "properties": [
+            "Name",
+            "VRAMMB",
+            "HasNVIDIA",
+            "CPUCores"
+          ]
+        },
+        {
+          "name": "UpscaleProfile",
+          "startLine": 62,
+          "endLine": 83,
+          "methods": [
+            "String"
+          ],
+          "properties": [
+            "Tier",
+            "Preset",
+            "Description",
+            "TileSize",
+            "Model",
+            "JPEGQuality",
+            "NVEncPreset",
+            "X265Preset",
+            "X265CRF",
+            "MaxScale"
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "name": "AllPresets",
+          "line": 25,
+          "isDefault": false
+        },
+        {
+          "name": "ParsePreset",
+          "line": 30,
+          "isDefault": false
+        },
+        {
+          "name": "GPUInfo",
+          "line": 54,
+          "isDefault": false
+        },
+        {
+          "name": "UpscaleProfile",
+          "line": 62,
+          "isDefault": false
+        },
+        {
+          "name": "String",
+          "line": 86,
+          "isDefault": false
+        },
+        {
+          "name": "DetectGPU",
+          "line": 101,
+          "isDefault": false
+        },
+        {
+          "name": "DetectGPUCount",
+          "line": 140,
+          "isDefault": false
+        },
+        {
+          "name": "GetProfile",
+          "line": 351,
+          "isDefault": false
+        },
+        {
+          "name": "GetDefaultProfile",
+          "line": 363,
+          "isDefault": false
+        },
+        {
+          "name": "AutoProfile",
+          "line": 369,
+          "isDefault": false
+        },
+        {
+          "name": "AutoProfileWithPreset",
+          "line": 378,
+          "isDefault": false
+        },
+        {
+          "name": "ProfileSummary",
+          "line": 386,
+          "isDefault": false
+        },
+        {
+          "name": "ProfileDisplay",
+          "line": 407,
+          "isDefault": false
+        },
+        {
+          "name": "CheckTileSafety",
+          "line": 472,
+          "isDefault": false
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "ParsePreset",
+          "callee": "strings.ToLower",
+          "lineNumber": 31
+        },
+        {
+          "caller": "ParsePreset",
+          "callee": "fmt.Errorf",
+          "lineNumber": 39
+        },
+        {
+          "caller": "String",
+          "callee": "fmt.Sprintf",
+          "lineNumber": 87
+        },
+        {
+          "caller": "String",
+          "callee": "shortModelName",
+          "lineNumber": 88
+        },
+        {
+          "caller": "shortModelName",
+          "callee": "strings.TrimPrefix",
+          "lineNumber": 92
+        },
+        {
+          "caller": "shortModelName",
+          "callee": "strings.TrimPrefix",
+          "lineNumber": 93
+        },
+        {
+          "caller": "DetectGPU",
+          "callee": "runtime.NumCPU",
+          "lineNumber": 103
+        },
+        {
+          "caller": "DetectGPU",
+          "callee": "context.WithTimeout",
+          "lineNumber": 106
+        },
+        {
+          "caller": "DetectGPU",
+          "callee": "context.Background",
+          "lineNumber": 106
+        },
+        {
+          "caller": "DetectGPU",
+          "callee": "cancel",
+          "lineNumber": 107
+        },
+        {
+          "caller": "DetectGPU",
+          "callee": "exec.CommandContext(ctx, \"nvidia-smi\",\n\t\t\"--query-gpu=name\", \"--format=csv,noheader\",\n\t).Output",
+          "lineNumber": 110
+        },
+        {
+          "caller": "DetectGPU",
+          "callee": "exec.CommandContext",
+          "lineNumber": 110
+        },
+        {
+          "caller": "DetectGPU",
+          "callee": "strings.TrimSpace",
+          "lineNumber": 113
+        },
+        {
+          "caller": "DetectGPU",
+          "callee": "string",
+          "lineNumber": 113
+        },
+        {
+          "caller": "DetectGPU",
+          "callee": "context.WithTimeout",
+          "lineNumber": 125
+        },
+        {
+          "caller": "DetectGPU",
+          "callee": "context.Background",
+          "lineNumber": 125
+        },
+        {
+          "caller": "DetectGPU",
+          "callee": "cancel2",
+          "lineNumber": 126
+        },
+        {
+          "caller": "DetectGPU",
+          "callee": "exec.CommandContext(ctx2, \"nvidia-smi\",\n\t\t\"--query-gpu=memory.total\", \"--format=csv,noheader,nounits\",\n\t).Output",
+          "lineNumber": 127
+        },
+        {
+          "caller": "DetectGPU",
+          "callee": "exec.CommandContext",
+          "lineNumber": 127
+        },
+        {
+          "caller": "DetectGPU",
+          "callee": "strings.TrimSpace",
+          "lineNumber": 130
+        },
+        {
+          "caller": "DetectGPU",
+          "callee": "string",
+          "lineNumber": 130
+        },
+        {
+          "caller": "DetectGPU",
+          "callee": "strconv.Atoi",
+          "lineNumber": 131
+        },
+        {
+          "caller": "DetectGPUCount",
+          "callee": "context.WithTimeout",
+          "lineNumber": 141
+        },
+        {
+          "caller": "DetectGPUCount",
+          "callee": "context.Background",
+          "lineNumber": 141
+        },
+        {
+          "caller": "DetectGPUCount",
+          "callee": "cancel",
+          "lineNumber": 142
+        },
+        {
+          "caller": "DetectGPUCount",
+          "callee": "exec.CommandContext(ctx, \"nvidia-smi\",\n\t\t\"--query-gpu=index\", \"--format=csv,noheader\",\n\t).Output",
+          "lineNumber": 143
+        },
+        {
+          "caller": "DetectGPUCount",
+          "callee": "exec.CommandContext",
+          "lineNumber": 143
+        },
+        {
+          "caller": "DetectGPUCount",
+          "callee": "strings.Split",
+          "lineNumber": 149
+        },
+        {
+          "caller": "DetectGPUCount",
+          "callee": "strings.TrimSpace",
+          "lineNumber": 149
+        },
+        {
+          "caller": "DetectGPUCount",
+          "callee": "string",
+          "lineNumber": 149
+        },
+        {
+          "caller": "DetectGPUCount",
+          "callee": "strings.TrimSpace",
+          "lineNumber": 152
+        },
+        {
+          "caller": "GetProfile",
+          "callee": "profileDB",
+          "lineNumber": 352
+        },
+        {
+          "caller": "GetDefaultProfile",
+          "callee": "GetProfile",
+          "lineNumber": 364
+        },
+        {
+          "caller": "AutoProfile",
+          "callee": "DetectGPU",
+          "lineNumber": 370
+        },
+        {
+          "caller": "AutoProfile",
+          "callee": "classifyTier",
+          "lineNumber": 371
+        },
+        {
+          "caller": "AutoProfile",
+          "callee": "GetProfile",
+          "lineNumber": 372
+        },
+        {
+          "caller": "AutoProfileWithPreset",
+          "callee": "DetectGPU",
+          "lineNumber": 379
+        },
+        {
+          "caller": "AutoProfileWithPreset",
+          "callee": "classifyTier",
+          "lineNumber": 380
+        },
+        {
+          "caller": "AutoProfileWithPreset",
+          "callee": "GetProfile",
+          "lineNumber": 381
+        },
+        {
+          "caller": "ProfileSummary",
+          "callee": "fmt.Sprintf",
+          "lineNumber": 393
+        },
+        {
+          "caller": "ProfileSummary",
+          "callee": "fmt.Sprintf",
+          "lineNumber": 395
+        },
+        {
+          "caller": "ProfileSummary",
+          "callee": "float64",
+          "lineNumber": 395
+        },
+        {
+          "caller": "ProfileSummary",
+          "callee": "append",
+          "lineNumber": 397
+        },
+        {
+          "caller": "ProfileSummary",
+          "callee": "fmt.Sprintf",
+          "lineNumber": 397
+        },
+        {
+          "caller": "ProfileSummary",
+          "callee": "append",
+          "lineNumber": 399
+        },
+        {
+          "caller": "ProfileSummary",
+          "callee": "fmt.Sprintf",
+          "lineNumber": 399
+        },
+        {
+          "caller": "ProfileSummary",
+          "callee": "append",
+          "lineNumber": 401
+        },
+        {
+          "caller": "ProfileSummary",
+          "callee": "fmt.Sprintf",
+          "lineNumber": 401
+        },
+        {
+          "caller": "ProfileSummary",
+          "callee": "append",
+          "lineNumber": 402
+        },
+        {
+          "caller": "ProfileSummary",
+          "callee": "fmt.Sprintf",
+          "lineNumber": 402
+        },
+        {
+          "caller": "ProfileSummary",
+          "callee": "strings.Join",
+          "lineNumber": 403
+        },
+        {
+          "caller": "ProfileDisplay",
+          "callee": "b.WriteString",
+          "lineNumber": 409
+        },
+        {
+          "caller": "ProfileDisplay",
+          "callee": "fmt.Sprintf",
+          "lineNumber": 409
+        },
+        {
+          "caller": "ProfileDisplay",
+          "callee": "ProfileSummary",
+          "lineNumber": 409
+        },
+        {
+          "caller": "ProfileDisplay",
+          "callee": "b.WriteString",
+          "lineNumber": 410
+        },
+        {
+          "caller": "ProfileDisplay",
+          "callee": "fmt.Sprintf",
+          "lineNumber": 410
+        },
+        {
+          "caller": "ProfileDisplay",
+          "callee": "b.WriteString",
+          "lineNumber": 411
+        },
+        {
+          "caller": "ProfileDisplay",
+          "callee": "fmt.Sprintf",
+          "lineNumber": 411
+        },
+        {
+          "caller": "ProfileDisplay",
+          "callee": "b.WriteString",
+          "lineNumber": 412
+        },
+        {
+          "caller": "ProfileDisplay",
+          "callee": "fmt.Sprintf",
+          "lineNumber": 412
+        },
+        {
+          "caller": "ProfileDisplay",
+          "callee": "b.WriteString",
+          "lineNumber": 414
+        },
+        {
+          "caller": "ProfileDisplay",
+          "callee": "fmt.Sprintf",
+          "lineNumber": 414
+        },
+        {
+          "caller": "ProfileDisplay",
+          "callee": "b.WriteString",
+          "lineNumber": 416
+        },
+        {
+          "caller": "ProfileDisplay",
+          "callee": "b.WriteString",
+          "lineNumber": 418
+        },
+        {
+          "caller": "ProfileDisplay",
+          "callee": "fmt.Sprintf",
+          "lineNumber": 418
+        },
+        {
+          "caller": "ProfileDisplay",
+          "callee": "b.WriteString",
+          "lineNumber": 419
+        },
+        {
+          "caller": "ProfileDisplay",
+          "callee": "fmt.Sprintf",
+          "lineNumber": 419
+        },
+        {
+          "caller": "ProfileDisplay",
+          "callee": "b.String",
+          "lineNumber": 420
+        },
+        {
+          "caller": "maxSafeTile",
+          "callee": "strings.Contains",
+          "lineNumber": 432
+        },
+        {
+          "caller": "maxSafeTile",
+          "callee": "strings.Contains",
+          "lineNumber": 432
+        },
+        {
+          "caller": "maxSafeTile",
+          "callee": "strings.Contains",
+          "lineNumber": 434
+        },
+        {
+          "caller": "maxSafeTile",
+          "callee": "strings.Contains",
+          "lineNumber": 442
+        },
+        {
+          "caller": "maxSafeTile",
+          "callee": "strings.Contains",
+          "lineNumber": 442
+        },
+        {
+          "caller": "maxSafeTile",
+          "callee": "strings.Contains",
+          "lineNumber": 444
+        },
+        {
+          "caller": "maxSafeTile",
+          "callee": "strings.Contains",
+          "lineNumber": 452
+        },
+        {
+          "caller": "maxSafeTile",
+          "callee": "strings.Contains",
+          "lineNumber": 452
+        },
+        {
+          "caller": "maxSafeTile",
+          "callee": "strings.Contains",
+          "lineNumber": 454
+        },
+        {
+          "caller": "maxSafeTile",
+          "callee": "strings.Contains",
+          "lineNumber": 462
+        },
+        {
+          "caller": "CheckTileSafety",
+          "callee": "maxSafeTile",
+          "lineNumber": 476
+        },
+        {
+          "caller": "CheckTileSafety",
+          "callee": "fmt.Sprintf",
+          "lineNumber": 478
+        },
+        {
+          "caller": "CheckTileSafety",
+          "callee": "shortModelName",
+          "lineNumber": 480
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 14,
+        "functionCount": 16,
+        "classCount": 2
+      }
+    },
+    {
+      "path": "internal/pipeline/pipeline.go",
+      "language": "go",
+      "fileCategory": "code",
+      "totalLines": 317,
+      "nonEmptyLines": 280,
+      "functions": [
+        {
+          "name": "Info",
+          "startLine": 45,
+          "endLine": 45,
+          "params": [
+            "msg"
+          ]
+        },
+        {
+          "name": "OK",
+          "startLine": 46,
+          "endLine": 46,
+          "params": [
+            "msg"
+          ]
+        },
+        {
+          "name": "Warn",
+          "startLine": 47,
+          "endLine": 47,
+          "params": [
+            "msg"
+          ]
+        },
+        {
+          "name": "Step",
+          "startLine": 48,
+          "endLine": 48,
+          "params": [
+            "msg"
+          ]
+        },
+        {
+          "name": "Err",
+          "startLine": 49,
+          "endLine": 49,
+          "params": [
+            "msg"
+          ]
+        },
+        {
+          "name": "Progress",
+          "startLine": 50,
+          "endLine": 58,
+          "params": [
+            "stage",
+            "current",
+            "total"
+          ]
+        },
+        {
+          "name": "pipelineParams",
+          "startLine": 62,
+          "endLine": 79,
+          "params": [
+            "cfg"
+          ]
+        },
+        {
+          "name": "Run",
+          "startLine": 82,
+          "endLine": 243,
+          "params": [
+            "cfg",
+            "log"
+          ]
+        },
+        {
+          "name": "upscale",
+          "startLine": 247,
+          "endLine": 294,
+          "params": [
+            "ctx",
+            "cfg",
+            "log",
+            "tempIn",
+            "tempOut",
+            "total",
+            "tileSize"
+          ]
+        },
+        {
+          "name": "runCmd",
+          "startLine": 296,
+          "endLine": 303,
+          "params": [
+            "ctx",
+            "verbose",
+            "name"
+          ]
+        },
+        {
+          "name": "countFiles",
+          "startLine": 305,
+          "endLine": 317,
+          "params": [
+            "dir",
+            "ext"
+          ]
+        }
+      ],
+      "classes": [
+        {
+          "name": "Logger",
+          "startLine": 21,
+          "endLine": 28,
+          "methods": [
+            "Info",
+            "OK",
+            "Warn",
+            "Step",
+            "Err",
+            "Progress"
+          ],
+          "properties": []
+        },
+        {
+          "name": "StdoutLogger",
+          "startLine": 31,
+          "endLine": 33,
+          "methods": [
+            "Info",
+            "OK",
+            "Warn",
+            "Step",
+            "Err",
+            "Progress"
+          ],
+          "properties": [
+            "Verbose"
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "name": "Logger",
+          "line": 21,
+          "isDefault": false
+        },
+        {
+          "name": "StdoutLogger",
+          "line": 31,
+          "isDefault": false
+        },
+        {
+          "name": "Info",
+          "line": 45,
+          "isDefault": false
+        },
+        {
+          "name": "OK",
+          "line": 46,
+          "isDefault": false
+        },
+        {
+          "name": "Warn",
+          "line": 47,
+          "isDefault": false
+        },
+        {
+          "name": "Step",
+          "line": 48,
+          "isDefault": false
+        },
+        {
+          "name": "Err",
+          "line": 49,
+          "isDefault": false
+        },
+        {
+          "name": "Progress",
+          "line": 50,
+          "isDefault": false
+        },
+        {
+          "name": "Run",
+          "line": 82,
+          "isDefault": false
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "Info",
+          "callee": "fmt.Printf",
+          "lineNumber": 45
+        },
+        {
+          "caller": "OK",
+          "callee": "fmt.Printf",
+          "lineNumber": 46
+        },
+        {
+          "caller": "Warn",
+          "callee": "fmt.Printf",
+          "lineNumber": 47
+        },
+        {
+          "caller": "Step",
+          "callee": "fmt.Printf",
+          "lineNumber": 48
+        },
+        {
+          "caller": "Err",
+          "callee": "fmt.Fprintf",
+          "lineNumber": 49
+        },
+        {
+          "caller": "Progress",
+          "callee": "float64",
+          "lineNumber": 52
+        },
+        {
+          "caller": "Progress",
+          "callee": "float64",
+          "lineNumber": 52
+        },
+        {
+          "caller": "Progress",
+          "callee": "fmt.Printf",
+          "lineNumber": 53
+        },
+        {
+          "caller": "Progress",
+          "callee": "fmt.Println",
+          "lineNumber": 55
+        },
+        {
+          "caller": "Run",
+          "callee": "cfg.Validate",
+          "lineNumber": 83
+        },
+        {
+          "caller": "Run",
+          "callee": "hardware.CheckDeps",
+          "lineNumber": 87
+        },
+        {
+          "caller": "Run",
+          "callee": "pipelineParams",
+          "lineNumber": 92
+        },
+        {
+          "caller": "Run",
+          "callee": "hardware.DetectGPU",
+          "lineNumber": 95
+        },
+        {
+          "caller": "Run",
+          "callee": "log.Info",
+          "lineNumber": 100
+        },
+        {
+          "caller": "Run",
+          "callee": "append",
+          "lineNumber": 104
+        },
+        {
+          "caller": "Run",
+          "callee": "append",
+          "lineNumber": 106
+        },
+        {
+          "caller": "Run",
+          "callee": "log.Warn",
+          "lineNumber": 108
+        },
+        {
+          "caller": "Run",
+          "callee": "fmt.Sprintf",
+          "lineNumber": 110
+        },
+        {
+          "caller": "Run",
+          "callee": "append",
+          "lineNumber": 112
+        },
+        {
+          "caller": "Run",
+          "callee": "log.Info",
+          "lineNumber": 116
+        },
+        {
+          "caller": "Run",
+          "callee": "hardware.ProfileSummary",
+          "lineNumber": 116
+        },
+        {
+          "caller": "Run",
+          "callee": "log.Info",
+          "lineNumber": 118
+        },
+        {
+          "caller": "Run",
+          "callee": "hardware.ProfileDisplay",
+          "lineNumber": 118
+        },
+        {
+          "caller": "Run",
+          "callee": "log.Info",
+          "lineNumber": 121
+        },
+        {
+          "caller": "Run",
+          "callee": "fmt.Sprintf",
+          "lineNumber": 121
+        },
+        {
+          "caller": "Run",
+          "callee": "hardware.CheckTileSafety",
+          "lineNumber": 125
+        },
+        {
+          "caller": "Run",
+          "callee": "log.Warn",
+          "lineNumber": 126
+        },
+        {
+          "caller": "Run",
+          "callee": "hardware.HasAudio",
+          "lineNumber": 130
+        },
+        {
+          "caller": "Run",
+          "callee": "hardware.Framerate",
+          "lineNumber": 134
+        },
+        {
+          "caller": "Run",
+          "callee": "log.Info",
+          "lineNumber": 140
+        },
+        {
+          "caller": "Run",
+          "callee": "log.Warn",
+          "lineNumber": 142
+        },
+        {
+          "caller": "Run",
+          "callee": "log.Info",
+          "lineNumber": 144
+        },
+        {
+          "caller": "Run",
+          "callee": "fmt.Sprintf",
+          "lineNumber": 144
+        },
+        {
+          "caller": "Run",
+          "callee": "log.Info",
+          "lineNumber": 148
+        },
+        {
+          "caller": "Run",
+          "callee": "fmt.Sprintf",
+          "lineNumber": 148
+        },
+        {
+          "caller": "Run",
+          "callee": "fmt.Sprintf",
+          "lineNumber": 151
+        },
+        {
+          "caller": "Run",
+          "callee": "time.Now().Unix",
+          "lineNumber": 151
+        },
+        {
+          "caller": "Run",
+          "callee": "time.Now",
+          "lineNumber": 151
+        },
+        {
+          "caller": "Run",
+          "callee": "os.Getpid",
+          "lineNumber": 151
+        },
+        {
+          "caller": "Run",
+          "callee": "filepath.Join",
+          "lineNumber": 152
+        },
+        {
+          "caller": "Run",
+          "callee": "os.TempDir",
+          "lineNumber": 152
+        },
+        {
+          "caller": "Run",
+          "callee": "filepath.Join",
+          "lineNumber": 153
+        },
+        {
+          "caller": "Run",
+          "callee": "os.TempDir",
+          "lineNumber": 153
+        },
+        {
+          "caller": "Run",
+          "callee": "os.MkdirAll",
+          "lineNumber": 157
+        },
+        {
+          "caller": "Run",
+          "callee": "fmt.Errorf",
+          "lineNumber": 158
+        },
+        {
+          "caller": "Run",
+          "callee": "os.RemoveAll",
+          "lineNumber": 164
+        },
+        {
+          "caller": "Run",
+          "callee": "os.RemoveAll",
+          "lineNumber": 165
+        },
+        {
+          "caller": "Run",
+          "callee": "os.Remove",
+          "lineNumber": 166
+        },
+        {
+          "caller": "Run",
+          "callee": "cleanup",
+          "lineNumber": 168
+        },
+        {
+          "caller": "Run",
+          "callee": "context.WithCancel",
+          "lineNumber": 171
+        },
+        {
+          "caller": "Run",
+          "callee": "context.Background",
+          "lineNumber": 171
+        },
+        {
+          "caller": "Run",
+          "callee": "cancel",
+          "lineNumber": 172
+        },
+        {
+          "caller": "Run",
+          "callee": "make",
+          "lineNumber": 174
+        },
+        {
+          "caller": "Run",
+          "callee": "signal.Notify",
+          "lineNumber": 175
+        },
+        {
+          "caller": "Run",
+          "callee": "signal.Stop",
+          "lineNumber": 176
+        },
+        {
+          "caller": "Run",
+          "callee": "func() {\n\t\t<-sigCh\n\t\tfmt.Println()\n\t\tlog.Err(\"Interrupted — cancelling and cleaning up...\")\n\t\tcancel()\n\t}",
+          "lineNumber": 177
+        },
+        {
+          "caller": "Run",
+          "callee": "fmt.Println",
+          "lineNumber": 179
+        },
+        {
+          "caller": "Run",
+          "callee": "log.Err",
+          "lineNumber": 180
+        },
+        {
+          "caller": "Run",
+          "callee": "cancel",
+          "lineNumber": 181
+        },
+        {
+          "caller": "Run",
+          "callee": "log.Step",
+          "lineNumber": 185
+        },
+        {
+          "caller": "Run",
+          "callee": "log.Progress",
+          "lineNumber": 186
+        },
+        {
+          "caller": "Run",
+          "callee": "append",
+          "lineNumber": 187
+        },
+        {
+          "caller": "Run",
+          "callee": "append",
+          "lineNumber": 191
+        },
+        {
+          "caller": "Run",
+          "callee": "fmt.Sprintf",
+          "lineNumber": 193
+        },
+        {
+          "caller": "Run",
+          "callee": "filepath.Join",
+          "lineNumber": 194
+        },
+        {
+          "caller": "Run",
+          "callee": "runCmd",
+          "lineNumber": 196
+        },
+        {
+          "caller": "Run",
+          "callee": "fmt.Errorf",
+          "lineNumber": 197
+        },
+        {
+          "caller": "Run",
+          "callee": "countFiles",
+          "lineNumber": 199
+        },
+        {
+          "caller": "Run",
+          "callee": "log.Progress",
+          "lineNumber": 203
+        },
+        {
+          "caller": "Run",
+          "callee": "log.OK",
+          "lineNumber": 204
+        },
+        {
+          "caller": "Run",
+          "callee": "fmt.Sprintf",
+          "lineNumber": 204
+        },
+        {
+          "caller": "Run",
+          "callee": "log.Step",
+          "lineNumber": 207
+        },
+        {
+          "caller": "Run",
+          "callee": "fmt.Sprintf",
+          "lineNumber": 207
+        },
+        {
+          "caller": "Run",
+          "callee": "log.Progress",
+          "lineNumber": 208
+        },
+        {
+          "caller": "Run",
+          "callee": "upscale",
+          "lineNumber": 209
+        },
+        {
+          "caller": "Run",
+          "callee": "fmt.Errorf",
+          "lineNumber": 210
+        },
+        {
+          "caller": "Run",
+          "callee": "log.Progress",
+          "lineNumber": 212
+        },
+        {
+          "caller": "Run",
+          "callee": "log.OK",
+          "lineNumber": 213
+        },
+        {
+          "caller": "Run",
+          "callee": "log.Step",
+          "lineNumber": 216
+        },
+        {
+          "caller": "Run",
+          "callee": "log.Progress",
+          "lineNumber": 217
+        },
+        {
+          "caller": "Run",
+          "callee": "filepath.Join",
+          "lineNumber": 221
+        },
+        {
+          "caller": "Run",
+          "callee": "append",
+          "lineNumber": 226
+        },
+        {
+          "caller": "Run",
+          "callee": "append",
+          "lineNumber": 228
+        },
+        {
+          "caller": "Run",
+          "callee": "append",
+          "lineNumber": 229
+        },
+        {
+          "caller": "Run",
+          "callee": "runCmd",
+          "lineNumber": 231
+        },
+        {
+          "caller": "Run",
+          "callee": "fmt.Errorf",
+          "lineNumber": 232
+        },
+        {
+          "caller": "Run",
+          "callee": "log.Progress",
+          "lineNumber": 234
+        },
+        {
+          "caller": "Run",
+          "callee": "os.Rename",
+          "lineNumber": 237
+        },
+        {
+          "caller": "Run",
+          "callee": "fmt.Errorf",
+          "lineNumber": 238
+        },
+        {
+          "caller": "Run",
+          "callee": "log.OK",
+          "lineNumber": 241
+        },
+        {
+          "caller": "Run",
+          "callee": "fmt.Sprintf",
+          "lineNumber": 241
+        },
+        {
+          "caller": "upscale",
+          "callee": "exec.CommandContext",
+          "lineNumber": 248
+        },
+        {
+          "caller": "upscale",
+          "callee": "fmt.Sprintf",
+          "lineNumber": 252
+        },
+        {
+          "caller": "upscale",
+          "callee": "fmt.Sprintf",
+          "lineNumber": 253
+        },
+        {
+          "caller": "upscale",
+          "callee": "fmt.Sprintf",
+          "lineNumber": 254
+        },
+        {
+          "caller": "upscale",
+          "callee": "cmd.Start",
+          "lineNumber": 261
+        },
+        {
+          "caller": "upscale",
+          "callee": "fmt.Errorf",
+          "lineNumber": 262
+        },
+        {
+          "caller": "upscale",
+          "callee": "make",
+          "lineNumber": 265
+        },
+        {
+          "caller": "upscale",
+          "callee": "func() { done <- cmd.Wait() }",
+          "lineNumber": 266
+        },
+        {
+          "caller": "upscale",
+          "callee": "cmd.Wait",
+          "lineNumber": 266
+        },
+        {
+          "caller": "upscale",
+          "callee": "time.NewTicker",
+          "lineNumber": 268
+        },
+        {
+          "caller": "upscale",
+          "callee": "ticker.Stop",
+          "lineNumber": 269
+        },
+        {
+          "caller": "upscale",
+          "callee": "countFiles",
+          "lineNumber": 275
+        },
+        {
+          "caller": "upscale",
+          "callee": "log.Progress",
+          "lineNumber": 277
+        },
+        {
+          "caller": "upscale",
+          "callee": "countFiles",
+          "lineNumber": 282
+        },
+        {
+          "caller": "upscale",
+          "callee": "log.Progress",
+          "lineNumber": 284
+        },
+        {
+          "caller": "upscale",
+          "callee": "ctx.Done",
+          "lineNumber": 288
+        },
+        {
+          "caller": "upscale",
+          "callee": "cmd.Process.Kill",
+          "lineNumber": 289
+        },
+        {
+          "caller": "upscale",
+          "callee": "cmd.Wait",
+          "lineNumber": 290
+        },
+        {
+          "caller": "upscale",
+          "callee": "ctx.Err",
+          "lineNumber": 291
+        },
+        {
+          "caller": "runCmd",
+          "callee": "exec.CommandContext",
+          "lineNumber": 297
+        },
+        {
+          "caller": "runCmd",
+          "callee": "cmd.Run",
+          "lineNumber": 302
+        },
+        {
+          "caller": "countFiles",
+          "callee": "os.ReadDir",
+          "lineNumber": 306
+        },
+        {
+          "caller": "countFiles",
+          "callee": "e.IsDir",
+          "lineNumber": 312
+        },
+        {
+          "caller": "countFiles",
+          "callee": "strings.HasSuffix",
+          "lineNumber": 312
+        },
+        {
+          "caller": "countFiles",
+          "callee": "e.Name",
+          "lineNumber": 312
+        }
+      ],
+      "metrics": {
+        "importCount": 4,
+        "exportCount": 9,
+        "functionCount": 11,
+        "classCount": 2
+      }
+    },
+    {
+      "path": "internal/tui/model.go",
+      "language": "go",
+      "fileCategory": "code",
+      "totalLines": 672,
+      "nonEmptyLines": 595,
+      "functions": [
+        {
+          "name": "NewModel",
+          "startLine": 79,
+          "endLine": 111,
+          "params": [
+            "cfg"
+          ]
+        },
+        {
+          "name": "Events",
+          "startLine": 113,
+          "endLine": 113,
+          "params": []
+        },
+        {
+          "name": "SetDone",
+          "startLine": 114,
+          "endLine": 114,
+          "params": [
+            "err"
+          ]
+        },
+        {
+          "name": "Init",
+          "startLine": 116,
+          "endLine": 122,
+          "params": []
+        },
+        {
+          "name": "readDirCmd",
+          "startLine": 132,
+          "endLine": 159,
+          "params": []
+        },
+        {
+          "name": "isVideoFile",
+          "startLine": 161,
+          "endLine": 167,
+          "params": [
+            "name"
+          ]
+        },
+        {
+          "name": "waitForEvent",
+          "startLine": 171,
+          "endLine": 183,
+          "params": []
+        },
+        {
+          "name": "Update",
+          "startLine": 185,
+          "endLine": 228,
+          "params": [
+            "msg"
+          ]
+        },
+        {
+          "name": "updateExplorer",
+          "startLine": 230,
+          "endLine": 312,
+          "params": [
+            "msg"
+          ]
+        },
+        {
+          "name": "updatePipeline",
+          "startLine": 314,
+          "endLine": 323,
+          "params": [
+            "msg"
+          ]
+        },
+        {
+          "name": "handlePipelineEvent",
+          "startLine": 325,
+          "endLine": 351,
+          "params": [
+            "e"
+          ]
+        },
+        {
+          "name": "addLog",
+          "startLine": 353,
+          "endLine": 358,
+          "params": [
+            "level",
+            "text"
+          ]
+        },
+        {
+          "name": "View",
+          "startLine": 362,
+          "endLine": 370,
+          "params": []
+        },
+        {
+          "name": "explorerVisibleHeight",
+          "startLine": 374,
+          "endLine": 380,
+          "params": []
+        },
+        {
+          "name": "viewExplorer",
+          "startLine": 382,
+          "endLine": 489,
+          "params": []
+        },
+        {
+          "name": "viewPipeline",
+          "startLine": 493,
+          "endLine": 571,
+          "params": []
+        },
+        {
+          "name": "renderStage",
+          "startLine": 573,
+          "endLine": 627,
+          "params": [
+            "num",
+            "s",
+            "innerW"
+          ]
+        },
+        {
+          "name": "renderLogLine",
+          "startLine": 629,
+          "endLine": 644,
+          "params": [
+            "e"
+          ]
+        },
+        {
+          "name": "renderBadge",
+          "startLine": 648,
+          "endLine": 650,
+          "params": [
+            "k",
+            "v"
+          ]
+        },
+        {
+          "name": "shortModel",
+          "startLine": 652,
+          "endLine": 658,
+          "params": [
+            "m"
+          ]
+        },
+        {
+          "name": "min",
+          "startLine": 660,
+          "endLine": 665,
+          "params": [
+            "a",
+            "b"
+          ]
+        },
+        {
+          "name": "max",
+          "startLine": 667,
+          "endLine": 672,
+          "params": [
+            "a",
+            "b"
+          ]
+        }
+      ],
+      "classes": [
+        {
+          "name": "stageState",
+          "startLine": 42,
+          "endLine": 47,
+          "methods": [],
+          "properties": [
+            "name",
+            "status",
+            "current",
+            "total"
+          ]
+        },
+        {
+          "name": "logEntry",
+          "startLine": 49,
+          "endLine": 52,
+          "methods": [],
+          "properties": [
+            "level",
+            "text"
+          ]
+        },
+        {
+          "name": "Model",
+          "startLine": 57,
+          "endLine": 76,
+          "methods": [
+            "Events",
+            "SetDone",
+            "Init",
+            "readDirCmd",
+            "waitForEvent",
+            "Update",
+            "updateExplorer",
+            "updatePipeline",
+            "handlePipelineEvent",
+            "addLog",
+            "View",
+            "explorerVisibleHeight",
+            "viewExplorer",
+            "viewPipeline",
+            "renderStage",
+            "renderLogLine"
+          ],
+          "properties": [
+            "cfg",
+            "events",
+            "done",
+            "stages",
+            "logs",
+            "width",
+            "height",
+            "quitting",
+            "finished",
+            "pipelineErr",
+            "state",
+            "currentDir",
+            "files",
+            "cursor",
+            "scrollOffset",
+            "explorerErr"
+          ]
+        },
+        {
+          "name": "readDirMsg",
+          "startLine": 126,
+          "endLine": 130,
+          "methods": [],
+          "properties": [
+            "dir",
+            "files",
+            "err"
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "name": "Model",
+          "line": 57,
+          "isDefault": false
+        },
+        {
+          "name": "NewModel",
+          "line": 79,
+          "isDefault": false
+        },
+        {
+          "name": "Events",
+          "line": 113,
+          "isDefault": false
+        },
+        {
+          "name": "SetDone",
+          "line": 114,
+          "isDefault": false
+        },
+        {
+          "name": "Init",
+          "line": 116,
+          "isDefault": false
+        },
+        {
+          "name": "Update",
+          "line": 185,
+          "isDefault": false
+        },
+        {
+          "name": "View",
+          "line": 362,
+          "isDefault": false
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "NewModel",
+          "callee": "hardware.ParsePreset",
+          "lineNumber": 89
+        },
+        {
+          "caller": "NewModel",
+          "callee": "hardware.AutoProfileWithPreset",
+          "lineNumber": 93
+        },
+        {
+          "caller": "NewModel",
+          "callee": "os.Getwd",
+          "lineNumber": 98
+        },
+        {
+          "caller": "NewModel",
+          "callee": "make",
+          "lineNumber": 101
+        },
+        {
+          "caller": "NewModel",
+          "callee": "make",
+          "lineNumber": 102
+        },
+        {
+          "caller": "Init",
+          "callee": "m.waitForEvent",
+          "lineNumber": 117
+        },
+        {
+          "caller": "Init",
+          "callee": "append",
+          "lineNumber": 119
+        },
+        {
+          "caller": "Init",
+          "callee": "m.readDirCmd",
+          "lineNumber": 119
+        },
+        {
+          "caller": "Init",
+          "callee": "tea.Batch",
+          "lineNumber": 121
+        },
+        {
+          "caller": "readDirCmd",
+          "callee": "os.Getwd",
+          "lineNumber": 137
+        },
+        {
+          "caller": "readDirCmd",
+          "callee": "os.ReadDir",
+          "lineNumber": 142
+        },
+        {
+          "caller": "readDirCmd",
+          "callee": "strings.HasPrefix",
+          "lineNumber": 148
+        },
+        {
+          "caller": "readDirCmd",
+          "callee": "e.Name",
+          "lineNumber": 148
+        },
+        {
+          "caller": "readDirCmd",
+          "callee": "e.IsDir",
+          "lineNumber": 151
+        },
+        {
+          "caller": "readDirCmd",
+          "callee": "append",
+          "lineNumber": 152
+        },
+        {
+          "caller": "readDirCmd",
+          "callee": "append",
+          "lineNumber": 154
+        },
+        {
+          "caller": "readDirCmd",
+          "callee": "append",
+          "lineNumber": 157
+        },
+        {
+          "caller": "isVideoFile",
+          "callee": "strings.ToLower",
+          "lineNumber": 162
+        },
+        {
+          "caller": "isVideoFile",
+          "callee": "filepath.Ext",
+          "lineNumber": 162
+        },
+        {
+          "caller": "Update",
+          "callee": "msg.String",
+          "lineNumber": 206
+        },
+        {
+          "caller": "Update",
+          "callee": "m.updateExplorer",
+          "lineNumber": 211
+        },
+        {
+          "caller": "Update",
+          "callee": "m.updatePipeline",
+          "lineNumber": 213
+        },
+        {
+          "caller": "Update",
+          "callee": "m.handlePipelineEvent",
+          "lineNumber": 216
+        },
+        {
+          "caller": "Update",
+          "callee": "m.addLog",
+          "lineNumber": 222
+        },
+        {
+          "caller": "Update",
+          "callee": "msg.err.Error",
+          "lineNumber": 222
+        },
+        {
+          "caller": "updateExplorer",
+          "callee": "m.explorerVisibleHeight",
+          "lineNumber": 231
+        },
+        {
+          "caller": "updateExplorer",
+          "callee": "msg.String",
+          "lineNumber": 232
+        },
+        {
+          "caller": "updateExplorer",
+          "callee": "len",
+          "lineNumber": 244
+        },
+        {
+          "caller": "updateExplorer",
+          "callee": "filepath.Dir",
+          "lineNumber": 251
+        },
+        {
+          "caller": "updateExplorer",
+          "callee": "m.readDirCmd",
+          "lineNumber": 252
+        },
+        {
+          "caller": "updateExplorer",
+          "callee": "len",
+          "lineNumber": 274
+        },
+        {
+          "caller": "updateExplorer",
+          "callee": "hardware.AllPresets",
+          "lineNumber": 277
+        },
+        {
+          "caller": "updateExplorer",
+          "callee": "len",
+          "lineNumber": 287
+        },
+        {
+          "caller": "updateExplorer",
+          "callee": "hardware.AutoProfileWithPreset",
+          "lineNumber": 288
+        },
+        {
+          "caller": "updateExplorer",
+          "callee": "len",
+          "lineNumber": 292
+        },
+        {
+          "caller": "updateExplorer",
+          "callee": "sel.IsDir",
+          "lineNumber": 296
+        },
+        {
+          "caller": "updateExplorer",
+          "callee": "filepath.Join",
+          "lineNumber": 297
+        },
+        {
+          "caller": "updateExplorer",
+          "callee": "sel.Name",
+          "lineNumber": 297
+        },
+        {
+          "caller": "updateExplorer",
+          "callee": "m.readDirCmd",
+          "lineNumber": 298
+        },
+        {
+          "caller": "updateExplorer",
+          "callee": "filepath.Join",
+          "lineNumber": 301
+        },
+        {
+          "caller": "updateExplorer",
+          "callee": "sel.Name",
+          "lineNumber": 301
+        },
+        {
+          "caller": "updateExplorer",
+          "callee": "filepath.Dir",
+          "lineNumber": 302
+        },
+        {
+          "caller": "updateExplorer",
+          "callee": "strings.TrimSuffix",
+          "lineNumber": 303
+        },
+        {
+          "caller": "updateExplorer",
+          "callee": "filepath.Base",
+          "lineNumber": 303
+        },
+        {
+          "caller": "updateExplorer",
+          "callee": "filepath.Ext",
+          "lineNumber": 303
+        },
+        {
+          "caller": "updateExplorer",
+          "callee": "filepath.Join",
+          "lineNumber": 304
+        },
+        {
+          "caller": "updateExplorer",
+          "callee": "func() {\n\t\t\tlog := &tuiLogger{events: m.Events()}\n\t\t\tm.SetDone(pipeline.Run(m.cfg, log))\n\t\t}",
+          "lineNumber": 305
+        },
+        {
+          "caller": "updateExplorer",
+          "callee": "m.Events",
+          "lineNumber": 306
+        },
+        {
+          "caller": "updateExplorer",
+          "callee": "m.SetDone",
+          "lineNumber": 307
+        },
+        {
+          "caller": "updateExplorer",
+          "callee": "pipeline.Run",
+          "lineNumber": 307
+        },
+        {
+          "caller": "updatePipeline",
+          "callee": "msg.String",
+          "lineNumber": 315
+        },
+        {
+          "caller": "handlePipelineEvent",
+          "callee": "m.addLog",
+          "lineNumber": 328
+        },
+        {
+          "caller": "handlePipelineEvent",
+          "callee": "m.waitForEvent",
+          "lineNumber": 350
+        },
+        {
+          "caller": "addLog",
+          "callee": "append",
+          "lineNumber": 354
+        },
+        {
+          "caller": "addLog",
+          "callee": "len",
+          "lineNumber": 355
+        },
+        {
+          "caller": "addLog",
+          "callee": "len",
+          "lineNumber": 356
+        },
+        {
+          "caller": "View",
+          "callee": "lipgloss.NewStyle().Foreground(colAmber).Render",
+          "lineNumber": 364
+        },
+        {
+          "caller": "View",
+          "callee": "lipgloss.NewStyle().Foreground",
+          "lineNumber": 364
+        },
+        {
+          "caller": "View",
+          "callee": "lipgloss.NewStyle",
+          "lineNumber": 364
+        },
+        {
+          "caller": "View",
+          "callee": "m.viewExplorer",
+          "lineNumber": 367
+        },
+        {
+          "caller": "View",
+          "callee": "m.viewPipeline",
+          "lineNumber": 369
+        },
+        {
+          "caller": "viewExplorer",
+          "callee": "titleStyle.Render",
+          "lineNumber": 392
+        },
+        {
+          "caller": "viewExplorer",
+          "callee": "lipgloss.NewStyle().\n\t\tForeground(colGold).\n\t\tRender",
+          "lineNumber": 393
+        },
+        {
+          "caller": "viewExplorer",
+          "callee": "lipgloss.NewStyle().\n\t\tForeground",
+          "lineNumber": 393
+        },
+        {
+          "caller": "viewExplorer",
+          "callee": "lipgloss.NewStyle",
+          "lineNumber": 393
+        },
+        {
+          "caller": "viewExplorer",
+          "callee": "b.WriteString",
+          "lineNumber": 396
+        },
+        {
+          "caller": "viewExplorer",
+          "callee": "subtitleStyle.Render",
+          "lineNumber": 398
+        },
+        {
+          "caller": "viewExplorer",
+          "callee": "truncatePath",
+          "lineNumber": 398
+        },
+        {
+          "caller": "viewExplorer",
+          "callee": "b.WriteString",
+          "lineNumber": 399
+        },
+        {
+          "caller": "viewExplorer",
+          "callee": "b.WriteString",
+          "lineNumber": 400
+        },
+        {
+          "caller": "viewExplorer",
+          "callee": "hRule",
+          "lineNumber": 400
+        },
+        {
+          "caller": "viewExplorer",
+          "callee": "m.explorerVisibleHeight",
+          "lineNumber": 403
+        },
+        {
+          "caller": "viewExplorer",
+          "callee": "b.WriteString",
+          "lineNumber": 406
+        },
+        {
+          "caller": "viewExplorer",
+          "callee": "errorBoxStyle.Render",
+          "lineNumber": 406
+        },
+        {
+          "caller": "viewExplorer",
+          "callee": "fmt.Sprintf",
+          "lineNumber": 406
+        },
+        {
+          "caller": "viewExplorer",
+          "callee": "len",
+          "lineNumber": 407
+        },
+        {
+          "caller": "viewExplorer",
+          "callee": "b.WriteString",
+          "lineNumber": 408
+        },
+        {
+          "caller": "viewExplorer",
+          "callee": "lipgloss.NewStyle().Foreground(colGray2).Italic(true).Render",
+          "lineNumber": 408
+        },
+        {
+          "caller": "viewExplorer",
+          "callee": "lipgloss.NewStyle().Foreground(colGray2).Italic",
+          "lineNumber": 408
+        },
+        {
+          "caller": "viewExplorer",
+          "callee": "lipgloss.NewStyle().Foreground",
+          "lineNumber": 408
+        },
+        {
+          "caller": "viewExplorer",
+          "callee": "lipgloss.NewStyle",
+          "lineNumber": 408
+        },
+        {
+          "caller": "viewExplorer",
+          "callee": "len",
+          "lineNumber": 411
+        },
+        {
+          "caller": "viewExplorer",
+          "callee": "len",
+          "lineNumber": 412
+        },
+        {
+          "caller": "viewExplorer",
+          "callee": "f.Name",
+          "lineNumber": 416
+        },
+        {
+          "caller": "viewExplorer",
+          "callee": "f.IsDir",
+          "lineNumber": 419
+        },
+        {
+          "caller": "viewExplorer",
+          "callee": "explorerDirStyle.Render",
+          "lineNumber": 421
+        },
+        {
+          "caller": "viewExplorer",
+          "callee": "isVideoFile",
+          "lineNumber": 422
+        },
+        {
+          "caller": "viewExplorer",
+          "callee": "explorerVideoStyle.Render",
+          "lineNumber": 424
+        },
+        {
+          "caller": "viewExplorer",
+          "callee": "explorerFileStyle.Render",
+          "lineNumber": 427
+        },
+        {
+          "caller": "viewExplorer",
+          "callee": "f.IsDir",
+          "lineNumber": 434
+        },
+        {
+          "caller": "viewExplorer",
+          "callee": "len",
+          "lineNumber": 437
+        },
+        {
+          "caller": "viewExplorer",
+          "callee": "explorerCursorStyle.Render",
+          "lineNumber": 441
+        },
+        {
+          "caller": "viewExplorer",
+          "callee": "strings.Repeat",
+          "lineNumber": 441
+        },
+        {
+          "caller": "viewExplorer",
+          "callee": "b.WriteString",
+          "lineNumber": 444
+        },
+        {
+          "caller": "viewExplorer",
+          "callee": "b.WriteString",
+          "lineNumber": 449
+        },
+        {
+          "caller": "viewExplorer",
+          "callee": "b.WriteString",
+          "lineNumber": 454
+        },
+        {
+          "caller": "viewExplorer",
+          "callee": "hRule",
+          "lineNumber": 454
+        },
+        {
+          "caller": "viewExplorer",
+          "callee": "fmt.Sprintf",
+          "lineNumber": 458
+        },
+        {
+          "caller": "viewExplorer",
+          "callee": "fmt.Sprintf",
+          "lineNumber": 462
+        },
+        {
+          "caller": "viewExplorer",
+          "callee": "fmt.Sprintf",
+          "lineNumber": 465
+        },
+        {
+          "caller": "viewExplorer",
+          "callee": "shortModel",
+          "lineNumber": 467
+        },
+        {
+          "caller": "viewExplorer",
+          "callee": "make",
+          "lineNumber": 470
+        },
+        {
+          "caller": "viewExplorer",
+          "callee": "len",
+          "lineNumber": 470
+        },
+        {
+          "caller": "viewExplorer",
+          "callee": "settingKeyStyle.Render",
+          "lineNumber": 472
+        },
+        {
+          "caller": "viewExplorer",
+          "callee": "settingValStyle.Render",
+          "lineNumber": 473
+        },
+        {
+          "caller": "viewExplorer",
+          "callee": "settingKbStyle.Render",
+          "lineNumber": 474
+        },
+        {
+          "caller": "viewExplorer",
+          "callee": "b.WriteString",
+          "lineNumber": 476
+        },
+        {
+          "caller": "viewExplorer",
+          "callee": "strings.Join",
+          "lineNumber": 476
+        },
+        {
+          "caller": "viewExplorer",
+          "callee": "footerDivStyle.Render",
+          "lineNumber": 476
+        },
+        {
+          "caller": "viewExplorer",
+          "callee": "b.WriteString",
+          "lineNumber": 486
+        },
+        {
+          "caller": "viewExplorer",
+          "callee": "renderFooterBinds",
+          "lineNumber": 486
+        },
+        {
+          "caller": "viewExplorer",
+          "callee": "b.String",
+          "lineNumber": 488
+        },
+        {
+          "caller": "viewPipeline",
+          "callee": "b.WriteString",
+          "lineNumber": 503
+        },
+        {
+          "caller": "viewPipeline",
+          "callee": "titleStyle.Render",
+          "lineNumber": 503
+        },
+        {
+          "caller": "viewPipeline",
+          "callee": "fmt.Sprintf",
+          "lineNumber": 508
+        },
+        {
+          "caller": "viewPipeline",
+          "callee": "fmt.Sprintf",
+          "lineNumber": 512
+        },
+        {
+          "caller": "viewPipeline",
+          "callee": "renderBadge",
+          "lineNumber": 514
+        },
+        {
+          "caller": "viewPipeline",
+          "callee": "renderBadge",
+          "lineNumber": 515
+        },
+        {
+          "caller": "viewPipeline",
+          "callee": "renderBadge",
+          "lineNumber": 516
+        },
+        {
+          "caller": "viewPipeline",
+          "callee": "shortModel",
+          "lineNumber": 516
+        },
+        {
+          "caller": "viewPipeline",
+          "callee": "renderBadge",
+          "lineNumber": 517
+        },
+        {
+          "caller": "viewPipeline",
+          "callee": "fmt.Sprintf",
+          "lineNumber": 517
+        },
+        {
+          "caller": "viewPipeline",
+          "callee": "b.WriteString",
+          "lineNumber": 518
+        },
+        {
+          "caller": "viewPipeline",
+          "callee": "truncatePath",
+          "lineNumber": 521
+        },
+        {
+          "caller": "viewPipeline",
+          "callee": "truncatePath",
+          "lineNumber": 522
+        },
+        {
+          "caller": "viewPipeline",
+          "callee": "b.WriteString",
+          "lineNumber": 523
+        },
+        {
+          "caller": "viewPipeline",
+          "callee": "subtitleStyle.Render",
+          "lineNumber": 523
+        },
+        {
+          "caller": "viewPipeline",
+          "callee": "lipgloss.NewStyle().Foreground(colGray1).Render",
+          "lineNumber": 524
+        },
+        {
+          "caller": "viewPipeline",
+          "callee": "lipgloss.NewStyle().Foreground",
+          "lineNumber": 524
+        },
+        {
+          "caller": "viewPipeline",
+          "callee": "lipgloss.NewStyle",
+          "lineNumber": 524
+        },
+        {
+          "caller": "viewPipeline",
+          "callee": "b.WriteString",
+          "lineNumber": 525
+        },
+        {
+          "caller": "viewPipeline",
+          "callee": "subtitleStyle.Render",
+          "lineNumber": 525
+        },
+        {
+          "caller": "viewPipeline",
+          "callee": "lipgloss.NewStyle().Foreground(colGray1).Render",
+          "lineNumber": 526
+        },
+        {
+          "caller": "viewPipeline",
+          "callee": "lipgloss.NewStyle().Foreground",
+          "lineNumber": 526
+        },
+        {
+          "caller": "viewPipeline",
+          "callee": "lipgloss.NewStyle",
+          "lineNumber": 526
+        },
+        {
+          "caller": "viewPipeline",
+          "callee": "b.WriteString",
+          "lineNumber": 527
+        },
+        {
+          "caller": "viewPipeline",
+          "callee": "hRule",
+          "lineNumber": 527
+        },
+        {
+          "caller": "viewPipeline",
+          "callee": "fmt.Sprintf",
+          "lineNumber": 531
+        },
+        {
+          "caller": "viewPipeline",
+          "callee": "b.WriteString",
+          "lineNumber": 532
+        },
+        {
+          "caller": "viewPipeline",
+          "callee": "m.renderStage",
+          "lineNumber": 532
+        },
+        {
+          "caller": "viewPipeline",
+          "callee": "b.WriteString",
+          "lineNumber": 533
+        },
+        {
+          "caller": "viewPipeline",
+          "callee": "b.WriteString",
+          "lineNumber": 537
+        },
+        {
+          "caller": "viewPipeline",
+          "callee": "hRule",
+          "lineNumber": 537
+        },
+        {
+          "caller": "viewPipeline",
+          "callee": "max",
+          "lineNumber": 540
+        },
+        {
+          "caller": "viewPipeline",
+          "callee": "min",
+          "lineNumber": 540
+        },
+        {
+          "caller": "viewPipeline",
+          "callee": "len",
+          "lineNumber": 543
+        },
+        {
+          "caller": "viewPipeline",
+          "callee": "len",
+          "lineNumber": 544
+        },
+        {
+          "caller": "viewPipeline",
+          "callee": "b.WriteString",
+          "lineNumber": 547
+        },
+        {
+          "caller": "viewPipeline",
+          "callee": "m.renderLogLine",
+          "lineNumber": 547
+        },
+        {
+          "caller": "viewPipeline",
+          "callee": "len",
+          "lineNumber": 550
+        },
+        {
+          "caller": "viewPipeline",
+          "callee": "b.WriteString",
+          "lineNumber": 551
+        },
+        {
+          "caller": "viewPipeline",
+          "callee": "b.WriteString",
+          "lineNumber": 555
+        },
+        {
+          "caller": "viewPipeline",
+          "callee": "hRule",
+          "lineNumber": 555
+        },
+        {
+          "caller": "viewPipeline",
+          "callee": "b.WriteString",
+          "lineNumber": 557
+        },
+        {
+          "caller": "viewPipeline",
+          "callee": "renderFooterBinds",
+          "lineNumber": 557
+        },
+        {
+          "caller": "viewPipeline",
+          "callee": "b.WriteString",
+          "lineNumber": 561
+        },
+        {
+          "caller": "viewPipeline",
+          "callee": "b.WriteString",
+          "lineNumber": 563
+        },
+        {
+          "caller": "viewPipeline",
+          "callee": "errorBoxStyle.Render",
+          "lineNumber": 563
+        },
+        {
+          "caller": "viewPipeline",
+          "callee": "m.pipelineErr.Error",
+          "lineNumber": 563
+        },
+        {
+          "caller": "viewPipeline",
+          "callee": "b.WriteString",
+          "lineNumber": 565
+        },
+        {
+          "caller": "viewPipeline",
+          "callee": "doneBoxStyle.Render",
+          "lineNumber": 565
+        },
+        {
+          "caller": "viewPipeline",
+          "callee": "b.WriteString",
+          "lineNumber": 567
+        },
+        {
+          "caller": "viewPipeline",
+          "callee": "b.String",
+          "lineNumber": 570
+        },
+        {
+          "caller": "renderStage",
+          "callee": "lipgloss.NewStyle().Foreground(colSubtext).Render",
+          "lineNumber": 591
+        },
+        {
+          "caller": "renderStage",
+          "callee": "lipgloss.NewStyle().Foreground",
+          "lineNumber": 591
+        },
+        {
+          "caller": "renderStage",
+          "callee": "lipgloss.NewStyle",
+          "lineNumber": 591
+        },
+        {
+          "caller": "renderStage",
+          "callee": "labelStyle.Render",
+          "lineNumber": 592
+        },
+        {
+          "caller": "renderStage",
+          "callee": "fmt.Sprintf",
+          "lineNumber": 593
+        },
+        {
+          "caller": "renderStage",
+          "callee": "b.WriteString",
+          "lineNumber": 596
+        },
+        {
+          "caller": "renderStage",
+          "callee": "renderBar",
+          "lineNumber": 600
+        },
+        {
+          "caller": "renderStage",
+          "callee": "max",
+          "lineNumber": 600
+        },
+        {
+          "caller": "renderStage",
+          "callee": "renderPct",
+          "lineNumber": 603
+        },
+        {
+          "caller": "renderStage",
+          "callee": "barCountStyle.Render",
+          "lineNumber": 605
+        },
+        {
+          "caller": "renderStage",
+          "callee": "b.WriteString",
+          "lineNumber": 607
+        },
+        {
+          "caller": "renderStage",
+          "callee": "fmt.Sprintf",
+          "lineNumber": 607
+        },
+        {
+          "caller": "renderStage",
+          "callee": "renderBar",
+          "lineNumber": 610
+        },
+        {
+          "caller": "renderStage",
+          "callee": "max",
+          "lineNumber": 610
+        },
+        {
+          "caller": "renderStage",
+          "callee": "renderPct",
+          "lineNumber": 611
+        },
+        {
+          "caller": "renderStage",
+          "callee": "b.WriteString",
+          "lineNumber": 612
+        },
+        {
+          "caller": "renderStage",
+          "callee": "fmt.Sprintf",
+          "lineNumber": 612
+        },
+        {
+          "caller": "renderStage",
+          "callee": "barEmptyStyle.Render",
+          "lineNumber": 615
+        },
+        {
+          "caller": "renderStage",
+          "callee": "strings.Repeat",
+          "lineNumber": 615
+        },
+        {
+          "caller": "renderStage",
+          "callee": "lipgloss.NewStyle().Foreground(colGray2).Italic(true).Render",
+          "lineNumber": 616
+        },
+        {
+          "caller": "renderStage",
+          "callee": "lipgloss.NewStyle().Foreground(colGray2).Italic",
+          "lineNumber": 616
+        },
+        {
+          "caller": "renderStage",
+          "callee": "lipgloss.NewStyle().Foreground",
+          "lineNumber": 616
+        },
+        {
+          "caller": "renderStage",
+          "callee": "lipgloss.NewStyle",
+          "lineNumber": 616
+        },
+        {
+          "caller": "renderStage",
+          "callee": "b.WriteString",
+          "lineNumber": 617
+        },
+        {
+          "caller": "renderStage",
+          "callee": "fmt.Sprintf",
+          "lineNumber": 617
+        },
+        {
+          "caller": "renderStage",
+          "callee": "strings.Repeat",
+          "lineNumber": 620
+        },
+        {
+          "caller": "renderStage",
+          "callee": "b.WriteString",
+          "lineNumber": 621
+        },
+        {
+          "caller": "renderStage",
+          "callee": "fmt.Sprintf",
+          "lineNumber": 621
+        },
+        {
+          "caller": "renderStage",
+          "callee": "lipgloss.NewStyle().Foreground(colRed).Render",
+          "lineNumber": 622
+        },
+        {
+          "caller": "renderStage",
+          "callee": "lipgloss.NewStyle().Foreground",
+          "lineNumber": 622
+        },
+        {
+          "caller": "renderStage",
+          "callee": "lipgloss.NewStyle",
+          "lineNumber": 622
+        },
+        {
+          "caller": "renderStage",
+          "callee": "lipgloss.NewStyle().Foreground(colRed).Render",
+          "lineNumber": 623
+        },
+        {
+          "caller": "renderStage",
+          "callee": "lipgloss.NewStyle().Foreground",
+          "lineNumber": 623
+        },
+        {
+          "caller": "renderStage",
+          "callee": "lipgloss.NewStyle",
+          "lineNumber": 623
+        },
+        {
+          "caller": "renderStage",
+          "callee": "b.String",
+          "lineNumber": 626
+        },
+        {
+          "caller": "renderLogLine",
+          "callee": "logPrefixOK.Render",
+          "lineNumber": 633
+        },
+        {
+          "caller": "renderLogLine",
+          "callee": "logPrefixWarn.Render",
+          "lineNumber": 635
+        },
+        {
+          "caller": "renderLogLine",
+          "callee": "logPrefixErr.Render",
+          "lineNumber": 637
+        },
+        {
+          "caller": "renderLogLine",
+          "callee": "logPrefixStep.Render",
+          "lineNumber": 639
+        },
+        {
+          "caller": "renderLogLine",
+          "callee": "logPrefixInfo.Render",
+          "lineNumber": 641
+        },
+        {
+          "caller": "renderLogLine",
+          "callee": "logTextStyle.Render",
+          "lineNumber": 643
+        },
+        {
+          "caller": "renderBadge",
+          "callee": "badgeKeyStyle.Render",
+          "lineNumber": 649
+        },
+        {
+          "caller": "renderBadge",
+          "callee": "badgeValStyle.Render",
+          "lineNumber": 649
+        },
+        {
+          "caller": "shortModel",
+          "callee": "strings.TrimPrefix",
+          "lineNumber": 655
+        },
+        {
+          "caller": "shortModel",
+          "callee": "strings.TrimPrefix",
+          "lineNumber": 656
+        }
+      ],
+      "metrics": {
+        "importCount": 6,
+        "exportCount": 7,
+        "functionCount": 22,
+        "classCount": 4
+      }
+    }
+  ]
+}

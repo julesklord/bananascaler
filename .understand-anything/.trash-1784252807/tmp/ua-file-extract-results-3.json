@@ -1,0 +1,768 @@
+{
+  "scriptCompleted": true,
+  "filesAnalyzed": 3,
+  "filesSkipped": [],
+  "results": [
+    {
+      "path": "internal/config/config_test.go",
+      "language": "go",
+      "fileCategory": "code",
+      "totalLines": 93,
+      "nonEmptyLines": 89,
+      "functions": [
+        {
+          "name": "TestConfigValidate",
+          "startLine": 9,
+          "endLine": 93,
+          "params": [
+            "t"
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "name": "TestConfigValidate",
+          "line": 9,
+          "isDefault": false
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "TestConfigValidate",
+          "callee": "os.CreateTemp",
+          "lineNumber": 11
+        },
+        {
+          "caller": "TestConfigValidate",
+          "callee": "t.Fatalf",
+          "lineNumber": 13
+        },
+        {
+          "caller": "TestConfigValidate",
+          "callee": "os.Remove",
+          "lineNumber": 15
+        },
+        {
+          "caller": "TestConfigValidate",
+          "callee": "tmpFile.Name",
+          "lineNumber": 15
+        },
+        {
+          "caller": "TestConfigValidate",
+          "callee": "tmpFile.Close",
+          "lineNumber": 16
+        },
+        {
+          "caller": "TestConfigValidate",
+          "callee": "tmpFile.Name",
+          "lineNumber": 28
+        },
+        {
+          "caller": "TestConfigValidate",
+          "callee": "filepath.Join",
+          "lineNumber": 32
+        },
+        {
+          "caller": "TestConfigValidate",
+          "callee": "filepath.Dir",
+          "lineNumber": 32
+        },
+        {
+          "caller": "TestConfigValidate",
+          "callee": "tmpFile.Name",
+          "lineNumber": 32
+        },
+        {
+          "caller": "TestConfigValidate",
+          "callee": "filepath.Base",
+          "lineNumber": 32
+        },
+        {
+          "caller": "TestConfigValidate",
+          "callee": "tmpFile.Name",
+          "lineNumber": 32
+        },
+        {
+          "caller": "TestConfigValidate",
+          "callee": "len",
+          "lineNumber": 32
+        },
+        {
+          "caller": "TestConfigValidate",
+          "callee": "filepath.Base",
+          "lineNumber": 32
+        },
+        {
+          "caller": "TestConfigValidate",
+          "callee": "tmpFile.Name",
+          "lineNumber": 32
+        },
+        {
+          "caller": "TestConfigValidate",
+          "callee": "tmpFile.Name",
+          "lineNumber": 38
+        },
+        {
+          "caller": "TestConfigValidate",
+          "callee": "tmpFile.Name",
+          "lineNumber": 46
+        },
+        {
+          "caller": "TestConfigValidate",
+          "callee": "tmpFile.Name",
+          "lineNumber": 62
+        },
+        {
+          "caller": "TestConfigValidate",
+          "callee": "t.Run",
+          "lineNumber": 74
+        },
+        {
+          "caller": "TestConfigValidate",
+          "callee": "tc.cfg.Validate",
+          "lineNumber": 75
+        },
+        {
+          "caller": "TestConfigValidate",
+          "callee": "t.Errorf",
+          "lineNumber": 78
+        },
+        {
+          "caller": "TestConfigValidate",
+          "callee": "t.Errorf",
+          "lineNumber": 82
+        },
+        {
+          "caller": "TestConfigValidate",
+          "callee": "t.Errorf",
+          "lineNumber": 85
+        },
+        {
+          "caller": "TestConfigValidate",
+          "callee": "t.Errorf",
+          "lineNumber": 88
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 1,
+        "functionCount": 1,
+        "classCount": 0
+      }
+    },
+    {
+      "path": "internal/pipeline/pipeline_test.go",
+      "language": "go",
+      "fileCategory": "code",
+      "totalLines": 198,
+      "nonEmptyLines": 173,
+      "functions": [
+        {
+          "name": "Info",
+          "startLine": 19,
+          "endLine": 19,
+          "params": [
+            "msg"
+          ]
+        },
+        {
+          "name": "OK",
+          "startLine": 20,
+          "endLine": 20,
+          "params": [
+            "msg"
+          ]
+        },
+        {
+          "name": "Warn",
+          "startLine": 21,
+          "endLine": 21,
+          "params": [
+            "msg"
+          ]
+        },
+        {
+          "name": "Step",
+          "startLine": 22,
+          "endLine": 22,
+          "params": [
+            "msg"
+          ]
+        },
+        {
+          "name": "Err",
+          "startLine": 23,
+          "endLine": 23,
+          "params": [
+            "msg"
+          ]
+        },
+        {
+          "name": "Progress",
+          "startLine": 24,
+          "endLine": 29,
+          "params": [
+            "stage",
+            "current",
+            "total"
+          ]
+        },
+        {
+          "name": "TestPipelineIntegration",
+          "startLine": 31,
+          "endLine": 175,
+          "params": [
+            "t"
+          ]
+        },
+        {
+          "name": "TestCountFiles",
+          "startLine": 177,
+          "endLine": 198,
+          "params": [
+            "t"
+          ]
+        }
+      ],
+      "classes": [
+        {
+          "name": "mockLogger",
+          "startLine": 12,
+          "endLine": 17,
+          "methods": [
+            "Info",
+            "OK",
+            "Warn",
+            "Step",
+            "Err",
+            "Progress"
+          ],
+          "properties": [
+            "infos",
+            "progress",
+            "stages",
+            "done"
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "name": "Info",
+          "line": 19,
+          "isDefault": false
+        },
+        {
+          "name": "OK",
+          "line": 20,
+          "isDefault": false
+        },
+        {
+          "name": "Warn",
+          "line": 21,
+          "isDefault": false
+        },
+        {
+          "name": "Step",
+          "line": 22,
+          "isDefault": false
+        },
+        {
+          "name": "Err",
+          "line": 23,
+          "isDefault": false
+        },
+        {
+          "name": "Progress",
+          "line": 24,
+          "isDefault": false
+        },
+        {
+          "name": "TestPipelineIntegration",
+          "line": 31,
+          "isDefault": false
+        },
+        {
+          "name": "TestCountFiles",
+          "line": 177,
+          "isDefault": false
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "Info",
+          "callee": "append",
+          "lineNumber": 19
+        },
+        {
+          "caller": "OK",
+          "callee": "append",
+          "lineNumber": 20
+        },
+        {
+          "caller": "Warn",
+          "callee": "append",
+          "lineNumber": 21
+        },
+        {
+          "caller": "Step",
+          "callee": "append",
+          "lineNumber": 22
+        },
+        {
+          "caller": "Err",
+          "callee": "append",
+          "lineNumber": 23
+        },
+        {
+          "caller": "Progress",
+          "callee": "append",
+          "lineNumber": 25
+        },
+        {
+          "caller": "TestPipelineIntegration",
+          "callee": "os.MkdirTemp",
+          "lineNumber": 33
+        },
+        {
+          "caller": "TestPipelineIntegration",
+          "callee": "t.Fatalf",
+          "lineNumber": 35
+        },
+        {
+          "caller": "TestPipelineIntegration",
+          "callee": "os.RemoveAll",
+          "lineNumber": 37
+        },
+        {
+          "caller": "TestPipelineIntegration",
+          "callee": "os.WriteFile",
+          "lineNumber": 51
+        },
+        {
+          "caller": "TestPipelineIntegration",
+          "callee": "filepath.Join",
+          "lineNumber": 51
+        },
+        {
+          "caller": "TestPipelineIntegration",
+          "callee": "t.Fatalf",
+          "lineNumber": 53
+        },
+        {
+          "caller": "TestPipelineIntegration",
+          "callee": "os.WriteFile",
+          "lineNumber": 77
+        },
+        {
+          "caller": "TestPipelineIntegration",
+          "callee": "filepath.Join",
+          "lineNumber": 77
+        },
+        {
+          "caller": "TestPipelineIntegration",
+          "callee": "t.Fatalf",
+          "lineNumber": 79
+        },
+        {
+          "caller": "TestPipelineIntegration",
+          "callee": "os.WriteFile",
+          "lineNumber": 101
+        },
+        {
+          "caller": "TestPipelineIntegration",
+          "callee": "filepath.Join",
+          "lineNumber": 101
+        },
+        {
+          "caller": "TestPipelineIntegration",
+          "callee": "t.Fatalf",
+          "lineNumber": 103
+        },
+        {
+          "caller": "TestPipelineIntegration",
+          "callee": "os.WriteFile",
+          "lineNumber": 110
+        },
+        {
+          "caller": "TestPipelineIntegration",
+          "callee": "filepath.Join",
+          "lineNumber": 110
+        },
+        {
+          "caller": "TestPipelineIntegration",
+          "callee": "t.Fatalf",
+          "lineNumber": 112
+        },
+        {
+          "caller": "TestPipelineIntegration",
+          "callee": "os.Getenv",
+          "lineNumber": 116
+        },
+        {
+          "caller": "TestPipelineIntegration",
+          "callee": "t.Setenv",
+          "lineNumber": 117
+        },
+        {
+          "caller": "TestPipelineIntegration",
+          "callee": "os.MkdirTemp",
+          "lineNumber": 120
+        },
+        {
+          "caller": "TestPipelineIntegration",
+          "callee": "t.Fatalf",
+          "lineNumber": 122
+        },
+        {
+          "caller": "TestPipelineIntegration",
+          "callee": "os.RemoveAll",
+          "lineNumber": 124
+        },
+        {
+          "caller": "TestPipelineIntegration",
+          "callee": "filepath.Join",
+          "lineNumber": 126
+        },
+        {
+          "caller": "TestPipelineIntegration",
+          "callee": "os.WriteFile",
+          "lineNumber": 127
+        },
+        {
+          "caller": "TestPipelineIntegration",
+          "callee": "t.Fatalf",
+          "lineNumber": 129
+        },
+        {
+          "caller": "TestPipelineIntegration",
+          "callee": "filepath.Join",
+          "lineNumber": 132
+        },
+        {
+          "caller": "TestPipelineIntegration",
+          "callee": "Run",
+          "lineNumber": 143
+        },
+        {
+          "caller": "TestPipelineIntegration",
+          "callee": "t.Fatalf",
+          "lineNumber": 145
+        },
+        {
+          "caller": "TestPipelineIntegration",
+          "callee": "os.Stat",
+          "lineNumber": 149
+        },
+        {
+          "caller": "TestPipelineIntegration",
+          "callee": "os.IsNotExist",
+          "lineNumber": 149
+        },
+        {
+          "caller": "TestPipelineIntegration",
+          "callee": "t.Errorf",
+          "lineNumber": 150
+        },
+        {
+          "caller": "TestPipelineIntegration",
+          "callee": "len",
+          "lineNumber": 154
+        },
+        {
+          "caller": "TestPipelineIntegration",
+          "callee": "t.Errorf",
+          "lineNumber": 155
+        },
+        {
+          "caller": "TestPipelineIntegration",
+          "callee": "t.Errorf",
+          "lineNumber": 172
+        },
+        {
+          "caller": "TestCountFiles",
+          "callee": "os.MkdirTemp",
+          "lineNumber": 178
+        },
+        {
+          "caller": "TestCountFiles",
+          "callee": "t.Fatalf",
+          "lineNumber": 180
+        },
+        {
+          "caller": "TestCountFiles",
+          "callee": "os.RemoveAll",
+          "lineNumber": 182
+        },
+        {
+          "caller": "TestCountFiles",
+          "callee": "os.WriteFile",
+          "lineNumber": 185
+        },
+        {
+          "caller": "TestCountFiles",
+          "callee": "filepath.Join",
+          "lineNumber": 185
+        },
+        {
+          "caller": "TestCountFiles",
+          "callee": "os.WriteFile",
+          "lineNumber": 186
+        },
+        {
+          "caller": "TestCountFiles",
+          "callee": "filepath.Join",
+          "lineNumber": 186
+        },
+        {
+          "caller": "TestCountFiles",
+          "callee": "os.WriteFile",
+          "lineNumber": 187
+        },
+        {
+          "caller": "TestCountFiles",
+          "callee": "filepath.Join",
+          "lineNumber": 187
+        },
+        {
+          "caller": "TestCountFiles",
+          "callee": "os.Mkdir",
+          "lineNumber": 188
+        },
+        {
+          "caller": "TestCountFiles",
+          "callee": "filepath.Join",
+          "lineNumber": 188
+        },
+        {
+          "caller": "TestCountFiles",
+          "callee": "countFiles",
+          "lineNumber": 190
+        },
+        {
+          "caller": "TestCountFiles",
+          "callee": "t.Fatalf",
+          "lineNumber": 192
+        },
+        {
+          "caller": "TestCountFiles",
+          "callee": "t.Errorf",
+          "lineNumber": 196
+        }
+      ],
+      "metrics": {
+        "importCount": 2,
+        "exportCount": 8,
+        "functionCount": 8,
+        "classCount": 1
+      }
+    },
+    {
+      "path": "internal/tui/pipeline_adapter.go",
+      "language": "go",
+      "fileCategory": "code",
+      "totalLines": 98,
+      "nonEmptyLines": 86,
+      "functions": [
+        {
+          "name": "Info",
+          "startLine": 14,
+          "endLine": 16,
+          "params": [
+            "msg"
+          ]
+        },
+        {
+          "name": "OK",
+          "startLine": 18,
+          "endLine": 20,
+          "params": [
+            "msg"
+          ]
+        },
+        {
+          "name": "Warn",
+          "startLine": 22,
+          "endLine": 24,
+          "params": [
+            "msg"
+          ]
+        },
+        {
+          "name": "Step",
+          "startLine": 26,
+          "endLine": 33,
+          "params": [
+            "msg"
+          ]
+        },
+        {
+          "name": "Err",
+          "startLine": 35,
+          "endLine": 37,
+          "params": [
+            "msg"
+          ]
+        },
+        {
+          "name": "Progress",
+          "startLine": 39,
+          "endLine": 53,
+          "params": [
+            "stage",
+            "current",
+            "total"
+          ]
+        },
+        {
+          "name": "parseStep",
+          "startLine": 55,
+          "endLine": 78,
+          "params": [
+            "msg"
+          ]
+        },
+        {
+          "name": "RunTUI",
+          "startLine": 81,
+          "endLine": 98,
+          "params": [
+            "cfg"
+          ]
+        }
+      ],
+      "classes": [
+        {
+          "name": "tuiLogger",
+          "startLine": 10,
+          "endLine": 12,
+          "methods": [
+            "Info",
+            "OK",
+            "Warn",
+            "Step",
+            "Err",
+            "Progress"
+          ],
+          "properties": [
+            "events"
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "name": "Info",
+          "line": 14,
+          "isDefault": false
+        },
+        {
+          "name": "OK",
+          "line": 18,
+          "isDefault": false
+        },
+        {
+          "name": "Warn",
+          "line": 22,
+          "isDefault": false
+        },
+        {
+          "name": "Step",
+          "line": 26,
+          "isDefault": false
+        },
+        {
+          "name": "Err",
+          "line": 35,
+          "isDefault": false
+        },
+        {
+          "name": "Progress",
+          "line": 39,
+          "isDefault": false
+        },
+        {
+          "name": "RunTUI",
+          "line": 81,
+          "isDefault": false
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "Step",
+          "callee": "parseStep",
+          "lineNumber": 28
+        },
+        {
+          "caller": "parseStep",
+          "callee": "len",
+          "lineNumber": 57
+        },
+        {
+          "caller": "parseStep",
+          "callee": "len",
+          "lineNumber": 64
+        },
+        {
+          "caller": "parseStep",
+          "callee": "int",
+          "lineNumber": 66
+        },
+        {
+          "caller": "parseStep",
+          "callee": "len",
+          "lineNumber": 71
+        },
+        {
+          "caller": "parseStep",
+          "callee": "len",
+          "lineNumber": 72
+        },
+        {
+          "caller": "RunTUI",
+          "callee": "NewModel",
+          "lineNumber": 82
+        },
+        {
+          "caller": "RunTUI",
+          "callee": "func() {\n\t\t\tlog := &tuiLogger{events: m.Events()}\n\t\t\terr := pipeline.Run(cfg, log)\n\t\t\tm.SetDone(err)\n\t\t}",
+          "lineNumber": 86
+        },
+        {
+          "caller": "RunTUI",
+          "callee": "m.Events",
+          "lineNumber": 87
+        },
+        {
+          "caller": "RunTUI",
+          "callee": "pipeline.Run",
+          "lineNumber": 88
+        },
+        {
+          "caller": "RunTUI",
+          "callee": "m.SetDone",
+          "lineNumber": 89
+        },
+        {
+          "caller": "RunTUI",
+          "callee": "tea.NewProgram",
+          "lineNumber": 93
+        },
+        {
+          "caller": "RunTUI",
+          "callee": "tea.WithAltScreen",
+          "lineNumber": 93
+        },
+        {
+          "caller": "RunTUI",
+          "callee": "p.Run",
+          "lineNumber": 94
+        }
+      ],
+      "metrics": {
+        "importCount": 4,
+        "exportCount": 7,
+        "functionCount": 8,
+        "classCount": 1
+      }
+    }
+  ]
+}

@@ -1,0 +1,141 @@
+{
+  "nodes": [
+    {
+      "id": "document:docs/AGENT.md",
+      "type": "document",
+      "name": "AGENT.md",
+      "filePath": "docs/AGENT.md",
+      "summary": "Agent instructions for working on bananascaler: coding conventions, architecture pointers, and how agents should change the codebase.",
+      "tags": [
+        "documentation",
+        "agent-guide",
+        "conventions"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "document:docs/GEMINI.md",
+      "type": "document",
+      "name": "GEMINI.md",
+      "filePath": "docs/GEMINI.md",
+      "summary": "Gemini-oriented agent notes with project context and collaboration tips for this repository.",
+      "tags": [
+        "documentation",
+        "agent-guide",
+        "gemini"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "document:docs/IDENTITY.md",
+      "type": "document",
+      "name": "IDENTITY.md",
+      "filePath": "docs/IDENTITY.md",
+      "summary": "Project identity and product positioning notes for bananascaler.",
+      "tags": [
+        "documentation",
+        "identity",
+        "branding"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "document:docs/MEMORY.md",
+      "type": "document",
+      "name": "MEMORY.md",
+      "filePath": "docs/MEMORY.md",
+      "summary": "Persistent project memory notes capturing decisions, milestones, and context for future sessions.",
+      "tags": [
+        "documentation",
+        "memory",
+        "project-history"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "document:docs/SOUL.md",
+      "type": "document",
+      "name": "SOUL.md",
+      "filePath": "docs/SOUL.md",
+      "summary": "Short product soul/mission statement describing bananascaler's purpose and tone.",
+      "tags": [
+        "documentation",
+        "mission",
+        "branding"
+      ],
+      "complexity": "simple"
+    }
+  ],
+  "edges": [
+    {
+      "source": "document:docs/AGENT.md",
+      "target": "document:README.md",
+      "type": "related",
+      "direction": "forward",
+      "weight": 0.5
+    },
+    {
+      "source": "document:docs/AGENT.md",
+      "target": "file:main.go",
+      "type": "documents",
+      "direction": "forward",
+      "weight": 0.5
+    },
+    {
+      "source": "document:docs/GEMINI.md",
+      "target": "document:README.md",
+      "type": "related",
+      "direction": "forward",
+      "weight": 0.5
+    },
+    {
+      "source": "document:docs/GEMINI.md",
+      "target": "file:main.go",
+      "type": "documents",
+      "direction": "forward",
+      "weight": 0.5
+    },
+    {
+      "source": "document:docs/IDENTITY.md",
+      "target": "document:README.md",
+      "type": "related",
+      "direction": "forward",
+      "weight": 0.5
+    },
+    {
+      "source": "document:docs/IDENTITY.md",
+      "target": "file:main.go",
+      "type": "documents",
+      "direction": "forward",
+      "weight": 0.5
+    },
+    {
+      "source": "document:docs/MEMORY.md",
+      "target": "document:README.md",
+      "type": "related",
+      "direction": "forward",
+      "weight": 0.5
+    },
+    {
+      "source": "document:docs/MEMORY.md",
+      "target": "file:main.go",
+      "type": "documents",
+      "direction": "forward",
+      "weight": 0.5
+    },
+    {
+      "source": "document:docs/SOUL.md",
+      "target": "document:README.md",
+      "type": "related",
+      "direction": "forward",
+      "weight": 0.5
+    },
+    {
+      "source": "document:docs/SOUL.md",
+      "target": "file:main.go",
+      "type": "documents",
+      "direction": "forward",
+      "weight": 0.5
+    }
+  ]
+}

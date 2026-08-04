@@ -1,0 +1,12 @@
+{
+  "status": "ok",
+  "issues": [],
+  "warnings": [
+    "2 calls edges dropped in merge (SetDone, Events not emitted as function nodes)"
+  ],
+  "stats": {
+    "nodes": 98,
+    "edges": 248,
+    "orphans": 0
+  }
+}

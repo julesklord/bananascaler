@@ -1,0 +1,887 @@
+{
+  "scriptCompleted": true,
+  "filesAnalyzed": 7,
+  "filesSkipped": [],
+  "results": [
+    {
+      "path": "cmd/root.go",
+      "language": "go",
+      "fileCategory": "code",
+      "totalLines": 167,
+      "nonEmptyLines": 143,
+      "functions": [
+        {
+          "name": "Execute",
+          "startLine": 71,
+          "endLine": 76,
+          "params": []
+        },
+        {
+          "name": "init",
+          "startLine": 78,
+          "endLine": 100,
+          "params": []
+        }
+      ],
+      "exports": [
+        {
+          "name": "Execute",
+          "line": 71,
+          "isDefault": false
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "Execute",
+          "callee": "rootCmd.Execute",
+          "lineNumber": 72
+        },
+        {
+          "caller": "Execute",
+          "callee": "fmt.Fprintf",
+          "lineNumber": 73
+        },
+        {
+          "caller": "Execute",
+          "callee": "os.Exit",
+          "lineNumber": 74
+        },
+        {
+          "caller": "init",
+          "callee": "rootCmd.PersistentFlags().StringVarP",
+          "lineNumber": 79
+        },
+        {
+          "caller": "init",
+          "callee": "rootCmd.PersistentFlags",
+          "lineNumber": 79
+        },
+        {
+          "caller": "init",
+          "callee": "rootCmd.PersistentFlags().IntVarP",
+          "lineNumber": 81
+        },
+        {
+          "caller": "init",
+          "callee": "rootCmd.PersistentFlags",
+          "lineNumber": 81
+        },
+        {
+          "caller": "init",
+          "callee": "rootCmd.PersistentFlags().IntVarP",
+          "lineNumber": 83
+        },
+        {
+          "caller": "init",
+          "callee": "rootCmd.PersistentFlags",
+          "lineNumber": 83
+        },
+        {
+          "caller": "init",
+          "callee": "rootCmd.PersistentFlags().StringVarP",
+          "lineNumber": 85
+        },
+        {
+          "caller": "init",
+          "callee": "rootCmd.PersistentFlags",
+          "lineNumber": 85
+        },
+        {
+          "caller": "init",
+          "callee": "rootCmd.PersistentFlags().BoolVarP",
+          "lineNumber": 87
+        },
+        {
+          "caller": "init",
+          "callee": "rootCmd.PersistentFlags",
+          "lineNumber": 87
+        },
+        {
+          "caller": "init",
+          "callee": "rootCmd.PersistentFlags().BoolVar",
+          "lineNumber": 89
+        },
+        {
+          "caller": "init",
+          "callee": "rootCmd.PersistentFlags",
+          "lineNumber": 89
+        },
+        {
+          "caller": "init",
+          "callee": "rootCmd.PersistentFlags().StringVar",
+          "lineNumber": 93
+        },
+        {
+          "caller": "init",
+          "callee": "rootCmd.PersistentFlags",
+          "lineNumber": 93
+        },
+        {
+          "caller": "init",
+          "callee": "rootCmd.PersistentFlags().BoolVar",
+          "lineNumber": 95
+        },
+        {
+          "caller": "init",
+          "callee": "rootCmd.PersistentFlags",
+          "lineNumber": 95
+        },
+        {
+          "caller": "init",
+          "callee": "rootCmd.AddCommand",
+          "lineNumber": 99
+        }
+      ],
+      "metrics": {
+        "importCount": 12,
+        "exportCount": 1,
+        "functionCount": 2,
+        "classCount": 0
+      }
+    },
+    {
+      "path": "cmd/tui.go",
+      "language": "go",
+      "fileCategory": "code",
+      "totalLines": 23,
+      "nonEmptyLines": 20,
+      "functions": [
+        {
+          "name": "init",
+          "startLine": 21,
+          "endLine": 23,
+          "params": []
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "init",
+          "callee": "rootCmd.AddCommand",
+          "lineNumber": 22
+        }
+      ],
+      "metrics": {
+        "importCount": 6,
+        "exportCount": 0,
+        "functionCount": 1,
+        "classCount": 0
+      }
+    },
+    {
+      "path": "internal/tui/messages.go",
+      "language": "go",
+      "fileCategory": "code",
+      "totalLines": 40,
+      "nonEmptyLines": 33,
+      "classes": [
+        {
+          "name": "PipelineEvent",
+          "startLine": 26,
+          "endLine": 34,
+          "methods": [],
+          "properties": [
+            "Kind",
+            "Level",
+            "Message",
+            "Stage",
+            "StageName",
+            "Current",
+            "Total"
+          ]
+        },
+        {
+          "name": "pipelineEventMsg",
+          "startLine": 38,
+          "endLine": 38,
+          "methods": [],
+          "properties": [
+            "e"
+          ]
+        },
+        {
+          "name": "pipelineDoneMsg",
+          "startLine": 39,
+          "endLine": 39,
+          "methods": [],
+          "properties": [
+            "err"
+          ]
+        },
+        {
+          "name": "pipelineStartMsg",
+          "startLine": 40,
+          "endLine": 40,
+          "methods": [],
+          "properties": [
+            "cfg"
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "name": "PipelineEvent",
+          "line": 26,
+          "isDefault": false
+        }
+      ],
+      "metrics": {
+        "importCount": 2,
+        "exportCount": 1,
+        "functionCount": 0,
+        "classCount": 4
+      }
+    },
+    {
+      "path": "internal/tui/model_test.go",
+      "language": "go",
+      "fileCategory": "code",
+      "totalLines": 185,
+      "nonEmptyLines": 159,
+      "functions": [
+        {
+          "name": "TestIsVideoFile",
+          "startLine": 12,
+          "endLine": 35,
+          "params": [
+            "t"
+          ]
+        },
+        {
+          "name": "TestShortModel",
+          "startLine": 37,
+          "endLine": 55,
+          "params": [
+            "t"
+          ]
+        },
+        {
+          "name": "TestModelExplorerKeybinds",
+          "startLine": 57,
+          "endLine": 115,
+          "params": [
+            "t"
+          ]
+        },
+        {
+          "name": "TestModelExplorerNavigation",
+          "startLine": 117,
+          "endLine": 185,
+          "params": [
+            "t"
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "name": "TestIsVideoFile",
+          "line": 12,
+          "isDefault": false
+        },
+        {
+          "name": "TestShortModel",
+          "line": 37,
+          "isDefault": false
+        },
+        {
+          "name": "TestModelExplorerKeybinds",
+          "line": 57,
+          "isDefault": false
+        },
+        {
+          "name": "TestModelExplorerNavigation",
+          "line": 117,
+          "isDefault": false
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "TestIsVideoFile",
+          "callee": "t.Run",
+          "lineNumber": 28
+        },
+        {
+          "caller": "TestIsVideoFile",
+          "callee": "isVideoFile",
+          "lineNumber": 29
+        },
+        {
+          "caller": "TestIsVideoFile",
+          "callee": "t.Errorf",
+          "lineNumber": 31
+        },
+        {
+          "caller": "TestShortModel",
+          "callee": "t.Run",
+          "lineNumber": 48
+        },
+        {
+          "caller": "TestShortModel",
+          "callee": "shortModel",
+          "lineNumber": 49
+        },
+        {
+          "caller": "TestShortModel",
+          "callee": "t.Errorf",
+          "lineNumber": 51
+        },
+        {
+          "caller": "TestModelExplorerKeybinds",
+          "callee": "NewModel",
+          "lineNumber": 64
+        },
+        {
+          "caller": "TestModelExplorerKeybinds",
+          "callee": "m.Update",
+          "lineNumber": 69
+        },
+        {
+          "caller": "TestModelExplorerKeybinds",
+          "callee": "t.Errorf",
+          "lineNumber": 72
+        },
+        {
+          "caller": "TestModelExplorerKeybinds",
+          "callee": "m.Update",
+          "lineNumber": 75
+        },
+        {
+          "caller": "TestModelExplorerKeybinds",
+          "callee": "t.Errorf",
+          "lineNumber": 78
+        },
+        {
+          "caller": "TestModelExplorerKeybinds",
+          "callee": "m.Update",
+          "lineNumber": 81
+        },
+        {
+          "caller": "TestModelExplorerKeybinds",
+          "callee": "t.Errorf",
+          "lineNumber": 84
+        },
+        {
+          "caller": "TestModelExplorerKeybinds",
+          "callee": "m.Update",
+          "lineNumber": 89
+        },
+        {
+          "caller": "TestModelExplorerKeybinds",
+          "callee": "t.Errorf",
+          "lineNumber": 92
+        },
+        {
+          "caller": "TestModelExplorerKeybinds",
+          "callee": "m.Update",
+          "lineNumber": 95
+        },
+        {
+          "caller": "TestModelExplorerKeybinds",
+          "callee": "t.Errorf",
+          "lineNumber": 98
+        },
+        {
+          "caller": "TestModelExplorerKeybinds",
+          "callee": "m.Update",
+          "lineNumber": 101
+        },
+        {
+          "caller": "TestModelExplorerKeybinds",
+          "callee": "t.Errorf",
+          "lineNumber": 104
+        },
+        {
+          "caller": "TestModelExplorerKeybinds",
+          "callee": "m.Update",
+          "lineNumber": 110
+        },
+        {
+          "caller": "TestModelExplorerKeybinds",
+          "callee": "t.Errorf",
+          "lineNumber": 113
+        },
+        {
+          "caller": "TestModelExplorerNavigation",
+          "callee": "NewModel",
+          "lineNumber": 124
+        },
+        {
+          "caller": "TestModelExplorerNavigation",
+          "callee": "os.MkdirTemp",
+          "lineNumber": 128
+        },
+        {
+          "caller": "TestModelExplorerNavigation",
+          "callee": "t.Fatalf",
+          "lineNumber": 130
+        },
+        {
+          "caller": "TestModelExplorerNavigation",
+          "callee": "os.RemoveAll",
+          "lineNumber": 132
+        },
+        {
+          "caller": "TestModelExplorerNavigation",
+          "callee": "os.WriteFile",
+          "lineNumber": 135
+        },
+        {
+          "caller": "TestModelExplorerNavigation",
+          "callee": "filepath.Join",
+          "lineNumber": 135
+        },
+        {
+          "caller": "TestModelExplorerNavigation",
+          "callee": "t.Fatalf",
+          "lineNumber": 137
+        },
+        {
+          "caller": "TestModelExplorerNavigation",
+          "callee": "os.WriteFile",
+          "lineNumber": 139
+        },
+        {
+          "caller": "TestModelExplorerNavigation",
+          "callee": "filepath.Join",
+          "lineNumber": 139
+        },
+        {
+          "caller": "TestModelExplorerNavigation",
+          "callee": "t.Fatalf",
+          "lineNumber": 141
+        },
+        {
+          "caller": "TestModelExplorerNavigation",
+          "callee": "m.readDirCmd()",
+          "lineNumber": 145
+        },
+        {
+          "caller": "TestModelExplorerNavigation",
+          "callee": "m.readDirCmd",
+          "lineNumber": 145
+        },
+        {
+          "caller": "TestModelExplorerNavigation",
+          "callee": "m.Update",
+          "lineNumber": 146
+        },
+        {
+          "caller": "TestModelExplorerNavigation",
+          "callee": "len",
+          "lineNumber": 149
+        },
+        {
+          "caller": "TestModelExplorerNavigation",
+          "callee": "t.Fatalf",
+          "lineNumber": 150
+        },
+        {
+          "caller": "TestModelExplorerNavigation",
+          "callee": "len",
+          "lineNumber": 150
+        },
+        {
+          "caller": "TestModelExplorerNavigation",
+          "callee": "t.Errorf",
+          "lineNumber": 155
+        },
+        {
+          "caller": "TestModelExplorerNavigation",
+          "callee": "m.Update",
+          "lineNumber": 159
+        },
+        {
+          "caller": "TestModelExplorerNavigation",
+          "callee": "t.Errorf",
+          "lineNumber": 162
+        },
+        {
+          "caller": "TestModelExplorerNavigation",
+          "callee": "m.Update",
+          "lineNumber": 166
+        },
+        {
+          "caller": "TestModelExplorerNavigation",
+          "callee": "t.Errorf",
+          "lineNumber": 169
+        },
+        {
+          "caller": "TestModelExplorerNavigation",
+          "callee": "m.Update",
+          "lineNumber": 173
+        },
+        {
+          "caller": "TestModelExplorerNavigation",
+          "callee": "t.Errorf",
+          "lineNumber": 176
+        },
+        {
+          "caller": "TestModelExplorerNavigation",
+          "callee": "m.Update",
+          "lineNumber": 180
+        },
+        {
+          "caller": "TestModelExplorerNavigation",
+          "callee": "t.Errorf",
+          "lineNumber": 183
+        }
+      ],
+      "metrics": {
+        "importCount": 2,
+        "exportCount": 4,
+        "functionCount": 4,
+        "classCount": 0
+      }
+    },
+    {
+      "path": "internal/tui/pipeline_adapter_test.go",
+      "language": "go",
+      "fileCategory": "code",
+      "totalLines": 54,
+      "nonEmptyLines": 51,
+      "functions": [
+        {
+          "name": "TestParseStep",
+          "startLine": 5,
+          "endLine": 54,
+          "params": [
+            "t"
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "name": "TestParseStep",
+          "line": 5,
+          "isDefault": false
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "TestParseStep",
+          "callee": "t.Run",
+          "lineNumber": 44
+        },
+        {
+          "caller": "TestParseStep",
+          "callee": "parseStep",
+          "lineNumber": 45
+        },
+        {
+          "caller": "TestParseStep",
+          "callee": "t.Errorf",
+          "lineNumber": 47
+        },
+        {
+          "caller": "TestParseStep",
+          "callee": "t.Errorf",
+          "lineNumber": 50
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 1,
+        "functionCount": 1,
+        "classCount": 0
+      }
+    },
+    {
+      "path": "internal/tui/styles.go",
+      "language": "go",
+      "fileCategory": "code",
+      "totalLines": 215,
+      "nonEmptyLines": 184,
+      "functions": [
+        {
+          "name": "renderBar",
+          "startLine": 135,
+          "endLine": 164,
+          "params": [
+            "current",
+            "total",
+            "width",
+            "done"
+          ]
+        },
+        {
+          "name": "renderPct",
+          "startLine": 167,
+          "endLine": 174,
+          "params": [
+            "current",
+            "total"
+          ]
+        },
+        {
+          "name": "repeat",
+          "startLine": 178,
+          "endLine": 187,
+          "params": [
+            "s",
+            "n"
+          ]
+        },
+        {
+          "name": "hRule",
+          "startLine": 190,
+          "endLine": 195,
+          "params": [
+            "w"
+          ]
+        },
+        {
+          "name": "renderFooterBinds",
+          "startLine": 198,
+          "endLine": 207,
+          "params": [
+            "binds"
+          ]
+        },
+        {
+          "name": "truncatePath",
+          "startLine": 210,
+          "endLine": 215,
+          "params": [
+            "p",
+            "maxLen"
+          ]
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "renderBar",
+          "callee": "barEmptyStyle.Render",
+          "lineNumber": 137
+        },
+        {
+          "caller": "renderBar",
+          "callee": "strings.Repeat",
+          "lineNumber": 137
+        },
+        {
+          "caller": "renderBar",
+          "callee": "float64",
+          "lineNumber": 140
+        },
+        {
+          "caller": "renderBar",
+          "callee": "float64",
+          "lineNumber": 140
+        },
+        {
+          "caller": "renderBar",
+          "callee": "int",
+          "lineNumber": 144
+        },
+        {
+          "caller": "renderBar",
+          "callee": "float64",
+          "lineNumber": 144
+        },
+        {
+          "caller": "renderBar",
+          "callee": "barDoneStyle.Render",
+          "lineNumber": 151
+        },
+        {
+          "caller": "renderBar",
+          "callee": "strings.Repeat",
+          "lineNumber": 151
+        },
+        {
+          "caller": "renderBar",
+          "callee": "bar.WriteString",
+          "lineNumber": 157
+        },
+        {
+          "caller": "renderBar",
+          "callee": "barFilledStyle.Render",
+          "lineNumber": 157
+        },
+        {
+          "caller": "renderBar",
+          "callee": "strings.Repeat",
+          "lineNumber": 157
+        },
+        {
+          "caller": "renderBar",
+          "callee": "bar.WriteString",
+          "lineNumber": 158
+        },
+        {
+          "caller": "renderBar",
+          "callee": "barLeadStyle.Render",
+          "lineNumber": 158
+        },
+        {
+          "caller": "renderBar",
+          "callee": "bar.WriteString",
+          "lineNumber": 160
+        },
+        {
+          "caller": "renderBar",
+          "callee": "barLeadStyle.Render",
+          "lineNumber": 160
+        },
+        {
+          "caller": "renderBar",
+          "callee": "bar.WriteString",
+          "lineNumber": 162
+        },
+        {
+          "caller": "renderBar",
+          "callee": "barEmptyStyle.Render",
+          "lineNumber": 162
+        },
+        {
+          "caller": "renderBar",
+          "callee": "strings.Repeat",
+          "lineNumber": 162
+        },
+        {
+          "caller": "renderBar",
+          "callee": "bar.String",
+          "lineNumber": 163
+        },
+        {
+          "caller": "renderPct",
+          "callee": "barCountStyle.Render",
+          "lineNumber": 169
+        },
+        {
+          "caller": "renderPct",
+          "callee": "int",
+          "lineNumber": 171
+        },
+        {
+          "caller": "renderPct",
+          "callee": "float64",
+          "lineNumber": 171
+        },
+        {
+          "caller": "renderPct",
+          "callee": "float64",
+          "lineNumber": 171
+        },
+        {
+          "caller": "renderPct",
+          "callee": "barPctStyle.Render",
+          "lineNumber": 172
+        },
+        {
+          "caller": "renderPct",
+          "callee": "fmt.Sprintf",
+          "lineNumber": 172
+        },
+        {
+          "caller": "renderPct",
+          "callee": "barCountStyle.Render",
+          "lineNumber": 173
+        },
+        {
+          "caller": "renderPct",
+          "callee": "fmt.Sprintf",
+          "lineNumber": 173
+        },
+        {
+          "caller": "repeat",
+          "callee": "b.WriteString",
+          "lineNumber": 184
+        },
+        {
+          "caller": "repeat",
+          "callee": "b.String",
+          "lineNumber": 186
+        },
+        {
+          "caller": "hRule",
+          "callee": "sepStyle.Render",
+          "lineNumber": 194
+        },
+        {
+          "caller": "hRule",
+          "callee": "strings.Repeat",
+          "lineNumber": 194
+        },
+        {
+          "caller": "renderFooterBinds",
+          "callee": "make",
+          "lineNumber": 199
+        },
+        {
+          "caller": "renderFooterBinds",
+          "callee": "len",
+          "lineNumber": 199
+        },
+        {
+          "caller": "renderFooterBinds",
+          "callee": "footerKeyStyle.Render",
+          "lineNumber": 201
+        },
+        {
+          "caller": "renderFooterBinds",
+          "callee": "footerDescStyle.Render",
+          "lineNumber": 202
+        },
+        {
+          "caller": "renderFooterBinds",
+          "callee": "append",
+          "lineNumber": 203
+        },
+        {
+          "caller": "renderFooterBinds",
+          "callee": "footerDivStyle.Render",
+          "lineNumber": 205
+        },
+        {
+          "caller": "renderFooterBinds",
+          "callee": "strings.Join",
+          "lineNumber": 206
+        },
+        {
+          "caller": "truncatePath",
+          "callee": "len",
+          "lineNumber": 211
+        },
+        {
+          "caller": "truncatePath",
+          "callee": "len",
+          "lineNumber": 214
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 6,
+        "classCount": 0
+      }
+    },
+    {
+      "path": "main.go",
+      "language": "go",
+      "fileCategory": "code",
+      "totalLines": 7,
+      "nonEmptyLines": 5,
+      "functions": [
+        {
+          "name": "main",
+          "startLine": 5,
+          "endLine": 7,
+          "params": []
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "main",
+          "callee": "cmd.Execute",
+          "lineNumber": 6
+        }
+      ],
+      "metrics": {
+        "importCount": 2,
+        "exportCount": 0,
+        "functionCount": 1,
+        "classCount": 0
+      }
+    }
+  ]
+}
